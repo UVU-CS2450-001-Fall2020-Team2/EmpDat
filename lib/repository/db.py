@@ -75,9 +75,18 @@ class DatabaseRepository(Repository, HasValidation):
         table = cls.table(DatabaseRepository.metadata)
         statement = select([table]).where(table.c.id == model_id)
         result = connection.execute(statement)
-        modelDict = result.fetchone() if result is not None else None
+
+        # Converts the result proxy into a dictionary and an array of values only
+        d, a = {}, []
+        for rowproxy in result:
+            # rowproxy.items() returns an array like [(key0, value0), (key1, value1)]
+            for column, value in rowproxy.items():
+                # build up the dictionary
+                d = {**d, **{column: value}}
+            a.append(d)
+
         connection.close()
-        return type(cls)(modelDict) if modelDict is not None else None
+        return cls(d) if result is not None else None
 
     @classmethod
     def read_all(cls):

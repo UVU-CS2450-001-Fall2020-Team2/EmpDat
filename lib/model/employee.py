@@ -21,7 +21,6 @@ class Employee(DynamicModel, DatabaseRepository, HasRelationships):
     }
 
     def __init__(self, data):
-        print('test')
         super().__init__(data)
         DatabaseRepository().__init__()
 
@@ -35,5 +34,6 @@ class Employee(DynamicModel, DatabaseRepository, HasRelationships):
     def table(cls, metadata=MetaData()):
         return Table(cls.resource_uri, metadata,
                      Column('id', String(36), primary_key=True),
+                     Column('last_name', String(36)),
                      extend_existing=True
                      )

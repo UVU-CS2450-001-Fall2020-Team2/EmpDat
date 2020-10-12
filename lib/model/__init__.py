@@ -37,7 +37,6 @@ class DynamicModel:
         return self.data
 
     def __getattr__(self, key):
-        print('test!')
         if key in self.data:
             return self.data[key]
 

@@ -19,7 +19,7 @@ class HasValidation:
             else:
                 raise ValueError(f'{key} given is invalid!')  # TODO make error message better
         else:
-            print('no validators')
+            # print('no validators')
             return super().__setattr__(key, value)
 
     @property
