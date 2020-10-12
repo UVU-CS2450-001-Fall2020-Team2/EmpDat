@@ -1,8 +1,9 @@
 # Python Virtual Environment
 /venv
 
-#
+# Data
 /data
+*empdat.db*
 
 # IDE-related folders
 /.idea

@@ -1,13 +1,27 @@
-from sqlalchemy import MetaData
+import datetime
 
-from lib.model import DynamicModel, HasRelationships, DatabaseModel
+from sqlalchemy import MetaData, Table, Column, String
+
+from lib.model import DynamicModel, HasRelationships, register_database_model
 from lib.repository.db import DatabaseRepository
 
 
-@DatabaseModel
+@register_database_model
 class Employee(DynamicModel, DatabaseRepository, HasRelationships):
+    resource_uri = 'employee'
+    field_validators = {
+        'last_name': 'alpha',
+        'first_name': 'alpha',
+        'phone_number': 'phone',
+        'emergency_contact_phone': 'phone'
+    }
+    field_casts = {
+        'start_date': datetime.date,
+        'date_of_birth': datetime.date,
+    }
 
     def __init__(self, data):
+        print('test')
         super().__init__(data)
         DatabaseRepository().__init__()
 
@@ -18,9 +32,8 @@ class Employee(DynamicModel, DatabaseRepository, HasRelationships):
         return []
 
     @classmethod
-    def resource_uri(cls):
-        return 'employee'
-
-    @classmethod
     def table(cls, metadata=MetaData()):
-        pass
+        return Table(cls.resource_uri, metadata,
+                     Column('id', String(36), primary_key=True),
+                     extend_existing=True
+                     )
