@@ -83,7 +83,13 @@ def _generic_regex(regexes: list, value):
 
 
 def _phone_number(value):
-    return True
+    """
+    Validates fields to be phone number formats only
+
+    :param value:
+    :return: if string is alphabetic
+    """
+    return _generic_regex(['^(\+\d{1,2}\s)?\(?\d{3}\)?[\s.-]\d{3}[\s.-]\d{4}$'], value)
 
 
 def _alpha(value: str):
@@ -96,7 +102,12 @@ def _alpha(value: str):
     return _generic_regex(['^[A-Za-z]+$'], value)
 
 
+def _notnull(value):
+    return value is not None
+
+
 _validators = {
     'phone': _phone_number,
-    'alpha': _alpha
+    'alpha': _alpha,
+    'notnull': _notnull
 }

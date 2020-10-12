@@ -10,6 +10,7 @@ from lib.repository.db import DatabaseRepository
 class Employee(DatabaseRepository, DynamicModel, HasRelationships):
     resource_uri = 'employee'
     field_validators = {
+        'id': 'notnull',
         'last_name': 'alpha',
         'first_name': 'alpha',
         'phone_number': 'phone',
