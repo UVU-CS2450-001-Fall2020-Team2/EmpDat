@@ -13,14 +13,26 @@ class HasValidation:
         :param value: value to set to field
         :return: None
         """
-        if self.field_validators and key in self.field_validators:
-            if validate(self.field_validators[key], value):
-                return super().__setattr__(key, value)
-            else:
-                raise ValueError(f'{key} given is invalid!')  # TODO make error message better
+        if key == 'data':
+            for data_key, data_value in value.items():
+                if not self.validate(data_key, data_value):
+                    raise ValueError(f'{data_key} given is invalid!')  # TODO make error message better
+            super().__setattr__(key, value)
         else:
-            # print('no validators')
-            return super().__setattr__(key, value)
+            if self.validate(key, value):
+                super().__setattr__(key, value)
+            else:
+                # print('no validators')
+                raise ValueError(f'{key} given is invalid!')  # TODO make error message better
+
+    def validate(self, key, new_value):
+        if self.field_validators and key in self.field_validators:
+            if is_valid_against(self.field_validators[key], new_value):
+                return True
+            else:
+                return False
+        else:
+            return True
 
     @property
     @classmethod
@@ -38,7 +50,7 @@ class HasValidation:
         raise NotImplementedError
 
 
-def validate(validator_type, value):
+def is_valid_against(validator_type, value):
     if isinstance(validator_type, list):
         _generic_regex(validator_type, value)
     else:
@@ -60,10 +72,10 @@ def _generic_regex(regexes: list, value):
     :return: if value matches the regexes given
     """
     if isinstance(regexes, str):
-        return re.match(regexes, value) is not None
+        return re.match(re.compile(regexes), value) is not None
 
     for regex in regexes:
-        result = re.match(regex, value)
+        result = re.match(re.compile(regex), value)
         if result is None:
             return None
 
@@ -81,7 +93,7 @@ def _alpha(value: str):
     :param value:
     :return: if string is alphabetic
     """
-    return _generic_regex(['[A-Za-z]'], value)
+    return _generic_regex(['^[A-Za-z]+$'], value)
 
 
 _validators = {

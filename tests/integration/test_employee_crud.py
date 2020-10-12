@@ -13,12 +13,14 @@ if __name__ == '__main__':
         'last_name': 'doe'
     }
     mymodel = Employee(data)
-    print(mymodel.to_dict())
+    # print(mymodel.data)
+    mymodel.first_name = 'john'
+    # print(mymodel.to_dict())
 
     Employee.create(mymodel)
     # Employee.destroy('XYZ')
 
     test = Employee.read('XYZ')
-    print(test.to_dict())
+    # print(test.to_dict())
 
     os.remove("empdat.db")

@@ -25,7 +25,7 @@ class DatabaseRepository(Repository, HasValidation):
     metadata: MetaData
 
     def __init__(self):
-        super().__init__()
+        Repository.__init__(self)
 
     @classmethod
     def _open_connection(cls):

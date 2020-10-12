@@ -37,14 +37,19 @@ class DynamicModel:
         return self.data
 
     def __getattr__(self, key):
+        if key == 'data':
+            super().__getattribute__(key)
+            return
+
         if key in self.data:
             return self.data[key]
+        raise AttributeError()
 
     def __setattr__(self, key, value):
         if key == 'data':
-            return super().__setattr__(key, value)
-        if key in self.data:
-            self.data[key] = value
+            super().__setattr__(key, value)
+            return
+        self.data[key] = value
 
     @property
     @classmethod
@@ -73,7 +78,7 @@ class HasRelationships:
         return []
 
     def __getstate__(self):
-        print('----test!')
+        print('DEBUG: ----stripping relationship fields!')
         state = self.__dict__.copy()
         fields_to_remove = self.relationship_fields()
         for field in fields_to_remove:

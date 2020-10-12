@@ -7,7 +7,7 @@ from lib.repository.db import DatabaseRepository
 
 
 @register_database_model
-class Employee(DynamicModel, DatabaseRepository, HasRelationships):
+class Employee(DatabaseRepository, DynamicModel, HasRelationships):
     resource_uri = 'employee'
     field_validators = {
         'last_name': 'alpha',
@@ -21,8 +21,12 @@ class Employee(DynamicModel, DatabaseRepository, HasRelationships):
     }
 
     def __init__(self, data):
-        super().__init__(data)
-        DatabaseRepository().__init__()
+        # self.data = data
+        DynamicModel.__init__(self, data)
+        DatabaseRepository.__init__(self)
+
+    def to_dict(self):
+        return DynamicModel.to_dict(self)
 
     def load_relationships(self):
         pass
@@ -35,5 +39,6 @@ class Employee(DynamicModel, DatabaseRepository, HasRelationships):
         return Table(cls.resource_uri, metadata,
                      Column('id', String(36), primary_key=True),
                      Column('last_name', String(36)),
+                     Column('first_name', String(36)),
                      extend_existing=True
                      )
