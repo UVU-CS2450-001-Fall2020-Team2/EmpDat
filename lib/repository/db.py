@@ -1,12 +1,21 @@
+"""
+Database Repository with helper methods for setup
+"""
 from abc import abstractmethod
 
-from sqlalchemy import create_engine, MetaData, select
+from sqlalchemy import create_engine, MetaData, select, Table
 
+from lib.model import database_models
 from lib.repository import Repository
 from lib.repository.validator import HasValidation
 
 
 def database_setup(config):
+    """
+    This statically configures the ORM and database schema
+    :param config: dict
+    :return: None
+    """
     engine = create_engine(config['DB_URL'], echo=False)
     metadata = MetaData(engine)
 
@@ -14,13 +23,15 @@ def database_setup(config):
     DatabaseRepository.url = config['DB_URL']
     DatabaseRepository.metadata = metadata
 
-    from lib.model import database_models
     for model in database_models:
         model.table(metadata=metadata)
     metadata.create_all()
 
 
 class DatabaseRepository(Repository, HasValidation):
+    """
+    A SQL implementation of the Repository class
+    """
     url: str
     metadata: MetaData
 
@@ -29,16 +40,23 @@ class DatabaseRepository(Repository, HasValidation):
 
     @classmethod
     def _open_connection(cls):
+        """
+        Used by CRUD methods. This opens a connection with the database
+        :return: connection instance
+        """
         return DatabaseRepository.engine.connect()
 
     @abstractmethod
     def to_dict(self):
+        """
+        Used by CRUD methods. The model needs to define what is to be stored in the database
+        :return: dict
+        """
         raise NotImplementedError
 
-    @property
     @classmethod
     @abstractmethod
-    def table(cls, metadata=MetaData()):
+    def table(cls, metadata=MetaData()) -> Table:
         """
         Table definition for the Repository
 
@@ -77,16 +95,17 @@ class DatabaseRepository(Repository, HasValidation):
         result = connection.execute(statement)
 
         # Converts the result proxy into a dictionary and an array of values only
-        d, a = {}, []
+        # data, values = {}, []
+        data = {}
         for rowproxy in result:
             # rowproxy.items() returns an array like [(key0, value0), (key1, value1)]
             for column, value in rowproxy.items():
                 # build up the dictionary
-                d = {**d, **{column: value}}
-            a.append(d)
+                data = {**data, **{column: value}}
+            # values.append(data)
 
         connection.close()
-        return cls(d) if result is not None else None
+        return cls(data) if result is not None else None  # pylint: disable=too-many-function-args
 
     @classmethod
     def read_all(cls):
@@ -98,13 +117,13 @@ class DatabaseRepository(Repository, HasValidation):
         connection = cls._open_connection()
         statement = select([cls.table(DatabaseRepository.metadata)])
         result = connection.execute(statement)
-        modelDicts = result.fetchall() if result is not None else None
+        model_dicts = result.fetchall() if result is not None else None
         connection.close()
 
         models = []
-        if modelDicts is not None:
-            for raw in modelDicts:
-                models.append(type(cls)(raw))
+        if model_dicts is not None:
+            for raw in model_dicts:
+                models.append(cls(raw))  # pylint: disable=too-many-function-args
 
         return models
 

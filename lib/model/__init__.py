@@ -1,5 +1,7 @@
+"""
+Model base classes and traits
+"""
 from abc import abstractmethod
-
 
 database_models = []
 
@@ -30,10 +32,15 @@ class DynamicModel:
             if field in self.data:
                 self.data[field] = type(self.field_casts[field])(self.data[field])
 
+    @property
     def __dict__(self):
         return self.data
 
     def to_dict(self):
+        """
+        This is a helper in case this is used with the DatabaseRepository interface
+        :return: data
+        """
         return self.data
 
     def __getattr__(self, key):
@@ -68,16 +75,30 @@ class DynamicModel:
 
 
 class HasRelationships:
+    """
+    Helps with relational models
+    """
 
     @abstractmethod
     def load_relationships(self):
+        """
+        This will eagerly load ALL relationships
+        :return: None
+        """
         raise NotImplementedError
 
     @abstractmethod
     def relationship_fields(self) -> list:
+        """
+        :return: list of fields to strip on serialization
+        """
         return []
 
     def __getstate__(self):
+        """
+        Strips relationship_fields on copying
+        :return:
+        """
         print('DEBUG: ----stripping relationship fields!')
         state = self.__dict__.copy()
         fields_to_remove = self.relationship_fields()
@@ -87,6 +108,3 @@ class HasRelationships:
             except KeyError:
                 pass
         return state
-
-
-
