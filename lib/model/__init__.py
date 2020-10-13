@@ -44,14 +44,14 @@ class DynamicModel:
         return self.data
 
     def __getattr__(self, key):
-        if key == 'data':
+        if key in self.reserved_keywords:
             return super().__getattribute__(key)
         if key in self.data:
             return self.data[key]
         raise AttributeError()
 
     def __setattr__(self, key, value):
-        if key == 'data':
+        if key in self.reserved_keywords:
             super().__setattr__(key, value)
             return
         self.data[key] = value
@@ -61,6 +61,8 @@ class DynamicModel:
     @abstractmethod
     def field_casts(cls) -> dict:
         """
+        Casts fields to a certain type using a generic constructor
+        when the model is created.
         It is recommended to set this as a class-wide variable.
         Must be a dictionary.
 
@@ -70,6 +72,18 @@ class DynamicModel:
         }
         """
         raise NotImplementedError
+
+    @property
+    @classmethod
+    def reserved_keywords(cls) -> list:
+        """
+        Properties that become directly part of the object
+        rather than part of the 'data' dict.
+        Can be overridden.
+        """
+        return [
+            'data'
+        ]
 
 
 class HasRelationships:
