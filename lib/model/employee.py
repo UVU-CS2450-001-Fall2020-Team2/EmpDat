@@ -22,7 +22,6 @@ class Employee(DatabaseRepository, DynamicModel, HasRelationships):
     }
 
     def __init__(self, data):
-        # self.data = data
         DynamicModel.__init__(self, data)
         DatabaseRepository.__init__(self)
 

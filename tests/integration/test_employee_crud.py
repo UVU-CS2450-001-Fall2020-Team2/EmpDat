@@ -23,4 +23,13 @@ if __name__ == '__main__':
     test = Employee.read('XYZ')
     # print(test.to_dict())
 
+    test2 = Employee.read_all()
+    print(test2)
+    print('---')
+
+    test3 = Employee.read_by(filters={
+        'first_name': [('!=', 'john')]
+    })
+    print(test3)
+
     os.remove("empdat.db")

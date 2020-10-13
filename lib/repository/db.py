@@ -82,16 +82,17 @@ class DatabaseRepository(Repository, HasValidation):
         return model
 
     @classmethod
-    def read(cls, model_id):
+    def read(cls, model_id, id_name='id'):
         """
         Performs a SELECT * WHERE id = model_id given
 
         :param model_id:
+        :param id_name: ID identifier. (is it called 'id' or 'mymodel_id'?)
         :return: model
         """
         connection = cls._open_connection()
         table = cls.table(DatabaseRepository.metadata)
-        statement = select([table]).where(table.c.id == model_id)
+        statement = select([table]).where(table.c[id_name] == model_id)
         result = connection.execute(statement)
 
         # Converts the result proxy into a dictionary and an array of values only
@@ -106,6 +107,44 @@ class DatabaseRepository(Repository, HasValidation):
 
         connection.close()
         return cls(data) if result is not None else None  # pylint: disable=too-many-function-args
+
+    @classmethod
+    def read_by(cls, filters=None):
+        """
+        Performs a SELECT * WHERE filterKey (=) filterValue given
+
+        :param filters: dictionary of fields and their filters
+            Example:
+                filters = {
+                    'first_name': 'john_doe',                   # first_name = 'john_doe'
+                    'age': [('>', 5)],                          # age > 5
+                    'number_of_corn': [('>=', 5), ('<', 10)]    # 5 >= number_of_corn < 10
+                }
+        :return: all rows that fit filter criteria
+        """
+        if filters is None:
+            return cls.read_all()
+
+        connection = cls._open_connection()
+        table = cls.table(DatabaseRepository.metadata)
+        statement = select([table])
+
+        for column, value in filters.items():
+            if isinstance(value, list):
+                statement = DatabaseRepository._convert_comparator(statement, table, column, value)
+            else:
+                statement = statement.where(table.c[column] == value)
+
+        result = connection.execute(statement)
+        model_dicts = result.fetchall() if result is not None else None
+        connection.close()
+
+        models = []
+        if model_dicts is not None:
+            for raw in model_dicts:
+                models.append(cls(raw))  # pylint: disable=too-many-function-args
+
+        return models
 
     @classmethod
     def read_all(cls):
@@ -128,30 +167,81 @@ class DatabaseRepository(Repository, HasValidation):
         return models
 
     @classmethod
-    def update(cls, model):
+    def update(cls, model, id_name='id'):
         """
         Performs an UPDATE <values> WHERE id = model_id query
 
         :param model: instance
+        :param id_name: ID identifier. (is it called 'id' or 'mymodel_id'?)
         :return: model instance
         """
         connection = cls._open_connection()
         table = cls.table(DatabaseRepository.metadata)
-        statement = table.update().where(table.c.id == model.id).values(**model.to_dict())
+        statement = table.update().where(table.c[id_name] == model.id).values(**model.to_dict())
         connection.execute(statement)
         connection.close()
         return model
 
     @classmethod
-    def destroy(cls, model_id):
+    def destroy(cls, model_id, id_name='id'):
         """
         Performs a DELETE WHERE id = model_id query
 
         :param model_id: id only
+        :param id_name: ID identifier. (is it called 'id' or 'mymodel_id'?)
         :return: None
         """
         connection = cls._open_connection()
         table = cls.table(DatabaseRepository.metadata)
-        statement = table.delete().where(table.c.id == model_id)
+        statement = table.delete().where(table.c[id_name] == model_id)
         connection.execute(statement)
         connection.close()
+
+    @classmethod
+    def run_statement(cls, statement):
+        """
+        Performs any statement given
+
+        :param statement: can be created like the following:
+            table = self.table(DatabaseRepository.metadata)
+            statement = table.delete().where(...)
+        :return: all rows of result set
+        """
+        connection = cls._open_connection()
+        result = connection.execute(statement)
+        results = result.fetchall() if result is not None else None
+        connection.close()
+
+        return results
+
+    @classmethod
+    def _convert_comparator(cls, statement, table, field, expressions):
+        """
+        Converts expressions like [('>', 5)] into x > 5 in a SQLAlchemy statement
+
+        :param statement: statement to build upon
+        :param expressions: an array of couples, the first being the comparator
+            [(comparator, value})
+                comparators should be strings
+        :return: statement built
+        """
+        for expression in expressions:
+            if len(expression) != 2:
+                raise ValueError('DB Expressions should only have 1 comparator and 1 value')
+            if expression[0] == '=':
+                statement = statement.where(table.c[field] == expression[1])
+            elif expression[0] == '!=':
+                statement = statement.where(table.c[field] != expression[1])
+            elif expression[0] == '>=':
+                statement = statement.where(table.c[field] >= expression[1])
+            elif expression[0] == '<=':
+                statement = statement.where(table.c[field] <= expression[1])
+            elif expression[0] == '>':
+                statement = statement.where(table.c[field] > expression[1])
+            elif expression[0] == '<':
+                statement = statement.where(table.c[field] < expression[1])
+            elif expression[0] == 'like':
+                statement = statement.where(table.c[field].like(expression[1]))
+            else:
+                raise NotImplementedError('Invalid comparator given in DB Expression')
+        return statement
