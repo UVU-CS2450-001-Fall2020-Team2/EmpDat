@@ -30,7 +30,7 @@ class DynamicModel:
         self.data = data
         for field in self.field_casts:
             if field in self.data:
-                self.data[field] = type(self.field_casts[field])(self.data[field])
+                self.data[field] = self.field_casts[field](self.data[field])
 
     @property
     def __dict__(self):
@@ -61,14 +61,14 @@ class DynamicModel:
     @abstractmethod
     def field_casts(cls) -> dict:
         """
-        Casts fields to a certain type using a generic constructor
+        Casts fields to a certain type using a given function
         when the model is created.
         It is recommended to set this as a class-wide variable.
         Must be a dictionary.
 
         Example:
         field_casts = {
-            'date_of_birth': datetime.date
+            'date_of_birth': lambda x: datetime.date.fromtimestamp(x)
         }
         """
         raise NotImplementedError

@@ -23,8 +23,8 @@ class Employee(DatabaseRepository, DynamicModel, HasRelationships):
         'emergency_contact_phone': 'phone'
     }
     field_casts = {
-        'start_date': datetime.date,
-        'date_of_birth': datetime.date,
+        'start_date': lambda d: datetime.date.fromtimestamp(d),
+        'date_of_birth': lambda d: datetime.date.fromtimestamp(d),
     }
 
     def __init__(self, data):
