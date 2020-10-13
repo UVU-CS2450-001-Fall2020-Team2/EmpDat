@@ -45,9 +45,7 @@ class DynamicModel:
 
     def __getattr__(self, key):
         if key == 'data':
-            super().__getattribute__(key)
-            return
-
+            return super().__getattribute__(key)
         if key in self.data:
             return self.data[key]
         raise AttributeError()

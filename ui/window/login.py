@@ -1,9 +1,16 @@
+"""
+Login GUI Window implemented with Tkinter w/ built-in tester
+"""
 import tkinter as tk
 
 from ui.window import View
 
 
 class LoginWindow(View):
+    """
+    Login GUI Window
+    """
+
     def __init__(self, tk_root, event_handlers):
         """Have a title, username, password, and submit button"""
         super().__init__(tk_root, event_handlers)
@@ -37,5 +44,3 @@ if __name__ == '__main__':
     root = tk.Tk()
     login_page = LoginWindow(root, {})
     root.mainloop()
-    # This method will loop forever, waiting for events from the user, until the user exits the program –
-    # either by closing the window, or by terminating the program with a keyboard interrupt in the console.

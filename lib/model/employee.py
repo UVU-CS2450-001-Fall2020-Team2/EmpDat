@@ -1,3 +1,6 @@
+"""
+Employee Data Model
+"""
 import datetime
 
 from sqlalchemy import MetaData, Table, Column, String
@@ -8,6 +11,9 @@ from lib.repository.db import DatabaseRepository
 
 @register_database_model
 class Employee(DatabaseRepository, DynamicModel, HasRelationships):
+    """
+    Tied directly to the 'employee' table
+    """
     resource_uri = 'employee'
     field_validators = {
         'id': 'notnull',
