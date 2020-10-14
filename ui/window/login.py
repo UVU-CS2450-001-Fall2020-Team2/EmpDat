@@ -1,14 +1,23 @@
+"""
+Login GUI Window implemented with Tkinter w/ built-in tester
+"""
 import tkinter as tk
 
-class Login:
-    def __init__(self,gui):
+from ui.window import View
+
+
+class LoginWindow(View):
+    """
+    Login GUI Window
+    """
+
+    def __init__(self, tk_root, event_handlers):
         """Have a title, username, password, and submit button"""
-        """Submit button will call submit method to login"""
-        self.gui = gui
-        self.gui.title = "Login Page"    
+        super().__init__(tk_root, event_handlers)
+        self.title = "Login Page"
         self.greeting = tk.Label(text="Login")
         self.greeting.pack()
-        #pack method organizes the item on the GUI
+        # pack method organizes the item on the GUI
 
         self.username = tk.Label(text="Username")
         self.entry = tk.Entry(bg="orange", width=50)
@@ -21,21 +30,17 @@ class Login:
         self.password_entry.pack()
 
         self.submit_button = tk.Button(
-            gui,
+            tk_root,
             text="Submit",
             width=35,
             height=2,
             fg="orange",
-            #command = self.submit (Call submit method to login user)
+            # command = self.submit (Call submit method to login user)
         )
         self.submit_button.pack()
 
-    def submit(self):
-        """This will login the user"""
-        
 
-root = tk.Tk()
-login_page = Login(root)
-root.mainloop()
-#This method will loop forever, waiting for events from the user, until the user exits the program – 
-#either by closing the window, or by terminating the program with a keyboard interrupt in the console.
+if __name__ == '__main__':
+    root = tk.Tk()
+    login_page = LoginWindow(root, {})
+    root.mainloop()
