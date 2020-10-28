@@ -82,17 +82,17 @@ class DatabaseRepository(Repository, HasValidation):
         return model
 
     @classmethod
-    def read(cls, model_id, id_col='id'):
+    def read(cls, model_id, id_attr='id'):
         """
         Performs a SELECT * WHERE id = model_id given
 
-        :param model_id:
-        :param id_col: ID identifier. (is it called 'id' or 'mymodel_id'?)
+        :param model_id: ID of model
+        :param id_attr: Optional. Name of ID attribute (default is 'id'). Matches to column
         :return: model
         """
         connection = cls._open_connection()
         table = cls.table(DatabaseRepository.metadata)
-        statement = select([table]).where(table.c[id_col] == model_id)
+        statement = select([table]).where(table.c[id_attr] == model_id)
         result = connection.execute(statement)
 
         # Converts the result proxy into a dictionary and an array of values only
@@ -112,7 +112,7 @@ class DatabaseRepository(Repository, HasValidation):
         else:
             model = None
 
-        cls.after_read(model, id_col)
+        cls.after_read(model, id_attr)
 
         return model
 
@@ -179,33 +179,33 @@ class DatabaseRepository(Repository, HasValidation):
         return models
 
     @classmethod
-    def update(cls, model, id_col='id'):
+    def update(cls, model, id_attr='id'):
         """
         Performs an UPDATE <values> WHERE id = model_id query
 
         :param model: instance
-        :param id_col: ID identifier. (is it called 'id' or 'mymodel_id'?)
+        :param id_attr: Optional. Name of ID attribute (default is 'id'). Matches to column
         :return: model instance
         """
         connection = cls._open_connection()
         table = cls.table(DatabaseRepository.metadata)
-        statement = table.update().where(table.c[id_col] == model.id).values(**model.to_dict())
+        statement = table.update().where(table.c[id_attr] == model.id).values(**model.to_dict())
         connection.execute(statement)
         connection.close()
         return model
 
     @classmethod
-    def destroy(cls, model_id, id_col='id'):
+    def destroy(cls, model_id, id_attr='id'):
         """
         Performs a DELETE WHERE id = model_id query
 
         :param model_id: id only
-        :param id_col: ID identifier. (is it called 'id' or 'mymodel_id'?)
+        :param id_attr: Optional. Name of ID attribute (default is 'id'). Matches to column
         :return: None
         """
         connection = cls._open_connection()
         table = cls.table(DatabaseRepository.metadata)
-        statement = table.delete().where(table.c[id_col] == model_id)
+        statement = table.delete().where(table.c[id_attr] == model_id)
         connection.execute(statement)
         connection.close()
 

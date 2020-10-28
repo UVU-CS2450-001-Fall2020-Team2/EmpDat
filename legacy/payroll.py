@@ -1,3 +1,4 @@
+#  pylint: skip-file
 """I declare that the following source code was written solely by me.
 I understand that copying any source code, in whole or in part,
 constitutes cheating, and that I will receive a zero on this project

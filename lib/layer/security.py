@@ -1,7 +1,10 @@
+"""
+Roles and Security Layer
+"""
 from lib.layer import Layer
 
 CAN_CREATE = 'can_create'  # falsy. Base rule is to reject
-CANT_READ = 'cant_read'  # truthy. Base rule is to allow (hence the 'cant'). This deletes fields as it comes out
+CANT_READ = 'cant_read'  # truthy. Base rule is to allow. Deletes fields during read
 CAN_UPDATE = 'can_update'  # falsy. Base rule is to reject
 CAN_DELETE = 'can_delete'  # falsy. Base rule is to reject
 CAN_APPROVE = 'can_approve'  # falsy. Base rule is to reject
@@ -56,10 +59,12 @@ class SecurityException(Exception):
     """
     Thrown when some security policy is violated
     """
-    pass
 
 
 class SecurityLayer(Layer):
+    """
+    Enforces role-based policies as outlined in ROLES
+    """
 
     def __init__(self, user_role_name):
         super().__init__()
@@ -87,14 +92,15 @@ class SecurityLayer(Layer):
                     delattr(model, field)
 
     def on_read_many(self, repo_cls, models):
-        raise NotImplementedError('lib.repository._call_middlewares currently calls on_read_one for every model read')
+        raise NotImplementedError('lib.repository._call_middlewares currently '
+                                  'calls on_read_one for every model read')
 
-    def on_update(self, repo_cls, new_model, id_col='id'):
-        old_model = repo_cls.read(getattr(new_model, id_col), id_col=id_col)
+    def on_update(self, repo_cls, updated_model, id_attr='id'):
+        old_model = repo_cls.read(getattr(updated_model, id_attr), id_attr=id_attr)
 
         # TODO do difference, check if it follows role policy
 
-    def on_destroy(self, repo_cls, model_id, id_col='id'):
+    def on_destroy(self, repo_cls, model_id, id_attr='id'):
         model_name = self._get_model_name_from_repo_cls(repo_cls)
         if model_name not in self.user_role['can_destory']:
             raise SecurityException(f'Destroying {model_name} records is not allowed')
