@@ -6,9 +6,9 @@ from abc import abstractmethod
 layers = []
 
 
-def _call_middlewares(action, repo_cls, model_id=None, new_model=None, id_attr='id'):  # pylint: disable=too-many-branches
+def _call_layers(action, repo_cls, model_id=None, new_model=None, id_attr='id'):  # pylint: disable=too-many-branches
     """
-    Utility method to call all middlewares
+    Utility method to call all layers
 
     Pylint: too-many-branches disabled because a dictionary dispatch system would not work here.
     :param action: str. Identifies what layer action to take
@@ -22,25 +22,25 @@ def _call_middlewares(action, repo_cls, model_id=None, new_model=None, id_attr='
         raise ValueError('Either model_id or new_model needs to be specified!')
 
     if action == 'create':
-        for middleware in layers:
-            middleware.on_create(repo_cls, new_model)
+        for layer in layers:
+            layer.on_create(repo_cls, new_model)
         return
     if action == 'read_one':
-        for middleware in layers:
-            middleware.on_read_one(repo_cls, new_model)
+        for layer in layers:
+            layer.on_read_one(repo_cls, new_model)
         return
     if action == 'read_many':
         for model in new_model:
-            for middleware in layers:
-                middleware.on_read_one(repo_cls, model)
+            for layer in layers:
+                layer.on_read_one(repo_cls, model)
         return
     if action == 'update':
-        for middleware in layers:
-            middleware.on_update(repo_cls, new_model, id_attr=id_attr)
+        for layer in layers:
+            layer.on_update(repo_cls, new_model, id_attr=id_attr)
         return
     if action == 'destroy':
-        for middleware in layers:
-            middleware.on_destroy(repo_cls, model_id, id_attr=id_attr)
+        for layer in layers:
+            layer.on_destroy(repo_cls, model_id, id_attr=id_attr)
     else:
         raise ValueError('Invalid action specified')
 
@@ -86,7 +86,7 @@ class Repository(CanMutateData):
         :param model: instance with data
         :return: model
         """
-        _call_middlewares('create', cls, new_model=model)
+        _call_layers('create', cls, new_model=model)
 
     @classmethod
     @abstractmethod
@@ -126,7 +126,7 @@ class Repository(CanMutateData):
         :param id_attr: Optional. Name of ID attribute (default is 'id')
         :return: model
         """
-        _call_middlewares('update', cls, new_model=model, id_attr=id_attr)
+        _call_layers('update', cls, new_model=model, id_attr=id_attr)
 
     @classmethod
     @abstractmethod
@@ -137,15 +137,15 @@ class Repository(CanMutateData):
         :param id_attr: Optional. Name of ID attribute (default is 'id')
         :return: None
         """
-        _call_middlewares('destroy', cls, model_id=model_id, id_attr=id_attr)
+        _call_layers('destroy', cls, model_id=model_id, id_attr=id_attr)
 
     @classmethod
     def after_read(cls, model_read, id_attr='id'):
-        _call_middlewares('read_one', cls, new_model=model_read, id_attr=id_attr)
+        _call_layers('read_one', cls, new_model=model_read, id_attr=id_attr)
 
     @classmethod
     def after_read_many(cls, models_read, id_attr='id'):
-        _call_middlewares('read_many', cls, new_model=models_read)
+        _call_layers('read_many', cls, new_model=models_read)
 
     @property
     @classmethod
