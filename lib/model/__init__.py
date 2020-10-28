@@ -21,6 +21,15 @@ class DynamicModel:
     This Model attribute will allow fields to be completely dynamic
     """
 
+    """
+    Properties that become directly part of the object
+    rather than part of the 'data' dict.
+    Can be overridden.
+    """
+    reserved_keywords = [
+        'data'
+    ]
+
     def __init__(self, data: dict):
         """
         Sets dynamic data and casts fields as specified
@@ -56,6 +65,12 @@ class DynamicModel:
             return
         self.data[key] = value
 
+    def __delattr__(self, key):
+        if key in self.reserved_keywords:
+            super().__delattr__(key)
+            return
+        del self.data[key]
+
     @property
     @classmethod
     @abstractmethod
@@ -72,18 +87,6 @@ class DynamicModel:
         }
         """
         raise NotImplementedError
-
-    @property
-    @classmethod
-    def reserved_keywords(cls) -> list:
-        """
-        Properties that become directly part of the object
-        rather than part of the 'data' dict.
-        Can be overridden.
-        """
-        return [
-            'data'
-        ]
 
 
 class HasRelationships:
