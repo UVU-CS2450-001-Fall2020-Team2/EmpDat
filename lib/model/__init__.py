@@ -25,7 +25,7 @@ class DynamicModel:
     Properties that become directly part of the object
     rather than part of the 'data' dict.
     Can be overridden.
-    """
+    """  # pylint: disable=pointless-string-statement
     reserved_keywords = [
         'data'
     ]
