@@ -3,7 +3,7 @@ Employee Data Model
 """
 import datetime
 
-from sqlalchemy import MetaData, Table, Column, String
+from sqlalchemy import MetaData, Table, Column, String, Float
 
 from lib.model import DynamicModel, HasRelationships, register_database_model
 from lib.repository.db import DatabaseRepository
@@ -45,6 +45,9 @@ class Employee(DatabaseRepository, DynamicModel, HasRelationships):
         return Table(cls.resource_uri, metadata,
                      Column('id', String(36), primary_key=True),
                      Column('last_name', String(36)),
+                     Column('first_name', String(36)),
+                     Column('first_name', Float),
+                     Column('first_name', String(36)),
                      Column('first_name', String(36)),
                      extend_existing=True
                      )
