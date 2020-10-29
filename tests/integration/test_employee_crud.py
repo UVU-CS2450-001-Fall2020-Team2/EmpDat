@@ -1,5 +1,6 @@
 import os
 
+from lib.layer.security import SecurityLayer
 from lib.model.employee import Employee
 from lib.repository.db import database_setup
 
@@ -7,6 +8,7 @@ if __name__ == '__main__':
     database_setup({
         'DB_URL': 'sqlite+pysqlite:///empdat.db'
     })
+    security_layer = SecurityLayer('Viewer')
 
     data = {
         'id': 'XYZ',
@@ -14,10 +16,11 @@ if __name__ == '__main__':
     }
     mymodel = Employee(data)
     # print(mymodel.data)
+
     mymodel.first_name = 'john'
     # print(mymodel.to_dict())
 
-    Employee.create(mymodel)
+    saved = Employee.create(mymodel)
     # Employee.destroy('XYZ')
 
     test = Employee.read('XYZ')
