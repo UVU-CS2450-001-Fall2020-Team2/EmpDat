@@ -4,6 +4,7 @@ Database Repository with helper methods for setup
 from abc import abstractmethod
 
 from sqlalchemy import create_engine, MetaData, select, Table
+from sqlalchemy.engine import Engine
 
 from lib.model import database_models
 from lib.repository import Repository
@@ -16,16 +17,13 @@ def database_setup(config):
     :param config: dict
     :return: None
     """
-    engine = create_engine(config['DB_URL'], echo=False)
-    metadata = MetaData(engine)
-
-    DatabaseRepository.engine = engine
+    DatabaseRepository.engine = create_engine(config['DB_URL'], echo=False)
     DatabaseRepository.url = config['DB_URL']
-    DatabaseRepository.metadata = metadata
+    DatabaseRepository.metadata = MetaData(DatabaseRepository.engine)
 
     for model in database_models:
-        model.table(metadata=metadata)
-    metadata.create_all()
+        model.table(metadata=DatabaseRepository.metadata)
+    DatabaseRepository.metadata.create_all()
 
 
 class DatabaseRepository(Repository, HasValidation):
@@ -34,6 +32,7 @@ class DatabaseRepository(Repository, HasValidation):
     """
     url: str
     metadata: MetaData
+    engine: Engine
 
     def __init__(self):
         Repository.__init__(self)
@@ -98,19 +97,21 @@ class DatabaseRepository(Repository, HasValidation):
         # Converts the result proxy into a dictionary and an array of values only
         # data, values = {}, []
         data = {}
+        rowcount = 0
         for rowproxy in result:
             # rowproxy.items() returns an array like [(key0, value0), (key1, value1)]
             for column, value in rowproxy.items():
                 # build up the dictionary
                 data = {**data, **{column: value}}
             # values.append(data)
+            rowcount += 1
 
-        connection.close()
-
-        if result is not None:
+        if rowcount > 0:
             model = cls(data)  # pylint: disable=too-many-function-args
         else:
             model = None
+
+        connection.close()
 
         cls.after_read(model, id_attr)
 
@@ -164,7 +165,8 @@ class DatabaseRepository(Repository, HasValidation):
         :return: all rows
         """
         connection = cls._open_connection()
-        statement = select([cls.table(DatabaseRepository.metadata)])
+        table = cls.table(DatabaseRepository.metadata)
+        statement = select([table])
         result = connection.execute(statement)
         model_dicts = result.fetchall() if result is not None else None
         connection.close()
@@ -173,6 +175,8 @@ class DatabaseRepository(Repository, HasValidation):
         if model_dicts is not None:
             for raw in model_dicts:
                 models.append(cls(raw))  # pylint: disable=too-many-function-args
+
+        print(models)
 
         cls.after_read_many(models_read=models)
 
