@@ -4,6 +4,7 @@ Main entry into the application
 
 import tkinter as tk
 
+import ui
 from lib import *
 from lib.model.employee import Employee
 from lib.repository.db import database_setup
@@ -12,10 +13,10 @@ from ui.control.login import LoginController
 
 
 def boostrap_ui():
-    TK_ROOT = tk.Tk()
-    TK_ROOT.title('EmpDat')
+    ui.store.TK_ROOT = tk.Tk()
+    ui.store.TK_ROOT.title('EmpDat')
     login_page = LoginController()
-    TK_ROOT.mainloop()
+    ui.store.TK_ROOT.mainloop()
 
 
 def cli():
@@ -34,9 +35,9 @@ def root_account_install():
 
 
 if __name__ == '__main__':
-    cli()
     database_setup({
         'DB_URL': DB_URL
     })
     root_account_install()
+    cli()
     boostrap_ui()

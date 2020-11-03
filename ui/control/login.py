@@ -1,5 +1,7 @@
+import ui
 from lib.model.employee import Employee
 from ui.control import Controller
+from ui.control.database import DatabaseController
 from ui.store import TK_ROOT
 from ui.window.login import LoginWindow
 
@@ -12,5 +14,11 @@ class LoginController(Controller):
         }))
 
     def login(self, username, password):
-        if Employee.authenticate(username, password) is not None:
-            print('success!!')
+        authenticated = Employee.authenticate(username, password)
+        if authenticated is not None:
+            ui.store.AUTHENTICATED_USER = authenticated
+            print("Logged in as user ID", authenticated.id)
+            # TODO send to main database page
+            ui.open_window(DatabaseController)
+        else:
+            self.view.show_error(title='Error', message='Credentials incorrect!')
