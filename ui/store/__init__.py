@@ -1,0 +1,2 @@
+TK_ROOT = None
+AUTHENTICATED_USER = None
