@@ -7,11 +7,11 @@ from ui.window import View
 class DatabaseWindow(View):
     def __init__(self, tk_root, event_handlers):
         super().__init__(tk_root, event_handlers)
+        database = self.master
 
         # This creates a tkinter variable needed for the dropdown list
         self.tkvar = StringVar(database)
 
-        self.database = self.master
         self.emp_dat = Label(database, text="Employee Database", font=(None, 30), anchor="center")
         self.search_label = Label(database, text="Search:")
         self.id = Label(database, text="ID")
@@ -43,7 +43,7 @@ class DatabaseWindow(View):
         # used grid method to arrange rows and columns
         # choices for filter dropdown
         choices = ('Filter', 'None', 'Pay', 'Department', 'Job Title', 'Last Name')
-        self.dropdown = OptionMenu(database, self.tkvar, *choices)
+        self.dropdown = OptionMenu(self.master, self.tkvar, *choices)
         # Note: To find out which choice is currently selected in an OptionMenu widget,
         # the .get() method on the associated control variable will return that choice as a string.
         self.current_user.grid(row=0, column=7, sticky=NSEW, padx=5, pady=10)
