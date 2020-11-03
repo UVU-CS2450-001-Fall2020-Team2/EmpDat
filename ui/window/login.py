@@ -14,7 +14,7 @@ class LoginWindow(View):
     def __init__(self, tk_root, event_handlers):
         """Have a title, username, password, and submit button"""
         super().__init__(tk_root, event_handlers)
-        self.title = "Login Page"
+        self.title("Login Page")
         self.greeting = tk.Label(text="Login")
         self.greeting.pack()
         # pack method organizes the item on the GUI
@@ -25,7 +25,7 @@ class LoginWindow(View):
         self.entry.pack()
 
         self.password = tk.Label(text="Password")
-        self.password_entry = tk.Entry(bg="orange", width=50)
+        self.password_entry = tk.Entry(bg="orange", width=50, show="•")
         self.password.pack()
         self.password_entry.pack()
 
@@ -35,7 +35,7 @@ class LoginWindow(View):
             width=35,
             height=2,
             fg="orange",
-            # command = self.submit (Call submit method to login user)
+            command=lambda: event_handlers['submit'](self.entry.get(), self.password_entry.get())
         )
         self.submit_button.pack()
 
