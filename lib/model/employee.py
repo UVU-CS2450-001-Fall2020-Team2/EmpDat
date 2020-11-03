@@ -3,10 +3,11 @@ Employee Data Model
 """
 import datetime
 
-from sqlalchemy import MetaData, Table, Column, String, Float
+from sqlalchemy import MetaData, Table, Column, String
 
 from lib.model import DynamicModel, HasRelationships, register_database_model
 from lib.repository.db import DatabaseRepository
+from lib.utils import sha_hash
 
 
 @register_database_model
@@ -19,8 +20,8 @@ class Employee(DatabaseRepository, DynamicModel, HasRelationships):
         'id': 'notnull',
         'last_name': 'alpha',
         'first_name': 'alpha',
-        'phone_number': 'phone',
-        'emergency_contact_phone': 'phone'
+        # 'phone_number': 'phone',
+        # 'emergency_contact_phone': 'phone'
     }
     field_casts = {
         'start_date': lambda d: datetime.date.fromtimestamp(d),  # pylint: disable=unnecessary-lambda
@@ -41,13 +42,26 @@ class Employee(DatabaseRepository, DynamicModel, HasRelationships):
         return []
 
     @classmethod
+    def authenticate(cls, username, password):
+        employees = Employee.read_by(filters={
+            'id': username
+        })
+
+        if len(employees) < 1:
+            return None
+
+        employee = employees[0]
+
+        if sha_hash(password) == employee.password:
+            return employee
+        return None
+
+    @classmethod
     def table(cls, metadata=MetaData()):
         return Table(cls.resource_uri, metadata,
                      Column('id', String(36), primary_key=True),
                      Column('last_name', String(36)),
                      Column('first_name', String(36)),
-                     Column('first_name', Float),
-                     Column('first_name', String(36)),
-                     Column('first_name', String(36)),
+                     Column('password', String(255)),
                      extend_existing=True
                      )

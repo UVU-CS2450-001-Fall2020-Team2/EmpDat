@@ -37,7 +37,9 @@ class DatabaseWindow(View):
                              # ,command = self.logout (Call submit method to login user
                              )
 
-    def setupGrid(self):
+        self.setup_grid()
+
+    def setup_grid(self):
         # used grid method to arrange rows and columns
         # choices for filter dropdown
         choices = ('Filter', 'None', 'Pay', 'Department', 'Job Title', 'Last Name')
@@ -74,7 +76,7 @@ if __name__ == "__main__":
     database = Tk()
     database.title("EmpDat")
     login_page = DatabaseWindow(database, {})
-    login_page.setupGrid()
+    login_page.setup_grid()
     database.mainloop()
 
 # mainloop method will loop forever, waiting for events from the user, until the user exits the program –
