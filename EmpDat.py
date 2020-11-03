@@ -8,5 +8,6 @@ from ui.control.login import LoginController
 
 if __name__ == '__main__':
     TK_ROOT = tk.Tk()
+    TK_ROOT.title('EmpDat')
     login_page = LoginController()
     TK_ROOT.mainloop()
