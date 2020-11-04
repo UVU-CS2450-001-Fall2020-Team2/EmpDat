@@ -1,27 +1,18 @@
 """
 Main entry into the application
 """
+import datetime
 
-import tkinter as tk
-
-import ui
 from lib import *
+from lib.cli import dispatch_cmd
 from lib.model.employee import Employee
 from lib.repository.db import database_setup
 from lib.utils import sha_hash
 from ui.control.login import LoginController
 
 
-def boostrap_ui():
-    ui.store.TK_ROOT = tk.Tk()
-    ui.store.TK_ROOT.title('EmpDat')
-    login_page = LoginController()
-    ui.store.TK_ROOT.mainloop()
-
-
-def cli():
-    # TODO check for sys.argv, run command if given
-    pass
+def bootstrap_ui():
+    LoginController().show()
 
 
 def root_account_install():
@@ -30,14 +21,26 @@ def root_account_install():
             'id': 'root',
             'password': sha_hash(ROOT_DEFAULT_PASS),
             'last_name': 'Admin',
-            'first_name': 'Root'
+            'first_name': 'Root',
+            'user_group_id': 0,
+            'start_date': datetime.date.today(),
+            'date_of_birth': datetime.date.today(),
+            'sex': -1,
+            'address_line1': 'INVALID',
+            'city': 'INVALID',
+            'state': 'INVALID',
+            'zipcode': '000',
+            'classification_id': 0,
+            'created_at': datetime.datetime.now(),
+            'modified_at': datetime.datetime.now(),
+            'date_left': datetime.date.today(),
+            'notes': ''
         }))
-
 
 if __name__ == '__main__':
     database_setup({
         'DB_URL': DB_URL
     })
     root_account_install()
-    cli()
-    boostrap_ui()
+    if not dispatch_cmd():
+        bootstrap_ui()

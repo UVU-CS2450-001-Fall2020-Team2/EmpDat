@@ -118,7 +118,7 @@ def _alpha(value: str):
     :param value:
     :return: if string is alphabetic
     """
-    return _generic_regex([r'^[A-Za-z]+$'], value)
+    return _generic_regex([r'^[A-Za-z\.\s]+$'], value)
 
 
 def _notnull(value):
