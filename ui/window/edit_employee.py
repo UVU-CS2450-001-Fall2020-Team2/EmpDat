@@ -1,7 +1,7 @@
 from tkinter import *
 from tkinter.ttk import *
 
-from ui.window import View
+from ui.window import TkinterWindow
 
 
 # To Do:
@@ -10,9 +10,10 @@ from ui.window import View
 # Make submit button bigger? THIS IS THE PRIORITY CURRENTLY
 
 
-class EditEmployeeWindow(View):
-    def __init__(self, tk_root, event_handlers):
-        super().__init__(tk_root, event_handlers)
+class EditEmployeeWindow(TkinterWindow):
+    def __init__(self, event_handlers):
+        super().__init__(event_handlers)
+        self.master.title("EmpDat")
 
         self.edit_pg = self.master
 
@@ -101,10 +102,7 @@ class EditEmployeeWindow(View):
 
 
 if __name__ == "__main__":
-    edit_pg = Tk()
-    edit_pg.title("EmpDat")
-    login_page = EditEmployeeWindow(edit_pg, {})
-    login_page.setup_grid()
+    edit_pg = EditEmployeeWindow({})
     edit_pg.mainloop()
 
 # mainloop method will loop forever, waiting for events from the user, until the user exits the program –

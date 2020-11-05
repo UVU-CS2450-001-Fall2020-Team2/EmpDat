@@ -1,13 +1,15 @@
+import tkinter as tk
 from tkinter import *
 from tkinter.ttk import *
 
-from ui.window import View
+from ui.window import *
 
 
-class DatabaseWindow(View):
-    def __init__(self, tk_root, event_handlers):
-        super().__init__(tk_root, event_handlers)
+class DatabaseWindow(TkinterFrame):
+    def __init__(self, event_handlers):
+        super().__init__(tk.Tk(), event_handlers)
         database = self.master
+        self.master.title('EmpDat')
 
         # This creates a tkinter variable needed for the dropdown list
         self.tkvar = StringVar(database)
@@ -36,8 +38,6 @@ class DatabaseWindow(View):
         self.logout = Button(database, text="Logout"
                              # ,command = self.logout (Call submit method to login user
                              )
-
-        self.setup_grid()
 
     def setup_grid(self):
         # used grid method to arrange rows and columns
@@ -73,11 +73,9 @@ class DatabaseWindow(View):
 
 
 if __name__ == "__main__":
-    database = Tk()
-    database.title("EmpDat")
-    login_page = DatabaseWindow(database, {})
-    login_page.setup_grid()
-    database.mainloop()
+    db_page = DatabaseWindow({})
+    db_page.setup_grid()
+    db_page.mainloop()
 
 # mainloop method will loop forever, waiting for events from the user, until the user exits the program –
 # either by closing the window, or by terminating the program with a keyboard interrupt in the console.

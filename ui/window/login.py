@@ -3,17 +3,18 @@ Login GUI Window implemented with Tkinter w/ built-in tester
 """
 import tkinter as tk
 
-from ui.window import View
+from ui.window import *
 
 
-class LoginWindow(View):
+class LoginWindow(TkinterFrame):
     """
     Login GUI Window
     """
 
-    def __init__(self, tk_root, event_handlers):
+    def __init__(self, event_handlers):
         """Have a username, password, and submit button"""
-        super().__init__(tk_root, event_handlers)
+        super().__init__(tk.Tk(), event_handlers)
+
         self.master.title("EmpDat Login")
 
         self.username = tk.Label(text="Username")
@@ -38,8 +39,7 @@ class LoginWindow(View):
 
 
 if __name__ == '__main__':
-    root = tk.Tk()
-    login_page = LoginWindow(root, {
+    login_page = LoginWindow({
         'submit': lambda x, y: print('submitted! received:', x, y)
     })
-    root.mainloop()
+    login_page.mainloop()

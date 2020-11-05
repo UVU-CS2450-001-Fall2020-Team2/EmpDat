@@ -1,23 +1,10 @@
 """
 Generic Window base classes
 """
-from tkinter import Toplevel, messagebox
+from tkinter import messagebox, Toplevel
 
 
-class View(Toplevel):
-    """
-    Easily creates windows and exposes event handlers for controllers
-    """
-
-    def __init__(self, tk_root, event_handlers):
-        """
-
-        :param tk_root: Root Tkinter instance
-        :param event_handlers:
-        """
-        super().__init__(master=tk_root)
-
-        self.event_handlers = event_handlers
+class UsesDialog:
 
     def show_error(self, title, message, **options):
         """
@@ -51,3 +38,37 @@ class View(Toplevel):
         :return: None
         """
         messagebox.showwarning(title=title, message=message, **options)
+
+
+class TkinterFrame(UsesDialog):
+    """
+    Easily creates windows and exposes event handlers for controllers
+    """
+
+    def __init__(self, master, event_handlers):
+        """
+        :param event_handlers:
+        """
+        self.master = master
+
+        self.event_handlers = event_handlers
+
+    def mainloop(self):
+        self.master.mainloop()
+
+    def destroy(self):
+        self.master.destroy()
+
+
+class TkinterWindow(Toplevel, UsesDialog):
+    """
+    Easily creates windows and exposes event handlers for controllers
+    """
+
+    def __init__(self, event_handlers):
+        """
+        :param event_handlers:
+        """
+        super().__init__()
+
+        self.event_handlers = event_handlers
