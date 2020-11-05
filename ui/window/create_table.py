@@ -24,10 +24,25 @@ class CreateTable:
                     e = Label(root, width=10, text=emp_list[i][j], font=('Arial', 17,))
                     e.grid(row=i, column=j)
                 else:
-                    e = Button(root, text="Edit", image=self.edit, command=lambda: self.destroy_row(i))
+                    e = Button(root, text="Edit", image=self.edit, command=lambda: self.add_to_list(
+                        (12345, 'John Wacky', '4435 South Happy Way', 'SLC', 'UT', 84044, 'Salary', 1)
+                    ))
                     e.grid(row=i, column=j)
                 row.append(e)
             self.data.append(row)
+
+    def add_to_list(self, to_add):
+        i = len(self.data) + 1
+        row = []
+        for j in range(self.TOTAL_COLUMNS):
+            if j < self.TOTAL_COLUMNS - 2:
+                e = Label(root, width=10, text=to_add[j], font=('Arial', 17,))
+                e.grid(row=i, column=j)
+            else:
+                e = Button(root, text="Edit", image=self.edit, command=lambda: self.destroy_row(i))  # the 'i' preprogrammed here will shift whenever a row is deleted above it
+                e.grid(row=i, column=j)
+            row.append(e)
+        self.data.append(row)
 
     def destroy_list(self):
         for i in self.data:
