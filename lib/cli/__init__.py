@@ -11,8 +11,9 @@ COMMANDS = {
 
 
 def dispatch_cmd():
-    print(sys.argv)
     args = sys.argv
+    if len(args) < 2:
+        return False
     cmd = args[1]
 
     if cmd not in COMMANDS:
