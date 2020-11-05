@@ -6,14 +6,14 @@ import tkinter as tk
 from ui.window import *
 
 
-class LoginWindow(TkinterFrame):
+class LoginWindow(TkinterWindow):
     """
     Login GUI Window
     """
 
     def __init__(self, event_handlers):
         """Have a username, password, and submit button"""
-        super().__init__(tk.Tk(), event_handlers)
+        super().__init__(event_handlers)
 
         self.master.title("EmpDat Login")
 
