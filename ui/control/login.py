@@ -1,5 +1,5 @@
-import ui
 from lib.model.employee import Employee
+from ui import store
 from ui.control import Controller
 from ui.control.database import DatabaseController
 from ui.window.login import LoginWindow
@@ -15,7 +15,7 @@ class LoginController(Controller):
     def login(self, username, password):
         authenticated = Employee.authenticate(username, password)
         if authenticated is not None:
-            ui.store.AUTHENTICATED_USER = authenticated
+            store.AUTHENTICATED_USER = authenticated
             print("Logged in as user ID", authenticated.id)
             # TODO send to main database page
             self.view.destroy()
