@@ -2,8 +2,8 @@ from ui.window.edit_employee import *
 
 
 class NewEmployeeWindow(EditEmployeeWindow):
-    def __init__(self, tk_root, event_handlers):
-        super().__init__(tk_root, event_handlers)
+    def __init__(self, event_handlers):
+        super().__init__(event_handlers)
 
         self.new_pg = self.master
 

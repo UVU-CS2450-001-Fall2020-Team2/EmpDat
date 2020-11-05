@@ -1,6 +1,7 @@
 """
 Generic Window base classes
 """
+import tkinter
 from tkinter import messagebox, Toplevel
 
 
@@ -40,16 +41,16 @@ class UsesDialog:
         messagebox.showwarning(title=title, message=message, **options)
 
 
-class TkinterFrame(UsesDialog):
+class TkinterWindow(UsesDialog):
     """
     Easily creates windows and exposes event handlers for controllers
     """
 
-    def __init__(self, master, event_handlers):
+    def __init__(self, event_handlers):
         """
         :param event_handlers:
         """
-        self.master = master
+        self.master = tkinter.Tk()
 
         self.event_handlers = event_handlers
 
@@ -60,7 +61,7 @@ class TkinterFrame(UsesDialog):
         self.master.destroy()
 
 
-class TkinterWindow(Toplevel, UsesDialog):
+class TkinterFrame(Toplevel, UsesDialog):
     """
     Easily creates windows and exposes event handlers for controllers
     """

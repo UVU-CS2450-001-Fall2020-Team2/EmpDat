@@ -1,13 +1,12 @@
-import tkinter as tk
 from tkinter import *
 from tkinter.ttk import *
 
 from ui.window import *
 
 
-class DatabaseWindow(TkinterFrame):
+class DatabaseWindow(TkinterWindow):
     def __init__(self, event_handlers):
-        super().__init__(tk.Tk(), event_handlers)
+        super().__init__(event_handlers)
         database = self.master
         self.master.title('EmpDat')
 
