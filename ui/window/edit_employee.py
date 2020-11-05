@@ -5,8 +5,6 @@ from ui.window import TkinterWindow
 
 
 # To Do:
-# MAKE FUNCTIONS SO THAT IT IS DRY CODE
-# Thoughts after trying this: not sure this is worth it as it seems to be the same
 # Make submit button bigger? THIS IS THE PRIORITY CURRENTLY
 
 
@@ -24,7 +22,7 @@ class EditEmployeeWindow(TkinterWindow):
         self.tkvar = StringVar(edit_pg)
 
         self.title = Label(edit_pg, text="Edit Employee", font=(None, 30), anchor="center")
-        self.general_info = Label(edit_pg, text="General Information", font=(None, 17))
+        self.general_info = Label(edit_pg, text="General Information", font=('Arial', 17))
         self.id = Label(edit_pg, text="ID", anchor="center")
         self.first_name_label = Label(edit_pg, text="First Name", anchor="center")
         self.last_name_label = Label(edit_pg, text="Last Name", anchor="center")
@@ -32,7 +30,7 @@ class EditEmployeeWindow(TkinterWindow):
         self.city = Label(edit_pg, text="City", anchor="center")
         self.state = Label(edit_pg, text="State", anchor="center")
         self.zip = Label(edit_pg, text="Zip", anchor="center")
-        self.employment_info = Label(edit_pg, text="Employment Information", font=(None, 17))
+        self.employment_info = Label(edit_pg, text="Employment Information", font=('Arial', 17))
         self.classification = Label(edit_pg, text="Classification", anchor="center")
         self.pay_method = Label(edit_pg, text="Pay Method", anchor="center")
         self.salary = Label(edit_pg, text="Salary", anchor="center")

@@ -13,7 +13,7 @@ class DatabaseWindow(TkinterWindow):
         # This creates a tkinter variable needed for the dropdown list
         self.tkvar = StringVar(database)
 
-        self.emp_dat = Label(database, text="Employee Database", font=(None, 30), anchor="center")
+        self.emp_dat = Label(database, text="Employee Database", font=('Arial', 30), anchor="center")
         self.search_label = Label(database, text="Search:")
         self.id = Label(database, text="ID")
         self.name = Label(database, text="Name")
@@ -23,7 +23,7 @@ class DatabaseWindow(TkinterWindow):
         self.zip = Label(database, text="Zip")
         self.classification = Label(database, text="Classification")
         self.pay_method = Label(database, text="Pay Method")
-        self.current_user = Label(database, text="Current User", font=(None, 15), anchor="center")
+        self.current_user = Label(database, text="Current User", font=('Arial', 15), anchor="center")
 
         # Create place to enter search query
         self.search_entry = Entry(database)
