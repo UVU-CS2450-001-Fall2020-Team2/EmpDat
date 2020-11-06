@@ -14,7 +14,7 @@ class NewEmployeeWindow(EditEmployeeWindow):
         self.tkvar = StringVar(new_pg)
 
         self.title = Label(new_pg, text="New Employee", font=(None, 30), anchor="center")
-        self.general_info = Label(new_pg, text="General Information", font=(None, 17))
+        self.general_info = Label(new_pg, text="General Information", font=('Arial', 17))
         self.id = Label(new_pg, text="ID")
         self.first_name_label = Label(new_pg, text="First Name", anchor="center")
         self.last_name_label = Label(new_pg, text="Last Name", anchor="center")
@@ -22,7 +22,7 @@ class NewEmployeeWindow(EditEmployeeWindow):
         self.city = Label(new_pg, text="City", anchor="center")
         self.state = Label(new_pg, text="State", anchor="center")
         self.zip = Label(new_pg, text="Zip", anchor="center")
-        self.employment_info = Label(new_pg, text="Employment Information", font=(None, 17))
+        self.employment_info = Label(new_pg, text="Employment Information", font=('Arial', 17))
         self.classification = Label(new_pg, text="Classification", anchor="center")
         self.pay_method = Label(new_pg, text="Pay Method", anchor="center")
         self.salary = Label(new_pg, text="Salary", anchor="center")
