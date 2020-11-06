@@ -8,7 +8,8 @@ class CreateTable:
         self.TOTAL_COLUMNS = 10
         # get number of rows we need
         # self.total_rows = len(self.emp_list)
-        self.edit = PhotoImage(file="edit.png")
+        self.edit = PhotoImage(file="ui/icons/pencil.gif")
+        self.delete = PhotoImage(file="ui/icons/trash.gif")
         # Creating a photoimage object to use image
         self.data = []
 
@@ -23,8 +24,13 @@ class CreateTable:
                 if j < self.TOTAL_COLUMNS - 2:
                     e = Label(root, width=10, text=emp_list[i][j], font=('Arial', 17,))
                     e.grid(row=i, column=j)
-                else:
+                elif j == 8:
                     e = Button(root, text="Edit", image=self.edit, command=lambda: self.add_to_list(
+                        (12345, 'John Wacky', '4435 South Happy Way', 'SLC', 'UT', 84044, 'Salary', 1)
+                    ))
+                    e.grid(row=i, column=j)
+                else:
+                    e = Button(root, text="Delete", image=self.delete, command=lambda: self.add_to_list(
                         (12345, 'John Wacky', '4435 South Happy Way', 'SLC', 'UT', 84044, 'Salary', 1)
                     ))
                     e.grid(row=i, column=j)
