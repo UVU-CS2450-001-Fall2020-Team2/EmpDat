@@ -1,7 +1,83 @@
 from tkinter import *
 from tkinter.ttk import *
 
+from ui import store
 from ui.window import *
+
+COLUMN_CONFIG = {
+    "id": {
+        "header": {
+            'padx': 5,
+            'pady': 2,
+        },
+        "body": {
+            "font": ('Arial', 17,)
+        }
+    },
+    "name": {
+        "header": {
+            'padx': 5,
+            'pady': 2,
+        },
+        "body": {
+            "font": ('Arial', 17,)
+        }
+    },
+    "address": {
+        "header": {
+            'padx': 5,
+            'pady': 2,
+        },
+        "body": {
+            "font": ('Arial', 17,)
+        }
+    },
+    "city": {
+        "header": {
+            'padx': 5,
+            'pady': 2,
+        },
+        "body": {
+            "font": ('Arial', 17,)
+        }
+    },
+    "state": {
+        "header": {
+            'padx': 5,
+            'pady': 2,
+        },
+        "body": {
+            "font": ('Arial', 17,)
+        }
+    },
+    "zip": {
+        "header": {
+            'padx': 5,
+            'pady': 2,
+        },
+        "body": {
+            "font": ('Arial', 17,)
+        }
+    },
+    "classification": {
+        "header": {
+            'padx': 5,
+            'pady': 2,
+        },
+        "body": {
+            "font": ('Arial', 17,)
+        }
+    },
+    "pay_method": {
+        "header": {
+            'padx': 5,
+            'pady': 2,
+        },
+        "body": {
+            "font": ('Arial', 17,)
+        }
+    }
+}
 
 
 class DatabaseWindow(TkinterWindow):
@@ -9,21 +85,30 @@ class DatabaseWindow(TkinterWindow):
         super().__init__(event_handlers)
         database = self.master
         self.master.title('EmpDat')
+        self.master.configure(bg='white')
+
+        self.results = {}
+        self.edit_icon = PhotoImage(file="ui/icons/pencil.gif")
+        self.delete_icon = PhotoImage(file="ui/icons/trash.gif")
 
         # This creates a tkinter variable needed for the dropdown list
         self.tkvar = StringVar(database)
 
-        self.emp_dat = Label(database, text="Employee Database", font=('Arial', 30), anchor="center")
-        self.search_label = Label(database, text="Search:")
-        self.id = Label(database, text="ID")
-        self.name = Label(database, text="Name")
-        self.address = Label(database, text="Address")
-        self.city = Label(database, text="City")
-        self.state = Label(database, text="State")
-        self.zip = Label(database, text="Zip")
-        self.classification = Label(database, text="Classification")
-        self.pay_method = Label(database, text="Pay Method")
-        self.current_user = Label(database, text="Current User", font=('Arial', 15), anchor="center")
+        self.emp_dat = Label(database, text="Employee Database", font=('Arial', 30), anchor="center", background='white')
+        self.search_label = Label(database, text="Search:", background='white')
+
+        self.columns = {
+            "id": Label(database, text="ID", background='white'),
+            "name": Label(database, text="Name", background='white'),
+            "address": Label(database, text="Address", background='white'),
+            "city": Label(database, text="City", background='white'),
+            "state": Label(database, text="State", background='white'),
+            "zip": Label(database, text="Zip", background='white'),
+            "classification": Label(database, text="Classification", background='white'),
+            "pay_method": Label(database, text="Pay Method", background='white'),
+        }
+        test = store.AUTHENTICATED_USER
+        self.current_user = Label(database, text=f"{store.AUTHENTICATED_USER.first_name} {store.AUTHENTICATED_USER.last_name}", font=('Arial', 15), anchor="center")
 
         # Create place to enter search query
         self.search_entry = Entry(database)
@@ -54,21 +139,52 @@ class DatabaseWindow(TkinterWindow):
         self.search_entry.grid(row=2, column=1, sticky=NSEW, columnspan=5, padx=6, pady=10)
         self.dropdown.grid(row=2, column=6, sticky=NSEW, padx=6, pady=10)
         self.new_employee.grid(row=2, column=7, sticky=NSEW, padx=5, pady=10)
-        self.id.grid(row=3, column=0, sticky=NSEW, pady=2, padx=5)
-        self.name.grid(row=3, column=1, sticky=NSEW, pady=2, padx=5)
-        self.address.grid(row=3, column=2, sticky=NSEW, pady=2, padx=5)
-        self.city.grid(row=3, column=3, sticky=NSEW, pady=2, padx=5)
-        self.state.grid(row=3, column=4, sticky=NSEW, pady=2, padx=5)
-        self.zip.grid(row=3, column=5, sticky=NSEW, pady=2, padx=5)
-        self.classification.grid(row=3, column=6, sticky=NSEW, pady=2, padx=5)
-        self.pay_method.grid(row=3, column=7, sticky=NSEW, pady=2, padx=5)
 
-    def add_employee(self):
-        """This is where the code for adding a new employee will go"""
-        # print("Added a new employee")
+        i = 0
+        for key in self.columns:
+            self.columns[key].grid(row=3, column=i, sticky=NSEW, **COLUMN_CONFIG[key]["header"])
+            i += 1
 
-    def submit_logout(self):
-        """This is where the code for logging out will go"""
+    def add_to_result(self, to_add: dict):
+        i = len(self.results) + 4
+        row = []
+
+        can_add = {x: to_add[x] for x in to_add if x in self.columns}
+
+        j = 0
+        for col, value in can_add.items():
+            e = Label(self.master, width=10, text=value, background='white',
+                      **COLUMN_CONFIG[col]["body"])
+            e.grid(row=i, column=j)
+            row.append(e)
+            j += 1
+
+        e = Button(self.master, text="Edit", image=self.edit_icon, command=lambda: self.on_edit(to_add[0]))
+        e.grid(row=i, column=(len(self.columns) + 1))
+        row.append(e)
+        e = Button(self.master, text="Delete", image=self.delete_icon,
+                   command=lambda: self.on_delete(to_add[0]))
+        e.grid(row=i, column=(len(self.columns) + 2))
+        row.append(e)
+
+        self.results[can_add['id']] = row
+
+    def destroy_results(self):
+        for key in self.results:
+            for row in self.results[key]:
+                self.results[key][row].destory()
+        self.results = {}
+
+    def on_edit(self, row_id):
+        pass  # TODO call controller hook
+
+    def on_delete(self, row_id):
+        self.destroy_row(row_id)
+        # TODO call controller hook
+
+    def destroy_row(self, row_id):
+        for element in self.results[row_id]:
+            element.destroy()
 
 
 if __name__ == "__main__":

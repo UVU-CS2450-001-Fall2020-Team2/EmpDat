@@ -17,13 +17,16 @@ class LoginWindow(TkinterWindow):
 
         self.master.title("EmpDat Login")
 
-        self.username = tk.Label(text="Username")
-        self.entry = tk.Entry(bg="orange", width=50)
+        self.title = tk.Label(bg="white", text="EmpDat", font=('Arial', 17), pady=15)
+        self.title.pack()
+
+        self.username = tk.Label(bg="white", text="Username", font=('Arial', 15))
+        self.entry = tk.Entry(bg="white", width=50, font=('Arial', 17))
         self.username.pack()
         self.entry.pack()
 
-        self.password = tk.Label(text="Password")
-        self.password_entry = tk.Entry(bg="orange", width=50, show="•")
+        self.password = tk.Label(bg="white", text="Password", font=('Arial', 15))
+        self.password_entry = tk.Entry(bg="white", width=50, show="•", font=('Arial', 17))
         self.password.pack()
         self.password_entry.pack()
 
@@ -32,10 +35,13 @@ class LoginWindow(TkinterWindow):
             text="Submit",
             width=35,
             height=2,
-            fg="orange",
-            command=lambda: event_handlers['submit'](self.entry.get(), self.password_entry.get())
+            fg="black",
+            command=lambda: event_handlers['submit'](self.entry.get(), self.password_entry.get()),
+            font=('Arial', 14),
         )
         self.submit_button.pack()
+
+        self.master.configure(padx=20, pady=20)
 
 
 if __name__ == '__main__':

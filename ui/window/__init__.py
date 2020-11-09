@@ -51,6 +51,7 @@ class TkinterWindow(UsesDialog):
         :param event_handlers:
         """
         self.master = tkinter.Tk()
+        self.master.configure(bg='white')
 
         self.event_handlers = event_handlers
 
