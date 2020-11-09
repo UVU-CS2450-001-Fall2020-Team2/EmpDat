@@ -11,7 +11,7 @@ COLUMN_CONFIG = {
             'pady': 2,
         },
         "body": {
-            "font": ('Arial', 17,)
+            "font": ('Arial', 13,)
         }
     },
     "name": {
@@ -20,7 +20,7 @@ COLUMN_CONFIG = {
             'pady': 2,
         },
         "body": {
-            "font": ('Arial', 17,)
+            "font": ('Arial', 14,)
         }
     },
     "address": {
@@ -29,7 +29,7 @@ COLUMN_CONFIG = {
             'pady': 2,
         },
         "body": {
-            "font": ('Arial', 17,)
+            "font": ('Arial', 13,)
         }
     },
     "city": {
@@ -38,7 +38,7 @@ COLUMN_CONFIG = {
             'pady': 2,
         },
         "body": {
-            "font": ('Arial', 17,)
+            "font": ('Arial', 13,)
         }
     },
     "state": {
@@ -47,7 +47,7 @@ COLUMN_CONFIG = {
             'pady': 2,
         },
         "body": {
-            "font": ('Arial', 17,)
+            "font": ('Arial', 13,)
         }
     },
     "zip": {
@@ -56,7 +56,7 @@ COLUMN_CONFIG = {
             'pady': 2,
         },
         "body": {
-            "font": ('Arial', 17,)
+            "font": ('Arial', 13,)
         }
     },
     "classification": {
@@ -65,7 +65,7 @@ COLUMN_CONFIG = {
             'pady': 2,
         },
         "body": {
-            "font": ('Arial', 17,)
+            "font": ('Arial', 13,)
         }
     },
     "pay_method": {
@@ -74,7 +74,7 @@ COLUMN_CONFIG = {
             'pady': 2,
         },
         "body": {
-            "font": ('Arial', 17,)
+            "font": ('Arial', 13,)
         }
     }
 }
@@ -129,15 +129,15 @@ class DatabaseWindow(TkinterWindow):
         self.dropdown = OptionMenu(self.master, self.tkvar, *choices)
         # Note: To find out which choice is currently selected in an OptionMenu widget,
         # the .get() method on the associated control variable will return that choice as a string.
-        self.current_user.grid(row=0, column=7, sticky=NSEW, padx=5, pady=10)
+        self.current_user.grid(row=0, column=7, sticky=NSEW, padx=5, pady=10, columnspan=4)
         self.emp_dat.grid(row=0, column=0, sticky=NSEW, padx=5, pady=10, columnspan=7, rowspan=2)
-        self.logout.grid(row=1, column=7, sticky=NSEW, padx=5, pady=3, columnspan=2)
+        self.logout.grid(row=1, column=7, sticky=NSEW, padx=5, pady=3, columnspan=4)
         self.search_label.grid(row=2, column=0, sticky=NSEW, pady=10, padx=5)
         # NSEW fills the whole column
         # padx and pady is padding horizontally (padx) or vertically (pady)
-        self.search_entry.grid(row=2, column=1, sticky=NSEW, columnspan=5, padx=6, pady=10)
+        self.search_entry.grid(row=2, column=1, sticky=NSEW, columnspan=6, padx=6, pady=10)
         self.dropdown.grid(row=2, column=6, sticky=NSEW, padx=6, pady=10)
-        self.new_employee.grid(row=2, column=7, sticky=NSEW, padx=5, pady=10)
+        self.new_employee.grid(row=2, column=7, sticky=NSEW, columnspan=4, padx=5, pady=10)
 
         i = 0
         for key in self.columns:
