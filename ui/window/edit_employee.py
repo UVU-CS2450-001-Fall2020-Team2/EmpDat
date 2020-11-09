@@ -13,7 +13,7 @@ class EditEmployeeWindow(TkinterWindow):
         super().__init__(event_handlers)
         self.master.title("EmpDat")
 
-        self.edit_pg = self.master
+        edit_pg = self.master
 
         # Create place to enter search query
         self.search_entry = Entry(edit_pg)
