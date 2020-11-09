@@ -1,5 +1,6 @@
 from lib.model.employee import Employee
 from ui.control import Controller
+from ui.control.employee import EmployeeController
 from ui.window.database import DatabaseWindow
 
 
@@ -18,7 +19,7 @@ class DatabaseController(Controller):
 
     def __init__(self):
         super().__init__(DatabaseWindow({
-            # 'submit': self.login
+            'edit_employee': self.edit_employee
         }))
 
     def show(self):
@@ -38,3 +39,6 @@ class DatabaseController(Controller):
             })
 
         super().show()
+
+    def edit_employee(self, emp_id):
+        EmployeeController(emp_id).show()

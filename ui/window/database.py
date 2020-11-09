@@ -107,7 +107,6 @@ class DatabaseWindow(TkinterWindow):
             "classification": Label(database, text="Classification", background='white'),
             "pay_method": Label(database, text="Pay Method", background='white'),
         }
-        test = store.AUTHENTICATED_USER
         self.current_user = Label(database, text=f"{store.AUTHENTICATED_USER.first_name} {store.AUTHENTICATED_USER.last_name}", font=('Arial', 15), anchor="center")
 
         # Create place to enter search query
@@ -159,11 +158,11 @@ class DatabaseWindow(TkinterWindow):
             row.append(e)
             j += 1
 
-        e = Button(self.master, text="Edit", image=self.edit_icon, command=lambda: self.on_edit(to_add[0]))
+        e = Button(self.master, text="Edit", image=self.edit_icon, command=lambda: self.on_edit(can_add['id']))
         e.grid(row=i, column=(len(self.columns) + 1))
         row.append(e)
         e = Button(self.master, text="Delete", image=self.delete_icon,
-                   command=lambda: self.on_delete(to_add[0]))
+                   command=lambda: self.on_delete(can_add['id']))
         e.grid(row=i, column=(len(self.columns) + 2))
         row.append(e)
 
@@ -176,7 +175,7 @@ class DatabaseWindow(TkinterWindow):
         self.results = {}
 
     def on_edit(self, row_id):
-        pass  # TODO call controller hook
+        self.event_handlers['edit_employee'](row_id)
 
     def on_delete(self, row_id):
         self.destroy_row(row_id)
