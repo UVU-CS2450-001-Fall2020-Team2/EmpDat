@@ -19,8 +19,10 @@ class DatabaseController(Controller):
 
     def __init__(self):
         super().__init__(DatabaseWindow({
-            'edit_employee': self.edit_employee
+            'edit_employee': self.edit_employee,
+            'query_change': self.on_query_change
         }))
+
 
     def show(self):
         self.view.setup_grid()
@@ -42,3 +44,24 @@ class DatabaseController(Controller):
 
     def edit_employee(self, emp_id):
         EmployeeController(emp_id).show()
+
+    def on_query_change(self, query):
+        if len(query) == 0:
+            employees = Employee.read_all()
+        else:
+            employees = Employee.read_by({
+                'first_name': [('like', f"%{query}%")]
+            })
+
+        self.view.destroy_results()
+        for employee in employees:
+            self.view.add_to_result({
+                "id": employee.id,
+                "name": f"{employee.last_name}, {employee.first_name}",
+                "address": f"{employee.address_line1} {employee.address_line2}",
+                "city": employee.city,
+                "state": employee.state,
+                "zip": employee.zipcode,
+                "classification": "hi",
+                "pay_method": employee.id
+            })

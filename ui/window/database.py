@@ -87,6 +87,9 @@ class DatabaseWindow(TkinterWindow):
         self.master.title('EmpDat')
         self.master.configure(bg='white')
 
+        self.query_var = StringVar()
+        self.query_var.trace("w", lambda name, index, mode, sv=self.query_var: self.event_handlers['query_change'](self.query_var.get()))
+
         self.results = {}
         self.edit_icon = PhotoImage(file="ui/icons/pencil.gif")
         self.delete_icon = PhotoImage(file="ui/icons/trash.gif")
@@ -110,7 +113,7 @@ class DatabaseWindow(TkinterWindow):
         self.current_user = Label(database, text=f"{store.AUTHENTICATED_USER.first_name} {store.AUTHENTICATED_USER.last_name}", font=('Arial', 15), anchor="center")
 
         # Create place to enter search query
-        self.search_entry = Entry(database)
+        self.search_entry = Entry(database, textvariable=self.query_var)
 
         # new employee button
         self.new_employee = Button(database, text="New Employee"
@@ -171,7 +174,7 @@ class DatabaseWindow(TkinterWindow):
     def destroy_results(self):
         for key in self.results:
             for row in self.results[key]:
-                self.results[key][row].destory()
+                row.destroy()
         self.results = {}
 
     def on_edit(self, row_id):
