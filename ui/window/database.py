@@ -1,5 +1,6 @@
 from tkinter import *
 from tkinter.ttk import *
+from ui.window.new_employee import NewEmployeeWindow
 
 from ui import store
 from ui.window import *
@@ -121,6 +122,28 @@ class DatabaseWindow(TkinterWindow):
         self.logout = Button(database, text="Logout"
                              # ,command = self.logout (Call submit method to login user
                              )
+        self.menubar = Menu(self.main)
+        self.main.config(menu=self.menubar)
+        # create the file object)
+        self.filemenu = Menu(self.menubar)
+        #New Employee
+        # adds a command to the menu option, calling it exit
+        self.filemenu.add_command(label="New Employee")
+        #Logout
+        self.filemenu.add_command(label="Logout",command=self.client_exit)
+        #added "file" to our menu
+        self.menubar.add_cascade(label="File", menu=self.filemenu)
+        #Reports Tab
+        self.reports_menu = Menu(self.menubar)
+        self.reports_menu.add_command(label="Paylog")
+        self.reports_menu.add_command(label = "Employee Directory")
+        self.menubar.add_cascade(label = "Reports", menu = self.reports_menu)
+        #Import tab
+        self.import_menu = Menu(self.menubar)
+        self.import_menu.add_command(label="Employee", command = None)
+        self.import_menu.add_command(label = "Receipt", command = None)
+        self.import_menu.add_command(label = "Timesheet", command = None)
+        self.menubar.add_cascade(label = "Import", menu = self.import_menu)
 
     def setup_grid(self):
         # used grid method to arrange rows and columns
