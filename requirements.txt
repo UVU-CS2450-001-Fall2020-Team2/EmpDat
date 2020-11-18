@@ -3,3 +3,5 @@ sqlalchemy
 pylint
 pyfaker
 dictdiffer
+ttkthemes
+tkintertable
