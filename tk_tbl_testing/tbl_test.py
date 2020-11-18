@@ -57,6 +57,9 @@ class TestApp(Frame):
     def client_exit(self):
         exit()
         return
+def main(): 
+    app=TestApp()
+    app.mainloop()
 
-app=TestApp()
-app.mainloop()
+if __name__ == "__main__":
+    main()
