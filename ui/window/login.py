@@ -3,8 +3,6 @@ Login GUI Window implemented with Tkinter w/ built-in tester
 """
 from tkinter.ttk import *
 
-from PIL import Image, ImageTk
-
 from ui.window import *
 
 
@@ -18,6 +16,7 @@ class LoginWindow(TkinterWindow):
         super().__init__(event_handlers)
 
         self.master.title("EmpDat Login")
+        self.master.resizable(False, False)
 
         main = Frame(self.master)
 
