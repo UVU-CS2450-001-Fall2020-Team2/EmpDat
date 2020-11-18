@@ -17,7 +17,7 @@ class DatabaseWindow(TkinterWindow):
         self.delete_icon = PhotoImage(file="ui/icons/trash.gif")
 
         self.main = self.master
-        self.main.geometry('800x500+200+100')
+        self.main.geometry('1024x768')
         self.main.title('EmpDat')
         f = Frame(self.main)
         f.pack(fill=BOTH, expand=1)
