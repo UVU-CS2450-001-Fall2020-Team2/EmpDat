@@ -4,6 +4,9 @@ Generic Window base classes
 import tkinter
 from tkinter import messagebox, Toplevel
 
+from PIL import Image, ImageTk
+from ttkthemes import ThemedStyle
+
 
 class UsesDialog:
 
@@ -51,7 +54,11 @@ class TkinterWindow(UsesDialog):
         :param event_handlers:
         """
         self.master = tkinter.Tk()
-        self.master.configure(bg='white')
+        # self.master.configure(bg='white')
+        style = ThemedStyle(self.master)
+        style.theme_use('arc')
+
+        self.master.iconphoto(False, ImageTk.PhotoImage(Image.open("ui/icons/EmpDat.gif")))
 
         self.event_handlers = event_handlers
 

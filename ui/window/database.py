@@ -1,210 +1,130 @@
 from tkinter import *
 from tkinter.ttk import *
-from ui.window.new_employee import NewEmployeeWindow
+
+from tkintertable import TableCanvas
 
 from ui import store
 from ui.window import *
-
-COLUMN_CONFIG = {
-    "id": {
-        "header": {
-            'padx': 5,
-            'pady': 2,
-        },
-        "body": {
-            "font": ('Arial', 17,)
-        }
-    },
-    "name": {
-        "header": {
-            'padx': 5,
-            'pady': 2,
-        },
-        "body": {
-            "font": ('Arial', 17,)
-        }
-    },
-    "address": {
-        "header": {
-            'padx': 5,
-            'pady': 2,
-        },
-        "body": {
-            "font": ('Arial', 17,)
-        }
-    },
-    "city": {
-        "header": {
-            'padx': 5,
-            'pady': 2,
-        },
-        "body": {
-            "font": ('Arial', 17,)
-        }
-    },
-    "state": {
-        "header": {
-            'padx': 5,
-            'pady': 2,
-        },
-        "body": {
-            "font": ('Arial', 17,)
-        }
-    },
-    "zip": {
-        "header": {
-            'padx': 5,
-            'pady': 2,
-        },
-        "body": {
-            "font": ('Arial', 17,)
-        }
-    },
-    "classification": {
-        "header": {
-            'padx': 5,
-            'pady': 2,
-        },
-        "body": {
-            "font": ('Arial', 17,)
-        }
-    },
-    "pay_method": {
-        "header": {
-            'padx': 5,
-            'pady': 2,
-        },
-        "body": {
-            "font": ('Arial', 17,)
-        }
-    }
-}
 
 
 class DatabaseWindow(TkinterWindow):
     def __init__(self, event_handlers):
         super().__init__(event_handlers)
-        database = self.master
         self.master.title('EmpDat')
-        self.master.configure(bg='white')
 
         self.results = {}
         self.edit_icon = PhotoImage(file="ui/icons/pencil.gif")
         self.delete_icon = PhotoImage(file="ui/icons/trash.gif")
 
-        # This creates a tkinter variable needed for the dropdown list
-        self.tkvar = StringVar(database)
+        self.main = self.master
+        self.main.geometry('1024x768')
+        self.main.title('EmpDat')
+        f = Frame(self.main)
+        f.pack(fill=BOTH, expand=1)
+        self.table = TableCanvas(f, data=self.results, rowheight=50)
+        # table.importCSV('legacy/employees.csv')
+        # print (table.model.columnNames)
+        # table.model.data[1]['a'] = 'XX'
+        # table.model.setValueAt('TESTCHANGE',0,0)
+        self.table.show()
 
-        self.emp_dat = Label(database, text="Employee Database", font=('Arial', 30), anchor="center", background='white')
-        self.search_label = Label(database, text="Search:", background='white')
+        if store.AUTHENTICATED_USER.role == 'Viewer':
+            self.table.read_only = True
 
-        self.columns = {
-            "id": Label(database, text="ID", background='white'),
-            "name": Label(database, text="Name", background='white'),
-            "address": Label(database, text="Address", background='white'),
-            "city": Label(database, text="City", background='white'),
-            "state": Label(database, text="State", background='white'),
-            "zip": Label(database, text="Zip", background='white'),
-            "classification": Label(database, text="Classification", background='white'),
-            "pay_method": Label(database, text="Pay Method", background='white'),
-        }
-        self.current_user = Label(database, text=f"{store.AUTHENTICATED_USER.first_name} {store.AUTHENTICATED_USER.last_name}", font=('Arial', 15), anchor="center")
+        self.create_menu()
+        self.create_bottom()
 
-        # Create place to enter search query
-        self.search_entry = Entry(database)
 
-        # new employee button
-        self.new_employee = Button(database, text="New Employee"
-                                   # ,command = self.add_employee (Call submit method to login user
-                                   )
-
-        # logout button
-        self.logout = Button(database, text="Logout"
-                             # ,command = self.logout (Call submit method to login user
-                             )
-        self.menubar = Menu(self.main)
+    def create_menu(self):
+        # add menubar at the top
+        self.menubar = Menu(self.main, tearoff=False)
         self.main.config(menu=self.menubar)
         # create the file object)
-        self.filemenu = Menu(self.menubar)
-        #New Employee
+        self.filemenu = Menu(self.menubar, tearoff=False)
+        # New Employee
         # adds a command to the menu option, calling it exit
         self.filemenu.add_command(label="New Employee")
-        #Logout
-        self.filemenu.add_command(label="Logout",command=self.client_exit)
-        #added "file" to our menu
+        # Logout
+        self.filemenu.add_command(label="Logout", command=None)
+        # added "file" to our menu
         self.menubar.add_cascade(label="File", menu=self.filemenu)
-        #Reports Tab
-        self.reports_menu = Menu(self.menubar)
+        # Reports Tab
+        self.reports_menu = Menu(self.menubar, tearoff=False)
         self.reports_menu.add_command(label="Paylog")
-        self.reports_menu.add_command(label = "Employee Directory")
-        self.menubar.add_cascade(label = "Reports", menu = self.reports_menu)
-        #Import tab
-        self.import_menu = Menu(self.menubar)
-        self.import_menu.add_command(label="Employee", command = None)
-        self.import_menu.add_command(label = "Receipt", command = None)
-        self.import_menu.add_command(label = "Timesheet", command = None)
-        self.menubar.add_cascade(label = "Import", menu = self.import_menu)
+        self.reports_menu.add_command(label="Employee Directory")
+        self.menubar.add_cascade(label="Reports", menu=self.reports_menu)
+        # Import tab
+        self.import_menu = Menu(self.menubar, tearoff=False)
+        self.import_menu.add_command(label="Employee", command=None)
+        self.import_menu.add_command(label="Receipt", command=None)
+        self.import_menu.add_command(label="Timesheet", command=None)
+        self.menubar.add_cascade(label="Import", menu=self.import_menu)
 
-    def setup_grid(self):
-        # used grid method to arrange rows and columns
-        # choices for filter dropdown
-        choices = ('Filter', 'None', 'Pay', 'Department', 'Job Title', 'Last Name')
-        self.dropdown = OptionMenu(self.master, self.tkvar, *choices)
-        # Note: To find out which choice is currently selected in an OptionMenu widget,
-        # the .get() method on the associated control variable will return that choice as a string.
-        self.current_user.grid(row=0, column=7, sticky=NSEW, padx=5, pady=10)
-        self.emp_dat.grid(row=0, column=0, sticky=NSEW, padx=5, pady=10, columnspan=7, rowspan=2)
-        self.logout.grid(row=1, column=7, sticky=NSEW, padx=5, pady=3, columnspan=2)
-        self.search_label.grid(row=2, column=0, sticky=NSEW, pady=10, padx=5)
-        # NSEW fills the whole column
-        # padx and pady is padding horizontally (padx) or vertically (pady)
-        self.search_entry.grid(row=2, column=1, sticky=NSEW, columnspan=5, padx=6, pady=10)
-        self.dropdown.grid(row=2, column=6, sticky=NSEW, padx=6, pady=10)
-        self.new_employee.grid(row=2, column=7, sticky=NSEW, padx=5, pady=10)
+    def create_bottom(self):
+        buttons = Frame(self.main)
 
-        i = 0
-        for key in self.columns:
-            self.columns[key].grid(row=3, column=i, sticky=NSEW, **COLUMN_CONFIG[key]["header"])
-            i += 1
+        self.new_button = Button(
+            buttons,
+            text="New",
+            command=lambda: self.add_to_result(12345, {}),
+        )
+        self.search_button = Button(
+            buttons,
+            text="Search",
+            command=lambda: self.table.showFilteringBar(),
+        )
+        self.delete_button = Button(
+            buttons,
+            text="Delete",
+            # command=lambda: event_handlers['submit'](self.entry.get(), self.password_entry.get()),
+        )
+        self.save_button = Button(
+            buttons,
+            text="Save",
+            # command=lambda: event_handlers['submit'](self.entry.get(), self.password_entry.get()),
+        )
 
-    def add_to_result(self, to_add: dict):
-        i = len(self.results) + 4
-        row = []
+        self.new_button.pack(side=LEFT, anchor=W)
+        Label(buttons, text=f"({store.AUTHENTICATED_USER.first_name} {store.AUTHENTICATED_USER.last_name})").pack(side=LEFT, anchor=W)
 
-        can_add = {x: to_add[x] for x in to_add if x in self.columns}
+        self.status = Label(buttons, text='')
+        self.status.pack(side=LEFT, anchor=W)
 
-        j = 0
-        for col, value in can_add.items():
-            e = Label(self.master, width=10, text=value, background='white',
-                      **COLUMN_CONFIG[col]["body"])
-            e.grid(row=i, column=j)
-            row.append(e)
-            j += 1
+        Frame(buttons, relief='flat', borderwidth=0).pack(fill=X, expand=1)
 
-        e = Button(self.master, text="Edit", image=self.edit_icon, command=lambda: self.on_edit(can_add['id']))
-        e.grid(row=i, column=(len(self.columns) + 1))
-        row.append(e)
-        e = Button(self.master, text="Delete", image=self.delete_icon,
-                   command=lambda: self.on_delete(can_add['id']))
-        e.grid(row=i, column=(len(self.columns) + 2))
-        row.append(e)
+        self.save_button.pack(side=RIGHT, anchor=E)
+        self.delete_button.pack(side=RIGHT, anchor=E)
+        self.search_button.pack(side=RIGHT, anchor=E)
 
-        self.results[can_add['id']] = row
+        buttons.pack(side=RIGHT, fill=X, expand=1)
+
+    def new_employee(self):
+        new_id = 12345
+        self.add_to_result(new_id, {})
+        self.table.movetoSelectedRow(recname=new_id)
+
+    def add_to_result(self, id, to_add: dict):
+        self.table.addRow(id, **to_add)
+        print(self.table.model)
 
     def destroy_results(self):
+        pass
         for key in self.results:
             for row in self.results[key]:
                 self.results[key][row].destory()
         self.results = {}
 
     def on_edit(self, row_id):
+        pass
         self.event_handlers['edit_employee'](row_id)
 
     def on_delete(self, row_id):
+        pass
         self.destroy_row(row_id)
         # TODO call controller hook
 
     def destroy_row(self, row_id):
+        pass
         for element in self.results[row_id]:
             element.destroy()
 

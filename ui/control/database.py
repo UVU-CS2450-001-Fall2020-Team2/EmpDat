@@ -1,6 +1,5 @@
 from lib.model.employee import Employee
 from ui.control import Controller
-from ui.control.employee import EmployeeController
 from ui.window.database import DatabaseWindow
 
 
@@ -19,26 +18,22 @@ class DatabaseController(Controller):
 
     def __init__(self):
         super().__init__(DatabaseWindow({
-            'edit_employee': self.edit_employee
         }))
 
     def show(self):
-        self.view.setup_grid()
-
         employees = Employee.read_all()
         for employee in employees:
-            self.view.add_to_result({
-                "id": employee.id,
-                "name": f"{employee.last_name}, {employee.first_name}",
-                "address": f"{employee.address_line1} {employee.address_line2}",
-                "city": employee.city,
-                "state": employee.state,
-                "zip": employee.zipcode,
-                "classification": "hi",
-                "pay_method": employee.id
+            self.view.add_to_result(employee.id, {
+                "ID": employee.id,
+                "Name": f"{employee.last_name}, {employee.first_name}",
+                "Address": f"{employee.address_line1} {employee.address_line2}",
+                "City": employee.city,
+                "State": employee.state,
+                "Postal": employee.zipcode,
+                "Class": "hi",
+                "Payment Method": employee.id
             })
 
-        super().show()
+        self.view.table.autoResizeColumns()
 
-    def edit_employee(self, emp_id):
-        EmployeeController(emp_id).show()
+        super().show()
