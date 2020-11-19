@@ -4,10 +4,6 @@ import random
 from collections import OrderedDict
 from changeRequest import changeRequest
 
-from tkintertable.Testing import sampledata
-#data=sampledata()
-#print(data)
-
 class TestApp(Frame):
     """Basic test frame for the table"""
     
