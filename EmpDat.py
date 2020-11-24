@@ -16,10 +16,11 @@ def bootstrap_ui():
 
 
 def root_account_install():
-    if Employee.read('root') is None:
+    if Employee.read(-1) is None:
         Employee.create(Employee({
-            'id': 'root',
+            'id': -1,
             'password': sha_hash(ROOT_DEFAULT_PASS),
+            'role': 'Admin',
             'last_name': 'Admin',
             'first_name': 'Root',
             'user_group_id': 0,

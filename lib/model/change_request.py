@@ -1,10 +1,11 @@
 """
 Change Request Data Model
 """
+import datetime
 
 from sqlalchemy import MetaData, Table, Column, String, DateTime, Text, BigInteger, JSON, Integer
 
-from lib.model import DynamicModel, HasRelationships, register_database_model
+from lib.model import DynamicModel, HasRelationships, register_database_model, find_model_by_name
 from lib.model.employee import Employee
 from lib.repository.db import DatabaseRepository
 
@@ -45,8 +46,31 @@ class ChangeRequest(DatabaseRepository, DynamicModel, HasRelationships):
             'approved_by'
         ]
 
-    def apply(self):
-        pass
+    def apply_to_db(self, approved_by: Employee):
+        """
+        Only works for DatabaseRepository
+        :param approved_by:
+        :return:
+        """
+        model_cls = find_model_by_name(self.table_name)
+        if not model_cls:
+            raise Exception("Table name given in the ChangeRequest does not exist!")
+
+        if self.row_id: # is just a change?
+            model = model_cls.read(self.row_id)
+            for diff_type, field, values in self.changes:
+                if diff_type == 'change':
+                    setattr(model, field, values[1])
+            model_cls.update(model)
+        else: # it must be an entire new object
+            model_raw = {}
+            for diff_type, field, values in self.changes:
+                if diff_type == 'add':
+                    setattr(model_raw, field, values[1])
+            model_cls.create(model_cls(model_raw))
+
+        self.approved_by_user_id = approved_by.id
+        self.approved_at = datetime.datetime.now()
 
     @classmethod
     def table(cls, metadata=MetaData()):

@@ -189,7 +189,7 @@ class DatabaseRepository(Repository, HasValidation):
         models = []
         if model_dicts is not None:
             for raw in model_dicts:
-                if raw[0] == 'root':
+                if raw[0] == -1:
                     continue
                 models.append(cls(dict(raw)))  # pylint: disable=too-many-function-args
 

@@ -46,7 +46,7 @@ class Employee(DatabaseRepository, DynamicModel, HasRelationships):
     @classmethod
     def authenticate(cls, username, password):
         employees = Employee.read_by(filters={
-            'id': username
+            'id': int(username)
         })
 
         if len(employees) < 1:

@@ -50,6 +50,7 @@ if __name__ == '__main__':
             print(e.request.changes)
 
             assert True
+
     finally:
         time.sleep(1)
         os.remove("empdat.db")

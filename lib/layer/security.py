@@ -108,6 +108,19 @@ class SecurityLayer(Layer):
         if model_name not in self.user_role[CAN_CREATE]:
             raise SecurityException(f'Creating {model_name} records is not allowed')
 
+        changes = list(dictdiffer.diff({}, new_model.to_dict()))
+
+        # everyone who is not an Admin must request
+        request = ChangeRequest({
+            'author_user_id': self.user.id,
+            'table_name': repo_cls.resource_uri,
+            'row_id': None,
+            'changes': changes,
+            'reason': 'No reason given'
+        })
+        request = ChangeRequest.create(request)
+        raise ChangeRequestException(f'Request created successfully', request)
+
     def on_read_one(self, repo_cls, model):
         model_name = self._get_model_name_from_repo_cls(repo_cls)
 
