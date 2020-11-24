@@ -16,6 +16,18 @@ def register_database_model(cls):
     return cls
 
 
+class ViewModel:
+    def __init__(self):
+        pass
+
+    def to_view_model(self):
+        return self.__dict__
+
+    @classmethod
+    def from_view_model(cls, view_model: dict):
+        return cls(view_model)  # pylint: disable=too-many-function-args
+
+
 class DynamicModel:
     """
     This Model attribute will allow fields to be completely dynamic
@@ -27,8 +39,10 @@ class DynamicModel:
     Can be overridden.
     """  # pylint: disable=pointless-string-statement
     reserved_keywords = [
-        'data'
+        'data',
+        '_has_timestamps'
     ]
+
 
     def __init__(self, data: dict):
         """
@@ -114,7 +128,6 @@ class HasRelationships:
         Strips relationship_fields on copying
         :return:
         """
-        print('DEBUG: ----stripping relationship fields!')
         state = self.__dict__.copy()
         fields_to_remove = self.relationship_fields()
         for field in fields_to_remove:
@@ -123,3 +136,16 @@ class HasRelationships:
             except KeyError:
                 pass
         return state
+
+    def trim_relationships(self, data: dict):
+        """
+        Strips relationship_fields manually
+        :return:
+        """
+        fields_to_remove = self.relationship_fields()
+        for field in fields_to_remove:
+            try:
+                del data[field]
+            except KeyError:
+                pass
+        return data

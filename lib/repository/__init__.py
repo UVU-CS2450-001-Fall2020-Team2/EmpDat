@@ -79,14 +79,27 @@ class Repository(CanMutateData):
     """
 
     @classmethod
+    def on_create(cls, model):
+        _call_layers('create', cls, new_model=model)
+
+    @classmethod
+    def on_update(cls, model, id_attr='id'):
+        _call_layers('update', cls, new_model=model, id_attr=id_attr)
+
+    @classmethod
+    def on_destroy(cls, model_id, id_attr='id'):
+        _call_layers('destroy', cls, model_id=model_id, id_attr=id_attr)
+
+    @classmethod
     @abstractmethod
-    def create(cls, model):
+    def create(cls, model, id_attr='id'):
         """
         Creates the model in the data sink of choice
         :param model: instance with data
+        :param id_attr: Optional. Name of ID attribute (default is 'id')
         :return: model
         """
-        _call_layers('create', cls, new_model=model)
+        raise NotImplementedError
 
     @classmethod
     @abstractmethod
@@ -126,7 +139,7 @@ class Repository(CanMutateData):
         :param id_attr: Optional. Name of ID attribute (default is 'id')
         :return: model
         """
-        _call_layers('update', cls, new_model=model, id_attr=id_attr)
+        raise NotImplementedError
 
     @classmethod
     @abstractmethod
@@ -137,7 +150,7 @@ class Repository(CanMutateData):
         :param id_attr: Optional. Name of ID attribute (default is 'id')
         :return: None
         """
-        _call_layers('destroy', cls, model_id=model_id, id_attr=id_attr)
+        raise NotImplementedError
 
     @classmethod
     def after_read(cls, model_read, id_attr='id'):

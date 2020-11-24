@@ -15,7 +15,6 @@ def import_csv(filename: str):
     i = 0
     with open(filename, 'r') as csv_file:
         reader = csv.reader(csv_file, delimiter=',')
-        # reader = csv.DictReader(csv_file, delimiter=',')
         cursor = 0
         for row in reader:
             if cursor == 0:  # this row is the column names, unneeded
@@ -59,10 +58,10 @@ def _split_names(full_name: str):
 
 def _is_csv(infile):
     return True
-    csv_fileh = open(infile, 'rb')
-    try:
-        dialect = csv.Sniffer().sniff(csv_fileh.read(1024))
-        csv_fileh.seek(0)
-        return True
-    except csv.Error:
-        return False
+    # csv_fileh = open(infile, 'rb')
+    # try:
+    #     dialect = csv.Sniffer().sniff(csv_fileh.read(1024))
+    #     csv_fileh.seek(0)
+    #     return True
+    # except csv.Error:
+    #     return False

@@ -1,6 +1,7 @@
 """
 Database Repository with helper methods for setup
 """
+import datetime
 from abc import abstractmethod
 
 from sqlalchemy import create_engine, MetaData, select, Table
@@ -34,8 +35,15 @@ class DatabaseRepository(Repository, HasValidation):
     metadata: MetaData
     engine: Engine
 
-    def __init__(self):
+    def __init__(self, has_timestamps=True):
         Repository.__init__(self)
+
+        self._has_timestamps = has_timestamps
+
+        if has_timestamps and not getattr(self, 'created_at', None):
+            self.created_at = datetime.datetime.now()
+        if has_timestamps and not getattr(self, 'modified_at', None):
+            self.modified_at = datetime.datetime.now()
 
     @classmethod
     def _open_connection(cls):
@@ -67,18 +75,25 @@ class DatabaseRepository(Repository, HasValidation):
         raise NotImplementedError
 
     @classmethod
-    def create(cls, model):
+    def create(cls, model, id_attr='id'):
         """
         Performs an INSERT
 
         :param model: instance
+        :param id_attr: Optional. Name of ID attribute (default is 'id'). Matches to column
         :return: model instance
         """
+        cls.on_create(model)
+
         connection = cls._open_connection()
         statement = cls.table(DatabaseRepository.metadata).insert().values(**model.to_dict())
-        connection.execute(statement)
+        result = connection.execute(statement)
+        setattr(model, id_attr, result.inserted_primary_key[0])
         connection.close()
-        return model
+
+        inserted = cls.read(getattr(model, id_attr), id_attr)
+
+        return inserted
 
     @classmethod
     def read(cls, model_id, id_attr='id'):
@@ -191,6 +206,11 @@ class DatabaseRepository(Repository, HasValidation):
         :param id_attr: Optional. Name of ID attribute (default is 'id'). Matches to column
         :return: model instance
         """
+        cls.on_update(model, id_attr)
+
+        if model._has_timestamps:
+            model.modified_at = datetime.datetime.now()
+
         connection = cls._open_connection()
         table = cls.table(DatabaseRepository.metadata)
         statement = table.update().where(table.c[id_attr] == model.id).values(**model.to_dict())
@@ -207,6 +227,8 @@ class DatabaseRepository(Repository, HasValidation):
         :param id_attr: Optional. Name of ID attribute (default is 'id'). Matches to column
         :return: None
         """
+        cls.on_destroy(model_id, id_attr)
+
         connection = cls._open_connection()
         table = cls.table(DatabaseRepository.metadata)
         statement = table.delete().where(table.c[id_attr] == model_id)
@@ -216,7 +238,7 @@ class DatabaseRepository(Repository, HasValidation):
     @classmethod
     def run_statement(cls, statement):
         """
-        Performs any statement given
+        Performs any statement given. Note that timestamps are NOT updated here nor are Layers called
 
         :param statement: can be created like the following:
             table = self.table(DatabaseRepository.metadata)

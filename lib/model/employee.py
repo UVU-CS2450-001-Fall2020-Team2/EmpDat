@@ -35,7 +35,7 @@ class Employee(DatabaseRepository, DynamicModel, HasRelationships):
         DatabaseRepository.__init__(self)
 
     def to_dict(self):
-        return DynamicModel.to_dict(self)
+        return self.trim_relationships(DynamicModel.to_dict(self))
 
     def load_relationships(self):
         pass
@@ -61,8 +61,9 @@ class Employee(DatabaseRepository, DynamicModel, HasRelationships):
     @classmethod
     def table(cls, metadata=MetaData()):
         return Table(cls.resource_uri, metadata,
-                     Column('id', BigInteger, primary_key=True, autoincrement=True),
+                     Column('id', BigInteger().with_variant(Integer, "sqlite"), primary_key=True),
                      Column('password', String(255)),
+                     Column('social_security_number', String(12)),
                      Column('user_group_id', Integer),
                      Column('department_id', Integer),
                      Column('role', String(64)),
@@ -91,7 +92,7 @@ class Employee(DatabaseRepository, DynamicModel, HasRelationships):
                      Column('timesheet', Float, nullable=True),
                      Column('created_at', DateTime),
                      Column('modified_at', DateTime),
-                     Column('date_left', Date),
-                     Column('notes', Text),
+                     Column('date_left', Date, nullable=True),
+                     Column('notes', Text, nullable=True),
                      extend_existing=True
                      )

@@ -14,7 +14,7 @@ class TimeSheet(DatabaseRepository, DynamicModel, HasRelationships):
     }
 
     def to_dict(self):
-        return DynamicModel.to_dict(self)
+        return self.trim_relationships(DynamicModel.to_dict(self))
 
     def load_relationships(self):
         pass
