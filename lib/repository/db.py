@@ -75,7 +75,7 @@ class DatabaseRepository(Repository, HasValidation):
         raise NotImplementedError
 
     @classmethod
-    def create(cls, model, id_attr='id'):
+    def create(cls, model):
         """
         Performs an INSERT
 
@@ -88,15 +88,15 @@ class DatabaseRepository(Repository, HasValidation):
         connection = cls._open_connection()
         statement = cls.table(DatabaseRepository.metadata).insert().values(**model.to_dict())
         result = connection.execute(statement)
-        setattr(model, id_attr, result.inserted_primary_key[0])
+        setattr(model, cls.id_attr, result.inserted_primary_key[0])
         connection.close()
 
-        inserted = cls.read(getattr(model, id_attr), id_attr)
+        inserted = cls.read(getattr(model, cls.id_attr))
 
         return inserted
 
     @classmethod
-    def read(cls, model_id, id_attr='id'):
+    def read(cls, model_id):
         """
         Performs a SELECT * WHERE id = model_id given
 
@@ -106,7 +106,7 @@ class DatabaseRepository(Repository, HasValidation):
         """
         connection = cls._open_connection()
         table = cls.table(DatabaseRepository.metadata)
-        statement = select([table]).where(table.c[id_attr] == model_id)
+        statement = select([table]).where(table.c[cls.id_attr] == model_id)
         result = connection.execute(statement)
 
         # Converts the result proxy into a dictionary and an array of values only
@@ -128,7 +128,7 @@ class DatabaseRepository(Repository, HasValidation):
 
         connection.close()
 
-        cls.after_read(model, id_attr)
+        cls.after_read(model, cls.id_attr)
 
         return model
 
@@ -166,7 +166,7 @@ class DatabaseRepository(Repository, HasValidation):
         models = []
         if model_dicts is not None:
             for raw in model_dicts:
-                models.append(cls(raw))  # pylint: disable=too-many-function-args
+                models.append(cls(dict(raw)))  # pylint: disable=too-many-function-args
 
         cls.after_read_many(models_read=models)
 
@@ -191,14 +191,14 @@ class DatabaseRepository(Repository, HasValidation):
             for raw in model_dicts:
                 if raw[0] == 'root':
                     continue
-                models.append(cls(raw))  # pylint: disable=too-many-function-args
+                models.append(cls(dict(raw)))  # pylint: disable=too-many-function-args
 
         cls.after_read_many(models_read=models)
 
         return models
 
     @classmethod
-    def update(cls, model, id_attr='id'):
+    def update(cls, model):
         """
         Performs an UPDATE <values> WHERE id = model_id query
 
@@ -206,20 +206,20 @@ class DatabaseRepository(Repository, HasValidation):
         :param id_attr: Optional. Name of ID attribute (default is 'id'). Matches to column
         :return: model instance
         """
-        cls.on_update(model, id_attr)
+        cls.on_update(model, cls.id_attr)
 
         if model._has_timestamps:
             model.modified_at = datetime.datetime.now()
 
         connection = cls._open_connection()
         table = cls.table(DatabaseRepository.metadata)
-        statement = table.update().where(table.c[id_attr] == model.id).values(**model.to_dict())
+        statement = table.update().where(table.c[cls.id_attr] == model.id).values(**model.to_dict())
         connection.execute(statement)
         connection.close()
         return model
 
     @classmethod
-    def destroy(cls, model_id, id_attr='id'):
+    def destroy(cls, model_id):
         """
         Performs a DELETE WHERE id = model_id query
 
@@ -227,11 +227,11 @@ class DatabaseRepository(Repository, HasValidation):
         :param id_attr: Optional. Name of ID attribute (default is 'id'). Matches to column
         :return: None
         """
-        cls.on_destroy(model_id, id_attr)
+        cls.on_destroy(model_id, cls.id_attr)
 
         connection = cls._open_connection()
         table = cls.table(DatabaseRepository.metadata)
-        statement = table.delete().where(table.c[id_attr] == model_id)
+        statement = table.delete().where(table.c[cls.id_attr] == model_id)
         connection.execute(statement)
         connection.close()
 

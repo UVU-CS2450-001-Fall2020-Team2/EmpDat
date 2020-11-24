@@ -16,6 +16,13 @@ def register_database_model(cls):
     return cls
 
 
+def find_model_by_name(model_name):
+    for db_model in database_models:
+        if db_model.__name__.lower() == model_name.lower():
+            return db_model
+    return None
+
+
 class ViewModel:
     def __init__(self):
         pass
@@ -42,7 +49,6 @@ class DynamicModel:
         'data',
         '_has_timestamps'
     ]
-
 
     def __init__(self, data: dict):
         """

@@ -77,6 +77,7 @@ class Repository(CanMutateData):
     """
     Base Repository Class for basic CRUD operations
     """
+    id_attr: str = 'id'
 
     @classmethod
     def on_create(cls, model):
@@ -92,18 +93,17 @@ class Repository(CanMutateData):
 
     @classmethod
     @abstractmethod
-    def create(cls, model, id_attr='id'):
+    def create(cls, model):
         """
         Creates the model in the data sink of choice
         :param model: instance with data
-        :param id_attr: Optional. Name of ID attribute (default is 'id')
         :return: model
         """
         raise NotImplementedError
 
     @classmethod
     @abstractmethod
-    def read(cls, model_id, id_attr='id'):
+    def read(cls, model_id):
         """
         Read a single Model by it's ID
         :param model_id: model ID
@@ -132,22 +132,20 @@ class Repository(CanMutateData):
 
     @classmethod
     @abstractmethod
-    def update(cls, model, id_attr='id'):
+    def update(cls, model):
         """
         Uses the 'id' column to update the model
         :param model: model instance
-        :param id_attr: Optional. Name of ID attribute (default is 'id')
         :return: model
         """
         raise NotImplementedError
 
     @classmethod
     @abstractmethod
-    def destroy(cls, model_id, id_attr='id'):
+    def destroy(cls, model_id):
         """
         Deletes the model from the data sink
         :param model_id: model's ID to destroy
-        :param id_attr: Optional. Name of ID attribute (default is 'id')
         :return: None
         """
         raise NotImplementedError

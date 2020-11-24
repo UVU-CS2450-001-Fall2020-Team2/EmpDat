@@ -174,7 +174,7 @@ class SecurityLayer(Layer):
         # self.user_role[CAN_UPDATE][model_name] exists
         # now to look at the nitty-gritty of the changes...
 
-        old_model = repo_cls.read(getattr(updated_model, id_attr), id_attr=id_attr)
+        old_model = repo_cls.read(getattr(updated_model, repo_cls.id_attr))
 
         changes = list(dictdiffer.diff(old_model.to_dict(), updated_model.to_dict()))
 

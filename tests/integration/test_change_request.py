@@ -1,4 +1,5 @@
 import datetime
+import os
 import time
 
 from lib.layer.security import SecurityLayer, SecurityException, ChangeRequestException
@@ -32,13 +33,11 @@ if __name__ == '__main__':
         }
         mymodel = Employee(data)
         saved = Employee.create(mymodel)
-        print(saved.to_dict())
 
         security_layer = SecurityLayer(saved)
 
         saved.salary = 2.0
         saved.hourly_rate = 10
-        print(saved.to_dict())
         try:
             Employee.update(saved)
             print('Changed w/o change request')
@@ -48,9 +47,9 @@ if __name__ == '__main__':
             assert False
         except ChangeRequestException as e:
             print('change request entered!')
-            print(e.request.to_dict())
+            print(e.request.changes)
 
             assert True
     finally:
         time.sleep(1)
-        # os.remove("empdat.db")
+        os.remove("empdat.db")
