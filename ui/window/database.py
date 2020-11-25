@@ -51,9 +51,9 @@ class DatabaseWindow(TkinterWindow):
         self.menubar.add_cascade(label="Reports", menu=self.reports_menu)
         # Import tab
         self.import_menu = Menu(self.menubar, tearoff=False)
-        self.import_menu.add_command(label="Employee", command=None)
-        self.import_menu.add_command(label="Receipt", command=None)
-        self.import_menu.add_command(label="Timesheet", command=None)
+        self.import_menu.add_command(label="Employee", command=self.event_handlers['import>employees'])
+        self.import_menu.add_command(label="Receipt", command=self.event_handlers['import>receipts'])
+        self.import_menu.add_command(label="Timesheet", command=self.event_handlers['import>timesheets'])
         self.menubar.add_cascade(label="Import", menu=self.import_menu)
 
     def create_bottom(self):
@@ -107,7 +107,7 @@ class DatabaseWindow(TkinterWindow):
         pass
         for key in self.results:
             for row in self.results[key]:
-                self.results[key][row].destory()
+                self.results[key][row].destroy()
         self.results = {}
 
     def on_edit(self, row_id):

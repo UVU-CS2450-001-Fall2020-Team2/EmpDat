@@ -1,6 +1,7 @@
 import csv
 import datetime
 import os
+from tkinter import messagebox
 
 from lib.model.employee import Employee
 from lib.model.receipt import Receipt
@@ -28,13 +29,16 @@ def _import_csv(filename: str, has_headers=False):
                 i += 1
 
 
-def import_receipts(filename: str):
+def import_receipts(filename: str, from_cmd=True):
+    employees_not_found = []
+
     i = 0
     for row in _import_csv(filename):
-        employee_id = row[0]
+        employee_id = int(row[0])
 
-        if not Employee.read(int(employee_id)):
+        if not Employee.read(employee_id):
             print(f'No Employee#{employee_id} exists, ignoring')
+            employees_not_found.append(employee_id)
             continue
 
         receipts = row[1:]
@@ -48,15 +52,24 @@ def import_receipts(filename: str):
             i += 1
 
     print(f'Imported {i} receipts successfully')
+    if not from_cmd:
+        if len(employees_not_found) > 0:
+            messagebox.showinfo("showwarning", f'Imported {i} receipts successfully. However, the following'
+            f'employee ID\'s were not found: {employees_not_found}')
+        else:
+            messagebox.showinfo("showinfo", f'Imported {i} receipts successfully')
 
 
-def import_timesheets(filename: str):
+def import_timesheets(filename: str, from_cmd=True):
+    employees_not_found = []
+
     i = 0
     for row in _import_csv(filename):
-        employee_id = row[0]
+        employee_id = int(row[0])
 
-        if not Employee.read(int(employee_id)):
+        if not Employee.read(employee_id):
             print(f'No Employee#{employee_id} exists, ignoring')
+            employees_not_found.append(employee_id)
             continue
 
         timesheets = row[1:]
@@ -74,9 +87,15 @@ def import_timesheets(filename: str):
             i += 1
 
     print(f'Imported {i} timesheets successfully')
+    if not from_cmd:
+        if len(employees_not_found) > 0:
+            messagebox.showinfo("showwarning", f'Imported {i} timesheets successfully. However, the following'
+            f'employee ID\'s were not found: {employees_not_found}')
+        else:
+            messagebox.showinfo("showinfo", f'Imported {i} timesheets successfully')
 
 
-def import_employees(filename: str):
+def import_employees(filename: str, from_cmd=True):
     i = 0
     for row in _import_csv(filename, has_headers=True):
         names = _split_names(row[1])
@@ -102,6 +121,8 @@ def import_employees(filename: str):
         i += 1
 
     print(f'Imported {i} employees successfully')
+    if not from_cmd:
+        messagebox.showinfo("showinfo", f'Imported {i} employees successfully')
 
 
 def _split_names(full_name: str):
