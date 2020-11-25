@@ -1,12 +1,12 @@
-from sqlalchemy import Table, MetaData, Column, String, Integer, DateTime, Boolean, BigInteger
+from sqlalchemy import Table, MetaData, Column, String, Integer, DateTime, Boolean, Float, BigInteger
 
 from lib.model import DynamicModel, HasRelationships, register_database_model
 from lib.repository.db import DatabaseRepository
 
 
 @register_database_model
-class TimeSheet(DatabaseRepository, DynamicModel, HasRelationships):
-    resource_uri = 'time_sheet'
+class Receipt(DatabaseRepository, DynamicModel, HasRelationships):
+    resource_uri = 'receipt'
     field_validators = {
 
     }
@@ -27,19 +27,12 @@ class TimeSheet(DatabaseRepository, DynamicModel, HasRelationships):
     def relationship_fields(self) -> list:
         return []
 
-    def to_hours(self):
-        difference = self.datetime_end - self.datetime_begin
-        return difference.total_sections() / 3600  # seconds to hour
-
     @classmethod
     def table(cls, metadata=MetaData()) -> Table:
         return Table(cls.resource_uri, metadata,
                      Column('id', BigInteger().with_variant(Integer, "sqlite"), primary_key=True),
                      Column('user_id', String(36)),
-                     Column('datetime_begin', DateTime),
-                     Column('datetime_end', DateTime),
-                     Column('break_begin', DateTime, nullable=True),
-                     Column('break_end', DateTime, nullable=True),
+                     Column('amount', Float),
                      Column('paid', Boolean, default=False),
                      Column('created_at', DateTime),
                      Column('modified_at', DateTime),

@@ -18,22 +18,22 @@ class DatabaseController(Controller):
 
     def __init__(self):
         super().__init__(DatabaseWindow({
+            'new_employee': self.new_employee,
+            'file>logout': self.logout
         }))
 
     def show(self):
         employees = Employee.read_all()
         for employee in employees:
-            self.view.add_to_result(employee.id, {
-                "ID": employee.id,
-                "Name": f"{employee.last_name}, {employee.first_name}",
-                "Address": f"{employee.address_line1} {employee.address_line2}",
-                "City": employee.city,
-                "State": employee.state,
-                "Postal": employee.zipcode,
-                "Class": "hi",
-                "Payment Method": employee.id
-            })
+            self.view.add_to_result(employee.id, employee.to_view_model())
 
         self.view.table.autoResizeColumns()
 
         super().show()
+
+    def new_employee(self):
+        print('new employee!')
+        self.view.new_employee()
+
+    def logout(self):
+        exit()

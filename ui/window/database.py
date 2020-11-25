@@ -22,10 +22,6 @@ class DatabaseWindow(TkinterWindow):
         f = Frame(self.main)
         f.pack(fill=BOTH, expand=1)
         self.table = TableCanvas(f, data=self.results, rowheight=50)
-        # table.importCSV('legacy/employees.csv')
-        # print (table.model.columnNames)
-        # table.model.data[1]['a'] = 'XX'
-        # table.model.setValueAt('TESTCHANGE',0,0)
         self.table.show()
 
         if store.AUTHENTICATED_USER.role == 'Viewer':
@@ -43,15 +39,15 @@ class DatabaseWindow(TkinterWindow):
         self.filemenu = Menu(self.menubar, tearoff=False)
         # New Employee
         # adds a command to the menu option, calling it exit
-        self.filemenu.add_command(label="New Employee")
+        self.filemenu.add_command(label="New Employee", command=self.event_handlers['new_employee'])
         # Logout
-        self.filemenu.add_command(label="Logout", command=None)
+        self.filemenu.add_command(label="Logout", command=self.event_handlers['file>logout'])
         # added "file" to our menu
         self.menubar.add_cascade(label="File", menu=self.filemenu)
         # Reports Tab
         self.reports_menu = Menu(self.menubar, tearoff=False)
-        self.reports_menu.add_command(label="Paylog")
-        self.reports_menu.add_command(label="Employee Directory")
+        self.reports_menu.add_command(label="Paylog", command=None)
+        self.reports_menu.add_command(label="Employee Directory", command=None)
         self.menubar.add_cascade(label="Reports", menu=self.reports_menu)
         # Import tab
         self.import_menu = Menu(self.menubar, tearoff=False)
@@ -66,7 +62,7 @@ class DatabaseWindow(TkinterWindow):
         self.new_button = Button(
             buttons,
             text="New",
-            command=lambda: self.add_to_result(12345, {}),
+            command=lambda: self.event_handlers['new_employee'],
         )
         self.search_button = Button(
             buttons,

@@ -94,7 +94,7 @@ def _generic_regex(regexes: list, value):
         return re.match(re.compile(regexes), value) is not None
 
     for regex in regexes:
-        result = re.match(re.compile(regex), value)
+        result = re.match(re.compile(regex), str(value))
         if result is None:
             return None
 
@@ -120,6 +120,15 @@ def _alpha(value: str):
     """
     return _generic_regex([r'^[A-Za-z\.\s]+$'], value)
 
+def _numeric(value: str):
+    """
+    Validates fields to be numeric only
+
+    :param value:
+    :return: if string is alphabetic
+    """
+    return _generic_regex([r'^[0-9\-]+$'], value)
+
 
 def _notnull(value):
     """
@@ -133,5 +142,6 @@ def _notnull(value):
 _validators = {
     'phone': _phone_number,
     'alpha': _alpha,
+    'numeric': _numeric,
     'notnull': _notnull
 }

@@ -37,21 +37,30 @@ ROLES = {
                 "bank_routing",
                 "bank_account",
                 "classification_id",
-                "paymethod_id"
+                "paymethod_id",
+                "role"
             ]
         },
     },
     "Reporter": {
         CANT_READ: {
             "employee": [
-                "social_security_number"
+                "social_security_number",
+                "role"
             ]
         }
     },
     "Viewer": {
         CANT_READ: {
             "employee": [
-                "social_security_number"
+                "salary",
+                "hourly_rate",
+                "commission_rate",
+                "bank_routing",
+                "bank_account",
+                "classification_id",
+                "paymethod_id",
+                "role"
             ]
         }
     }

@@ -1,12 +1,20 @@
 import sys
 
-from lib.cli.import_csv import import_csv
+from lib.cli.import_csv import import_employees, import_receipts, import_timesheets
 
 COMMANDS = {
-    'import_csv': {
-        'method': import_csv,
+    'import_employees': {
+        'method': import_employees,
         'args': 1
-    }
+    },
+    'import_receipts': {
+        'method': import_receipts,
+        'args': 1
+    },
+    'import_timesheets': {
+        'method': import_timesheets,
+        'args': 1
+    },
 }
 
 

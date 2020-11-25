@@ -1,10 +1,13 @@
 import csv
+import datetime
 import os
 
 from lib.model.employee import Employee
+from lib.model.receipt import Receipt
+from lib.model.time_sheet import TimeSheet
 
 
-def import_csv(filename: str):
+def _import_csv(filename: str, has_headers=False):
     if not os.path.exists(filename):
         raise ValueError('File given does not exist!')
     if not _is_csv(filename):
@@ -17,33 +20,86 @@ def import_csv(filename: str):
         reader = csv.reader(csv_file, delimiter=',')
         cursor = 0
         for row in reader:
-            if cursor == 0:  # this row is the column names, unneeded
+            if cursor == 0 and has_headers:  # this row is the column names, unneeded
                 cursor += 1
                 continue
             else:
-                names = _split_names(row[1])
-
-                Employee.create(Employee({
-                    'id': row[0],
-                    'role': 'Viewer',
-                    'first_name': names[0],
-                    'last_name': names[1],
-                    'address_line1': row[2],
-                    'address_line2': '',
-                    'city': row[3],
-                    'state': row[4],
-                    'zipcode': row[5],
-                    'classification_id': row[6],
-                    'paymethod_id': row[7],
-                    'salary': row[8],
-                    'hourly_rate': row[9],
-                    'commission_rate': row[10],
-                    'bank_routing': row[11],
-                    'bank_account': row[12],
-                }))
-
-                print('Importing Emp#', row[0])
+                yield row
                 i += 1
+
+
+def import_receipts(filename: str):
+    i = 0
+    for row in _import_csv(filename):
+        employee_id = row[0]
+
+        if not Employee.read(int(employee_id)):
+            print(f'No Employee#{employee_id} exists, ignoring')
+            continue
+
+        receipts = row[1:]
+
+        for receipt in receipts:
+            Receipt.create(Receipt({
+                'user_id': employee_id,
+                'amount': receipt
+            }))
+            print('Importing Receipt#', i, 'for Emp#', employee_id)
+            i += 1
+
+    print(f'Imported {i} receipts successfully')
+
+
+def import_timesheets(filename: str):
+    i = 0
+    for row in _import_csv(filename):
+        employee_id = row[0]
+
+        if not Employee.read(int(employee_id)):
+            print(f'No Employee#{employee_id} exists, ignoring')
+            continue
+
+        timesheets = row[1:]
+
+        for time_in_hours in timesheets:
+            datetime_end = datetime.datetime.now()
+            datetime_begin = datetime_end - datetime.timedelta(seconds=(float(time_in_hours) * 3600))
+
+            TimeSheet.create(TimeSheet({
+                'user_id': employee_id,
+                'datetime_end': datetime_end,
+                'datetime_begin': datetime_begin
+            }))
+            print('Importing TimeSheet#', i, 'for Emp#', employee_id)
+            i += 1
+
+    print(f'Imported {i} timesheets successfully')
+
+
+def import_employees(filename: str):
+    i = 0
+    for row in _import_csv(filename, has_headers=True):
+        names = _split_names(row[1])
+        Employee.create(Employee({
+            'id': row[0],
+            'role': 'Viewer',
+            'first_name': names[0],
+            'last_name': names[1],
+            'address_line1': row[2],
+            'address_line2': '',
+            'city': row[3],
+            'state': row[4],
+            'zipcode': row[5],
+            'classification_id': int(row[6]),
+            'paymethod_id': int(row[7]),
+            'salary': row[8],
+            'hourly_rate': row[9],
+            'commission_rate': row[10],
+            'bank_routing': row[11],
+            'bank_account': row[12],
+        }))
+        print('Importing Emp#', row[0])
+        i += 1
 
     print(f'Imported {i} employees successfully')
 

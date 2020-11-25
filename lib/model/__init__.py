@@ -23,18 +23,6 @@ def find_model_by_name(model_name):
     return None
 
 
-class ViewModel:
-    def __init__(self):
-        pass
-
-    def to_view_model(self):
-        return self.__dict__
-
-    @classmethod
-    def from_view_model(cls, view_model: dict):
-        return cls(view_model)  # pylint: disable=too-many-function-args
-
-
 class DynamicModel:
     """
     This Model attribute will allow fields to be completely dynamic
@@ -77,7 +65,7 @@ class DynamicModel:
             return super().__getattribute__(key)
         if key in self.data:
             return self.data[key]
-        raise AttributeError()
+        return None
 
     def __setattr__(self, key, value):
         if key in self.reserved_keywords:
@@ -107,6 +95,29 @@ class DynamicModel:
         }
         """
         raise NotImplementedError
+
+
+class DynamicViewModel(DynamicModel):
+    view_columns: dict = {}
+
+    def __init__(self, data: dict):
+        super().__init__(data)
+
+    def to_view_model(self):
+        view_model = {}
+        for key, value in self.view_columns.items():
+            if getattr(self, key):
+                view_model[value] = getattr(self, key)
+        return view_model
+
+    @classmethod
+    def from_view_model(cls, view_model: dict):
+        data = {}
+        for key, value in cls.view_columns.items():
+            if getattr(view_model, value):
+                data[key] = view_model[value]
+
+        return cls(data)
 
 
 class HasRelationships:

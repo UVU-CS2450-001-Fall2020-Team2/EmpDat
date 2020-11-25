@@ -1,3 +1,4 @@
+from lib.layer.security import SecurityLayer
 from lib.model.employee import Employee
 from ui import store
 from ui.control import Controller
@@ -16,6 +17,7 @@ class LoginController(Controller):
         authenticated = Employee.authenticate(username, password)
         if authenticated is not None:
             store.AUTHENTICATED_USER = authenticated
+            SecurityLayer(authenticated)
             print("Logged in as user ID", authenticated.id)
             # TODO send to main database page
             self.view.destroy()
