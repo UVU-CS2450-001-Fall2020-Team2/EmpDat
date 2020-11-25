@@ -28,7 +28,7 @@ class LoginWindow(TkinterWindow):
         self.title = Label(main, text="EmpDat")
         self.title.pack(pady=10)
 
-        self.username = Label(main, text="Username")
+        self.username = Label(main, text="Employee ID")
         self.entry = Entry(main, width=50)
         self.username.pack()
         self.entry.pack(padx=10)

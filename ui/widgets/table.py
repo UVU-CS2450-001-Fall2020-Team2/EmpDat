@@ -12,7 +12,7 @@ class EmpDatTableCanvas(TableCanvas):
     Override for TableCanvas
     """
 
-    def __init__(self, *args, col_modifiers: dict = None, **kwargs):
+    def __init__(self, *args, col_modifiers: dict = None, on_change=None, on_unsaved=None, on_selected=None, **kwargs):
         """
         TableCanvas constructor
         :param args: blanket passthrough
@@ -29,13 +29,18 @@ class EmpDatTableCanvas(TableCanvas):
                         'render_as': lambda X: Y    # Render X as Y
                     }
                 }
-
+        :param on_change: callback called on every change
+        :param on_unsaved: callback called on every change, passes 1 parameter on whether there are pending changes
+        :param on_selected: callback called on when a row is selected
         :param kwargs: blanket passthrough
         """
         super().__init__(*args, **kwargs)
 
         self.col_modifiers = col_modifiers
         self.unsaved = set()
+        self.on_change = on_change
+        self.on_unsaved = on_unsaved
+        self.on_selected = on_selected
 
     def drawText(self, row, col, celltxt, fgcolor=None, align=None):
         """Draw the text inside a cell area"""
@@ -93,6 +98,12 @@ class EmpDatTableCanvas(TableCanvas):
                 self.delete('entry')
                 # self.drawRect(row, col)
                 # self.gotonextCell(e)
+            if self.on_change:
+                self.on_change()
+            if len(self.unsaved) > 0:
+                self.on_unsaved(False)
+            else:
+                self.on_unsaved(True)
             return
 
         if col in self.col_modifiers and 'options' in self.col_modifiers[col]:
@@ -122,6 +133,12 @@ class EmpDatTableCanvas(TableCanvas):
                                            tag='entry')
 
         return
+
+    def handle_left_click(self, event):
+        """Respond to a single press"""
+
+        self.on_selected()
+        super().handle_left_click(event)
 
     # def deleteRowByRecname(self, recname):
     #     """Delete a row"""

@@ -34,7 +34,9 @@ class DatabaseWindow(TkinterWindow):
             9: {  # Payment Method
                 'options': list(employee.pay_methods_dict.keys())
             }
-        }, data=self.results, rowheight=50)
+        }, on_unsaved=lambda x: self.set_save_state('normal' if not x else 'disabled'),
+                                       on_selected=lambda: self.set_delete_state('normal'),
+                                       data=self.results, rowheight=50)
         self.table.show()
 
         if store.AUTHENTICATED_USER.role == 'Viewer':
@@ -42,7 +44,6 @@ class DatabaseWindow(TkinterWindow):
 
         self.create_menu()
         self.create_bottom()
-
 
     def create_menu(self):
         # add menubar at the top
@@ -90,16 +91,19 @@ class DatabaseWindow(TkinterWindow):
         self.delete_button = Button(
             buttons,
             text="Delete",
-            # command=lambda: event_handlers['submit'](self.entry.get(), self.password_entry.get()),
+            state="disabled",
+            command=self.event_handlers['delete'],
         )
         self.save_button = Button(
             buttons,
             text="Save",
             command=self.event_handlers['save'],
+            state="disabled"
         )
 
         self.new_button.pack(side=LEFT, anchor=W)
-        Label(buttons, text=f"({store.AUTHENTICATED_USER.first_name} {store.AUTHENTICATED_USER.last_name})").pack(side=LEFT, anchor=W)
+        Label(buttons, text=f"({store.AUTHENTICATED_USER.first_name} {store.AUTHENTICATED_USER.last_name})").pack(
+            side=LEFT, anchor=W)
 
         self.status = Label(buttons, text='')
         self.status.pack(side=LEFT, anchor=W)
@@ -112,6 +116,12 @@ class DatabaseWindow(TkinterWindow):
 
         buttons.pack(side=RIGHT, fill=X, expand=1)
 
+    def set_save_state(self, state):
+        self.save_button['state'] = state
+
+    def set_delete_state(self, state):
+        self.delete_button['state'] = state
+
     def new_employee(self):
         new_id = 12345
         self.add_to_result(new_id, {})
@@ -119,7 +129,6 @@ class DatabaseWindow(TkinterWindow):
 
     def add_to_result(self, id, to_add: dict):
         self.table.addRow(id, **to_add)
-        print(self.table.model)
 
     def destroy_results(self):
         keys = list(self.table.model.data.keys())

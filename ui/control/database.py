@@ -1,5 +1,5 @@
 from lib.cli import import_csv
-from lib.layer.security import ChangeRequestException
+from lib.layer.security import ChangeRequestException, SecurityException
 from lib.model.employee import Employee
 from ui.control import Controller
 from ui.control.change_requests import ChangeRequestsController
@@ -23,11 +23,12 @@ class DatabaseController(Controller):
         super().__init__(DatabaseWindow({
             'new_employee': self.new_employee,
             'save': self.save,
+            'delete': self.delete,
             'file>logout': self.logout,
             'import>employees': self.import_employees,
             'import>receipts': self.import_receipts,
             'import>timesheets': self.import_timesheets,
-            'admin>review': self.open_change_requests
+            'admin>review': self.open_change_requests,
         }))
 
     def load(self):
@@ -68,6 +69,18 @@ class DatabaseController(Controller):
             self.view.set_status(f'Request to Change {len(self.view.table.unsaved)} employees Submitted!')
         else:
             self.view.set_status(f'Saved {len(self.view.table.unsaved)} employees successfully!')
+        self.refresh()
+
+    def delete(self):
+        ids = self.view.table.get_selectedRecordNames()
+        for employee_id in ids:
+            try:
+                Employee.destroy(employee_id)
+            except SecurityException:
+                self.view.show_error('Access Denied', 'Insufficient permission to delete selected employees')
+                self.refresh()
+                break
+        self.view.show_info('Deletion Successful', 'The selected employee(s) were deleted successfully!')
         self.refresh()
 
     def new_employee(self):
