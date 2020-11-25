@@ -45,6 +45,9 @@ class DynamicModel:
         :param data: dict
         """
         self.data = data
+        self.cast_fields()
+
+    def cast_fields(self):
         for field in self.field_casts:
             if field in self.data:
                 self.data[field] = self.field_casts[field](self.data[field])
@@ -118,6 +121,9 @@ class DynamicViewModel(DynamicModel):
                 data[key] = view_model[value]
 
         return cls(data)
+
+    def get_name(self):
+        raise NotImplementedError
 
 
 class HasRelationships:

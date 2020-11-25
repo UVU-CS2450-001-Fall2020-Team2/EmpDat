@@ -1,6 +1,7 @@
 from lib.cli import import_csv
 from lib.model.employee import Employee
 from ui.control import Controller
+from ui.control.change_requests import ChangeRequestsController
 from ui.window.database import DatabaseWindow
 
 
@@ -20,10 +21,12 @@ class DatabaseController(Controller):
     def __init__(self):
         super().__init__(DatabaseWindow({
             'new_employee': self.new_employee,
+            'save': self.save,
             'file>logout': self.logout,
             'import>employees': self.import_employees,
             'import>receipts': self.import_receipts,
-            'import>timesheets': self.import_timesheets
+            'import>timesheets': self.import_timesheets,
+            'admin>review': self.open_change_requests
         }))
 
     def load(self):
@@ -41,12 +44,21 @@ class DatabaseController(Controller):
     def refresh(self):
         self.view.destroy_results()
         self.load()
+        self.view.table.unsaved = []
         self.view.table.redraw()
 
     def show(self):
         self.load()
 
         super().show()
+
+    def save(self):
+        for employee_id in self.view.table.unsaved:
+            view_model = self.view.table.model.data[employee_id]
+            employee = Employee.from_view_model(view_model)
+            Employee.update(employee)
+        self.view.set_status(f'Saved {len(self.view.table.unsaved)} employees successfully!')
+        self.refresh()
 
     def new_employee(self):
         print('new employee!')
@@ -58,6 +70,7 @@ class DatabaseController(Controller):
                 title='Import Employees (CSV)',
                 filetypes=('*.csv', '*.txt')
             ), from_cmd=False)
+        self.view.set_status(f'Importing employees successful!')
         self.refresh()
 
     def import_receipts(self):
@@ -66,6 +79,7 @@ class DatabaseController(Controller):
                 title='Import Receipts (CSV)',
                 filetypes=('*.txt', '*.csv')
             ), from_cmd=False)
+        self.view.set_status(f'Importing receipts successful!')
         self.refresh()
 
     def import_timesheets(self):
@@ -74,7 +88,11 @@ class DatabaseController(Controller):
                 title='Import Time Sheets (CSV)',
                 filetypes=('*.txt', '*.csv')
             ), from_cmd=False)
+        self.view.set_status(f'Importing time sheets successful!')
         self.refresh()
+
+    def open_change_requests(self):
+        ChangeRequestsController().show()
 
     def logout(self):
         exit()

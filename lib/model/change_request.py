@@ -5,13 +5,13 @@ import datetime
 
 from sqlalchemy import MetaData, Table, Column, String, DateTime, Text, BigInteger, JSON, Integer
 
-from lib.model import DynamicModel, HasRelationships, register_database_model, find_model_by_name
+from lib.model import HasRelationships, register_database_model, find_model_by_name, DynamicViewModel
 from lib.model.employee import Employee
 from lib.repository.db import DatabaseRepository
 
 
 @register_database_model
-class ChangeRequest(DatabaseRepository, DynamicModel, HasRelationships):
+class ChangeRequest(DatabaseRepository, DynamicViewModel, HasRelationships):
     """
     Tied directly to the 'change_request' table
     """
@@ -23,15 +23,24 @@ class ChangeRequest(DatabaseRepository, DynamicModel, HasRelationships):
     }
     field_casts = {
     }
+    view_columns = {
+        # 'id': 'ID',
+        'author': 'Issued By',
+        'table_name': 'Data Type',
+        'row_id': 'ID affected',
+        'changes': 'Changes',
+        # 'reason': 'Reason',
+        'created_at': 'Created On',
+    }
 
     def __init__(self, data):
-        DynamicModel.__init__(self, data)
+        DynamicViewModel.__init__(self, data)
         DatabaseRepository.__init__(self)
 
         self.load_relationships()
 
     def to_dict(self):
-        return self.trim_relationships(DynamicModel.to_dict(self))
+        return self.trim_relationships(DynamicViewModel.to_dict(self))
 
     def load_relationships(self):
         self.author = Employee.read(self.author_user_id)
@@ -71,6 +80,18 @@ class ChangeRequest(DatabaseRepository, DynamicModel, HasRelationships):
 
         self.approved_by_user_id = approved_by.id
         self.approved_at = datetime.datetime.now()
+
+    @classmethod
+    def prettify_changes(cls, changes, model_name=None):
+        result = ""
+        for diff_type, field, values in changes:
+            if model_name:
+                model_cls = find_model_by_name(model_name)
+                result += f"{model_cls.view_columns[field]}: {values[0]} > {values[1]}\n"
+            else:
+                result += f"{field}: {values[0]} > {values[1]}\n"
+        return result.rstrip()
+
 
     @classmethod
     def table(cls, metadata=MetaData()):

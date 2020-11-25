@@ -11,7 +11,6 @@ from ui.window import *
 class DatabaseWindow(TkinterWindow):
     def __init__(self, event_handlers):
         super().__init__(event_handlers)
-        self.master.title('EmpDat')
 
         self.results = {}
         self.edit_icon = PhotoImage(file="ui/icons/pencil.gif")
@@ -69,6 +68,11 @@ class DatabaseWindow(TkinterWindow):
         self.import_menu.add_command(label="Receipt", command=self.event_handlers['import>receipts'])
         self.import_menu.add_command(label="Timesheet", command=self.event_handlers['import>timesheets'])
         self.menubar.add_cascade(label="Import", menu=self.import_menu)
+        # Admin tab
+        if store.AUTHENTICATED_USER.role == 'Admin':
+            self.admin_menu = Menu(self.menubar, tearoff=False)
+            self.admin_menu.add_command(label="Review Change Requests", command=self.event_handlers['admin>review'])
+            self.menubar.add_cascade(label="Admin", menu=self.admin_menu)
 
     def create_bottom(self):
         buttons = Frame(self.main)
@@ -91,7 +95,7 @@ class DatabaseWindow(TkinterWindow):
         self.save_button = Button(
             buttons,
             text="Save",
-            # command=lambda: event_handlers['submit'](self.entry.get(), self.password_entry.get()),
+            command=self.event_handlers['save'],
         )
 
         self.new_button.pack(side=LEFT, anchor=W)
@@ -118,11 +122,9 @@ class DatabaseWindow(TkinterWindow):
         print(self.table.model)
 
     def destroy_results(self):
-        pass
-        for key in self.results:
-            for row in self.results[key]:
-                self.results[key][row].destroy()
-        self.results = {}
+        keys = list(self.table.model.data.keys())
+        for key in keys:
+            self.table.model.deleteRow(key=key)
 
     def on_edit(self, row_id):
         pass
@@ -134,9 +136,10 @@ class DatabaseWindow(TkinterWindow):
         # TODO call controller hook
 
     def destroy_row(self, row_id):
-        pass
-        for element in self.results[row_id]:
-            element.destroy()
+        del self.table.model.data[row_id]
+
+    def set_status(self, text: str):
+        self.status.configure(text=text)
 
 
 if __name__ == "__main__":

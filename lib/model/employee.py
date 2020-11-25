@@ -56,6 +56,10 @@ class Employee(DatabaseRepository, DynamicViewModel, HasRelationships):
         'notes': 'Notes',
     }
     field_casts = {
+        'id': lambda s: int(s),
+        'salary': lambda s: float(s) if s is not None else None,
+        'hourly_rate': lambda s: float(s) if s is not None else None,
+        'commission_rate': lambda s: float(s) if s is not None else None,
         # 'start_date': lambda d: datetime.date.fromtimestamp(d),  # pylint: disable=unnecessary-lambda
         # 'date_of_birth': lambda d: datetime.date.fromtimestamp(d),  # pylint: disable=unnecessary-lambda
         # 'date_left': lambda d: datetime.date.fromtimestamp(d),  # pylint: disable=unnecessary-lambda
@@ -82,6 +86,29 @@ class Employee(DatabaseRepository, DynamicViewModel, HasRelationships):
             'payment_method'
         ]
 
+    def get_name(self):
+        return f"{self.first_name} {self.last_name}"
+
+    @classmethod
+    def from_view_model(cls, view_model: dict):
+        employee = Employee.read(int(view_model[cls.view_columns['id']]))
+        for key, value in cls.view_columns.items():
+            if value in view_model:
+                setattr(employee, key, view_model[value])
+
+        employee.cast_fields()
+
+        print(employee)
+
+        employee.classification = Classification.to_enum_from_name(employee.classification)
+        employee.classification_id = employee.classification.get_id()
+        employee.payment_method = PaymentMethod.to_enum_from_name(employee.payment_method)
+        employee.paymethod_id = employee.payment_method.get_id()
+
+        print(employee)
+
+        return employee
+
     @classmethod
     def authenticate(cls, username, password):
         employees = Employee.read_by(filters={
@@ -96,6 +123,9 @@ class Employee(DatabaseRepository, DynamicViewModel, HasRelationships):
         if sha_hash(password) == employee.password:
             return employee
         return None
+
+    def __str__(self):
+        return f"{self.first_name} {self.last_name}"
 
     @classmethod
     def table(cls, metadata=MetaData()):
@@ -188,7 +218,15 @@ class Classification:
 
     @classmethod
     def to_enum(cls, clz):
-        return classifications[classifications_dict[str(clz)]['id']]
+        return classifications[classifications_dict[clz.name]['id']]
+
+    @classmethod
+    def to_enum_from_name(cls, name):
+        return classifications[classifications_dict[name]['id'] - 1]
+
+    @classmethod
+    def get_id(cls):
+        return classifications_dict[cls.name]['id']
 
 
 @register_classification
@@ -203,7 +241,6 @@ class Hourly(Classification):
         This method is the constructor for the Hourly classification
         """
         super().__init__()
-        self.time_list = []
 
     def issue_payment(self, employee_id, hourly_rate):
         """
@@ -217,8 +254,6 @@ class Hourly(Classification):
             'paid': ('!=', True)
         })
         s = sum([timesheet.to_hours() for timesheet in timesheets])
-
-        s = sum(self.time_list)
         money += hourly_rate * s
 
         for timesheet in timesheets:
@@ -326,7 +361,15 @@ class PaymentMethod:
 
     @classmethod
     def to_enum(cls, clz):
-        return pay_methods[pay_methods_dict[str(clz)]['id']]
+        return pay_methods[pay_methods_dict[clz.name]['id']]
+
+    @classmethod
+    def to_enum_from_name(cls, name):
+        return pay_methods[pay_methods_dict[name]['id'] - 1]
+
+    @classmethod
+    def get_id(cls):
+        return pay_methods_dict[cls.name]['id']
 
     def __str__(self):
         return self.name

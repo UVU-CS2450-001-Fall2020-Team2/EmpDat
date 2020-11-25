@@ -24,6 +24,9 @@ class EmpDatTableCanvas(TableCanvas):
                     },
                     1: {
                         'options': ['A', 'B', 'C"]  # Options A, B, and C
+                    },
+                    2: {
+                        'render_as': lambda X: Y    # Render X as Y
                     }
                 }
 
@@ -32,6 +35,15 @@ class EmpDatTableCanvas(TableCanvas):
         super().__init__(*args, **kwargs)
 
         self.col_modifiers = col_modifiers
+        self.unsaved = set()
+
+    def drawText(self, row, col, celltxt, fgcolor=None, align=None):
+        """Draw the text inside a cell area"""
+
+        if col in self.col_modifiers and 'render_as' in self.col_modifiers[col]:
+            celltxt = self.col_modifiers[col]['render_as'](celltxt)
+
+        super().drawText(row, col, celltxt, fgcolor, align)
 
     def drawCellEntry(self, row, col, text=None):
         """When the user single/double clicks on a text/number cell, bring up entry window"""
@@ -69,8 +81,10 @@ class EmpDatTableCanvas(TableCanvas):
             if coltype == 'number':
                 sta = self.checkDataEntry(e)
                 if sta == 1:
+                    self.unsaved.add(self.model.getRecName(row))
                     model.setValueAt(value, row, col)
             elif coltype == 'text':
+                self.unsaved.add(self.model.getRecName(row))
                 model.setValueAt(value, row, col)
 
             color = self.model.getColorAt(row, col, 'fg')
@@ -89,6 +103,7 @@ class EmpDatTableCanvas(TableCanvas):
                                       takefocus=1,
                                       font=self.thefont)
             self.cellentry['values'] = options
+            self.cellentry.bind('<<ComboboxSelected>>', callback)
         else:
             self.cellentry = Entry(self.parentframe, width=20,
                                    textvariable=txtvar,
@@ -107,3 +122,11 @@ class EmpDatTableCanvas(TableCanvas):
                                            tag='entry')
 
         return
+
+    # def deleteRowByRecname(self, recname):
+    #     """Delete a row"""
+    #     row = self.get
+    #     self.model.deleteRow(row)
+    #     self.setSelectedRow(row-1)
+    #     self.clearSelected()
+    #     self.redrawTable()
