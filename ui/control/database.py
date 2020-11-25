@@ -1,4 +1,5 @@
 from lib.cli import import_csv
+from lib.layer.security import ChangeRequestException
 from lib.model.employee import Employee
 from ui.control import Controller
 from ui.control.change_requests import ChangeRequestsController
@@ -53,11 +54,20 @@ class DatabaseController(Controller):
         super().show()
 
     def save(self):
+        change_request_submitted = False
         for employee_id in self.view.table.unsaved:
             view_model = self.view.table.model.data[employee_id]
             employee = Employee.from_view_model(view_model)
-            Employee.update(employee)
-        self.view.set_status(f'Saved {len(self.view.table.unsaved)} employees successfully!')
+            try:
+                Employee.update(employee)
+            except ChangeRequestException:
+                change_request_submitted = True
+
+        if change_request_submitted:
+            self.view.show_info('Request to Change Submitted!')
+            self.view.set_status(f'Request to Change {len(self.view.table.unsaved)} employees Submitted!')
+        else:
+            self.view.set_status(f'Saved {len(self.view.table.unsaved)} employees successfully!')
         self.refresh()
 
     def new_employee(self):
