@@ -14,6 +14,9 @@ class LoginController(Controller):
         }))
 
     def login(self, username, password):
+        if not self.view.validate():
+            return
+
         authenticated = Employee.authenticate(username, password)
         if authenticated is not None:
             store.AUTHENTICATED_USER = authenticated

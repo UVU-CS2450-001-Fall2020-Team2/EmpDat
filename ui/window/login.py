@@ -49,6 +49,12 @@ class LoginWindow(TkinterWindow):
 
         self.master.bind('<Return>', lambda x: event_handlers['submit'](self.entry.get(), self.password_entry.get()))
 
+    def validate(self):
+        if len(self.entry.get()) <= 0:
+            self.show_error('Username required', 'No username given.')
+            return False
+        return True
+
 
 if __name__ == '__main__':
     login_page = LoginWindow({

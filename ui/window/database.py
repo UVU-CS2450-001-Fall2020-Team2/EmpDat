@@ -1,9 +1,10 @@
 from tkinter import *
 from tkinter.ttk import *
 
-from tkintertable import TableCanvas
-
+from lib.layer import security
+from lib.model import employee
 from ui import store
+from ui.widgets.table import EmpDatTableCanvas
 from ui.window import *
 
 
@@ -21,7 +22,20 @@ class DatabaseWindow(TkinterWindow):
         self.main.title('EmpDat')
         f = Frame(self.main)
         f.pack(fill=BOTH, expand=1)
-        self.table = TableCanvas(f, data=self.results, rowheight=50)
+        self.table = EmpDatTableCanvas(f, col_modifiers={
+            0: {  # ID
+                'read_only': True
+            },
+            1: {  # Role
+                'options': list(security.ROLES.keys())
+            },
+            8: {  # Classification
+                'options': list(employee.classifications_dict.keys())
+            },
+            9: {  # Payment Method
+                'options': list(employee.pay_methods_dict.keys())
+            }
+        }, data=self.results, rowheight=50)
         self.table.show()
 
         if store.AUTHENTICATED_USER.role == 'Viewer':

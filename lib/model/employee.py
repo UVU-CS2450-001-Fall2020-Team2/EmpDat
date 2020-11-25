@@ -45,7 +45,7 @@ class Employee(DatabaseRepository, DynamicViewModel, HasRelationships):
         'emergency_contact_relation': 'Emergency Contact Relation',
         'emergency_contact_phone': 'Emergency Contact Phone',
         'classification': 'Classification',
-        'paymethod': 'Pay Method',
+        'payment_method': 'Payment Method',
         'salary': 'Salary',
         'hourly_rate': 'Hourly Rate',
         'commission_rate': 'Commission Rate',
@@ -74,7 +74,7 @@ class Employee(DatabaseRepository, DynamicViewModel, HasRelationships):
 
     def load_relationships(self):
         self.classification = Classification.from_enum(self.classification_id)
-        self.payment_method = Classification.from_enum(self.paymethod_id)
+        self.payment_method = PaymentMethod.from_enum(self.paymethod_id)
 
     def relationship_fields(self):
         return [
@@ -145,7 +145,7 @@ pay_methods_dict = {}
 
 def register_classification(cls):
     classifications.append(cls)
-    classifications_dict[str(cls)] = {
+    classifications_dict[cls.name] = {
         'class': cls,
         'id': len(classifications)
     }
@@ -154,7 +154,7 @@ def register_classification(cls):
 
 def register_payment_method(cls):
     pay_methods.append(cls)
-    pay_methods_dict[str(cls)] = {
+    pay_methods_dict[cls.name] = {
         'class': cls,
         'id': len(pay_methods)
     }
@@ -167,6 +167,7 @@ class Classification:
 
     Creates the abstract issue payment method which is used for all employee classifications
     """
+    name: str = ''
 
     def __init__(self):
         pass
@@ -179,7 +180,7 @@ class Classification:
         raise NotImplementedError
 
     def __str__(self):
-        return self.__class__
+        return self.name
 
     @classmethod
     def from_enum(cls, id):
@@ -195,6 +196,7 @@ class Hourly(Classification):
     """
     Class for hourly employee, inherits from classification to use abstract issue payment method
     """
+    name = 'Hourly'
 
     def __init__(self):
         """
@@ -232,15 +234,13 @@ class Hourly(Classification):
     #     """
     #     self.time_list.append(time)
 
-    def __str__(self):
-        return 'Hourly'
-
 
 @register_classification
 class Salaried(Classification):
     """
     Class for salary employee, inherits from classification to use abstract issue payment method
     """
+    name = 'Salary'
 
     def __init__(self):
         """
@@ -255,15 +255,13 @@ class Salaried(Classification):
         """
         return float(salary) / 24
 
-    def __str__(self):
-        return 'Salary'
-
 
 @register_classification
 class Commissioned(Classification):
     """
     Class for hourly employee, inherits from classification to use abstract issue payment method
     """
+    name = 'Commission'
 
     def __init__(self):
         """
@@ -289,6 +287,11 @@ class Commissioned(Classification):
         })
         s = sum([receipt.amount for receipt in receipts])
         money += s * (commission / 100)
+
+        for receipt in receipts:
+            receipt.paid = True
+            Receipt.update(receipt)
+
         return money
 
     # def add_receipt(self, rcpt):
@@ -298,14 +301,12 @@ class Commissioned(Classification):
     #     """
     #     self.rcpt_list.append(float(rcpt))
 
-    def __str__(self):
-        return 'Commission'
-
 
 class PaymentMethod:
     """
     Abstract payment class, allows for each employee to have a payment method that can be issued
     """
+    name: str = ''
 
     def __init__(self):
         """
@@ -327,12 +328,16 @@ class PaymentMethod:
     def to_enum(cls, clz):
         return pay_methods[pay_methods_dict[str(clz)]['id']]
 
+    def __str__(self):
+        return self.name
+
 
 @register_payment_method
 class DirectMethod(PaymentMethod):
     """
     Direct method payment class, inherits from PaymentMethod to use abstract issue method
     """
+    name = 'Direct Deposit'
 
     def __init__(self):
         """
@@ -358,6 +363,7 @@ class MailMethod(PaymentMethod):
     """
     Direct method payment class, inherits from PaymentMethod to use abstract issue method
     """
+    name = 'Mail'
 
     def __init__(self):
         """
