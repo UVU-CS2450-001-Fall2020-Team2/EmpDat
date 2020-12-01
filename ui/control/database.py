@@ -28,6 +28,7 @@ class DatabaseController(Controller):
             'import>employees': self.import_employees,
             'import>receipts': self.import_receipts,
             'import>timesheets': self.import_timesheets,
+            'add>receipts': self.add_receipts,
             'admin>review': self.open_change_requests,
         }))
 
@@ -113,6 +114,36 @@ class DatabaseController(Controller):
             ), from_cmd=False)
         self.view.set_status(f'Importing time sheets successful!')
         self.refresh()
+
+    def add_receipts(self):
+        self.main = Toplevel(self.main)
+        self.main.geometry = ('200 x 200')
+        self.emp_label = tkinter.Label(self.main,
+                            text = "Which employee is the receipt for?")
+        self.emp_label.grid(column=0, row=0)
+        tkvar = StringVar(self.main)
+
+        # Dictionary with options
+        choices = {'Joe','John','Suzie','Phil','Allison'}
+        tkvar.set('Joe') # set the default option
+        popupMenu = OptionMenu(self.main, tkvar, *choices)
+        popupMenu.grid(column= 1, row = 0)
+
+        self.amount_lbl = tkinter.Label(self.main,
+                            text = "How much did they pay?")
+        self.amount_lbl.grid(column = 0, row = 1)
+        self.amount = tkinter.Entry(self.main)
+        self.amount.grid(column = 1, row = 1)
+        self.save_btn = Button(self.main, text = "Save", command= None) 
+        #need to change commands
+        self.save_btn.grid(column = 0, row = 2)
+        self.cancel_btn = Button(self.main, text = "Cancel", command= None) 
+        #need to change commands
+        self.cancel_btn.grid(column = 1, row = 2)
+
+        #find a way to do date and time inputs for time sheets
+        
+        
 
     def open_change_requests(self):
         ChangeRequestsController().show()
