@@ -29,6 +29,7 @@ class DatabaseController(Controller):
             'import>receipts': self.import_receipts,
             'import>timesheets': self.import_timesheets,
             'add>receipts': self.add_receipts,
+            'add>timesheets': self.add_timesheets,
             'admin>review': self.open_change_requests,
         }))
 
@@ -141,7 +142,68 @@ class DatabaseController(Controller):
         #need to change commands
         self.cancel_btn.grid(column = 1, row = 2)
 
-        #find a way to do date and time inputs for time sheets
+    def add_timesheets(self):
+        self.main = Toplevel(self.main)
+        self.main.geometry = ('200 x 200')
+        self.frame1 = Frame(self.main)
+        self.frame1.pack(side = TOP)
+        self.emp_label = tkinter.Label(self.frame1,
+                            text = "Which employee is the timesheet for?")
+        self.emp_label.pack(side = LEFT)
+        tkvar = StringVar(self.main)
+        # Dictionary with options
+        choices = { 'Joe','John','Suzie','Phil','Allison'}
+        tkvar.set('Joe') # set the default option
+        popupMenu = OptionMenu(self.frame1, tkvar, *choices)
+        popupMenu.pack(side= LEFT)
+        self.frame2 = Frame(self.main)
+        self.frame2.pack(side = TOP)
+        self.month_lbl = Label(self.frame2,text = "Date (MM/DD/YYYY): ")
+        self.month_lbl.pack(side = LEFT)
+        self.month = tkinter.StringVar() 
+        self.day = tkinter.StringVar() 
+        self.year = tkinter.StringVar() 
+        self.month = tkinter.Entry(self.frame2, width=2)
+        self.slash_1 = tkinter.Label(self.frame2, text='/')
+        self.day = tkinter.Entry(self.frame2, width=2)
+        self.slash_2 = tkinter.Label(self.frame2, text='/')
+        self.year = tkinter.Entry(self.frame2, width=4)
+        self.month.pack(side = LEFT)
+        self.slash_1.pack(side = LEFT)
+        self.day.pack(side = LEFT)
+        self.slash_2.pack(side = LEFT)
+        self.year.pack(side = LEFT)
+        self.frame3 = Frame(self.main)
+        self.frame3.pack(side = TOP)
+        self.clock_in = tkinter.Label(self.frame3, text = "Clock in: ")
+        # self.hour_1 = tkinter.Entry(self.frame3, width=2,validatecommand=self.vcmd)
+        self.hour_1 = tkinter.Entry(self.frame3, width=2)
+        self.colon_1 = tkinter.Label(self.frame3, text=':')
+        self.min_1 = tkinter.Entry(self.frame3, width=2)
+        # self.min_1 = tkinter.Entry(self.frame3, width=2, validatecommand=self.vcmd)
+        #self.vcmd = (self.main.register(self.do_validation), '%P')
+        #def do_validation(new_value):
+        #    return new_value == "" or new_value.isnumeric()
+        self.clock_in.pack(side = LEFT)
+        self.hour_1.pack(side = LEFT)
+        self.colon_1.pack(side = LEFT)
+        self.min_1.pack(side = LEFT)
+        self.frame4 = Frame(self.main)
+        self.frame4.pack(side = TOP)
+        self.clock_out = tkinter.Label(self.frame4, text = "Clock out: ")
+        self.hour_2 = tkinter.Entry(self.frame4, width=2)
+        self.colon_2 = tkinter.Label(self.frame4, text=':')
+        self.min_2 = tkinter.Entry(self.frame4, width=2)
+        self.clock_out.pack(side = LEFT)
+        self.hour_2.pack(side = LEFT)
+        self.colon_2.pack(side = LEFT)
+        self.min_2.pack(side = LEFT)
+        self.frame5 = Frame(self.main)
+        self.frame5.pack(side = TOP)
+        self.save_btn = Button(self.frame5, text = "Save", command= None) 
+        self.save_btn.pack(side = LEFT)
+        self.cancel_btn = Button(self.frame5, text = "Cancel", command= None) 
+        self.cancel_btn.pack(side = LEFT)
         
         
 
