@@ -16,6 +16,13 @@ def register_database_model(cls):
     return cls
 
 
+def find_model_by_name(model_name):
+    for db_model in database_models:
+        if db_model.__name__.lower() == model_name.lower():
+            return db_model
+    return None
+
+
 class DynamicModel:
     """
     This Model attribute will allow fields to be completely dynamic
@@ -27,7 +34,8 @@ class DynamicModel:
     Can be overridden.
     """  # pylint: disable=pointless-string-statement
     reserved_keywords = [
-        'data'
+        'data',
+        '_has_timestamps'
     ]
 
     def __init__(self, data: dict):
@@ -37,6 +45,9 @@ class DynamicModel:
         :param data: dict
         """
         self.data = data
+        self.cast_fields()
+
+    def cast_fields(self):
         for field in self.field_casts:
             if field in self.data:
                 self.data[field] = self.field_casts[field](self.data[field])
@@ -57,7 +68,7 @@ class DynamicModel:
             return super().__getattribute__(key)
         if key in self.data:
             return self.data[key]
-        raise AttributeError()
+        return None
 
     def __setattr__(self, key, value):
         if key in self.reserved_keywords:
@@ -89,6 +100,32 @@ class DynamicModel:
         raise NotImplementedError
 
 
+class DynamicViewModel(DynamicModel):
+    view_columns: dict = {}
+
+    def __init__(self, data: dict):
+        super().__init__(data)
+
+    def to_view_model(self):
+        view_model = {}
+        for key, value in self.view_columns.items():
+            if getattr(self, key):
+                view_model[value] = getattr(self, key)
+        return view_model
+
+    @classmethod
+    def from_view_model(cls, view_model: dict):
+        data = {}
+        for key, value in cls.view_columns.items():
+            if getattr(view_model, value):
+                data[key] = view_model[value]
+
+        return cls(data)
+
+    def get_name(self):
+        raise NotImplementedError
+
+
 class HasRelationships:
     """
     Helps with relational models
@@ -114,7 +151,6 @@ class HasRelationships:
         Strips relationship_fields on copying
         :return:
         """
-        print('DEBUG: ----stripping relationship fields!')
         state = self.__dict__.copy()
         fields_to_remove = self.relationship_fields()
         for field in fields_to_remove:
@@ -123,3 +159,16 @@ class HasRelationships:
             except KeyError:
                 pass
         return state
+
+    def trim_relationships(self, data: dict):
+        """
+        Strips relationship_fields manually
+        :return:
+        """
+        fields_to_remove = self.relationship_fields()
+        for field in fields_to_remove:
+            try:
+                del data[field]
+            except KeyError:
+                pass
+        return data

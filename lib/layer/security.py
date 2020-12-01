@@ -1,9 +1,11 @@
 """
 Roles and Security Layer
 """
+
 import dictdiffer
 
 from lib.layer import Layer
+from lib.model.change_request import ChangeRequest
 
 CAN_CREATE = 'can_create'  # falsy. Base rule is to reject
 CANT_READ = 'cant_read'  # truthy. Base rule is to allow. Deletes fields during read
@@ -35,22 +37,30 @@ ROLES = {
                 "bank_routing",
                 "bank_account",
                 "classification_id",
-                "paymethod_id"
+                "paymethod_id",
+                "role"
             ]
         },
-
     },
     "Reporter": {
         CANT_READ: {
             "employee": [
-                "social_security_number"
+                "social_security_number",
+                "role"
             ]
         }
     },
     "Viewer": {
         CANT_READ: {
             "employee": [
-                "social_security_number"
+                "salary",
+                "hourly_rate",
+                "commission_rate",
+                "bank_routing",
+                "bank_account",
+                "classification_id",
+                "paymethod_id",
+                "role"
             ]
         }
     }
@@ -63,19 +73,30 @@ class SecurityException(Exception):
     """
 
 
+class ChangeRequestException(Exception):
+    """
+    Thrown when a change request is entered instead of changing the data source directly
+    """
+
+    def __init__(self, message, request=None, *args):
+        super().__init__(message, *args)
+        self.request = request
+
+
 class SecurityLayer(Layer):
     """
     Enforces role-based policies as outlined in ROLES
     """
 
-    def __init__(self, user_role_name):
+    def __init__(self, user):
         super().__init__()
 
-        if user_role_name not in ROLES:
-            raise ValueError(f'No role programmed for role "{user_role_name}"')
+        if user.role not in ROLES:
+            raise ValueError(f'No role programmed for role "{user.role}"')
 
-        self.user_role_name = user_role_name
-        self.user_role = ROLES[user_role_name]
+        self.user_role_name = user.role
+        self.user_role = ROLES[user.role]
+        self.user = user
 
     @staticmethod
     def _get_model_name_from_repo_cls(repo_cls):
@@ -83,6 +104,9 @@ class SecurityLayer(Layer):
 
     def on_create(self, repo_cls, new_model):
         model_name = self._get_model_name_from_repo_cls(repo_cls)
+
+        if model_name == 'changerequest':
+            return
 
         if CAN_CREATE not in self.user_role:
             raise SecurityException(f'Creating {model_name} records is not allowed')
@@ -93,8 +117,25 @@ class SecurityLayer(Layer):
         if model_name not in self.user_role[CAN_CREATE]:
             raise SecurityException(f'Creating {model_name} records is not allowed')
 
+        changes = list(dictdiffer.diff({}, new_model.to_dict()))
+
+        # everyone who is not an Admin must request
+        request = ChangeRequest({
+            'author_user_id': self.user.id,
+            'table_name': repo_cls.resource_uri,
+            'row_id': None,
+            'changes': changes,
+            'reason': 'No reason given'
+        })
+        request = ChangeRequest.create(request)
+        raise ChangeRequestException(f'Request created successfully', request)
+
     def on_read_one(self, repo_cls, model):
         model_name = self._get_model_name_from_repo_cls(repo_cls)
+
+        if CANT_READ not in self.user_role:
+            return
+
         if '*' in self.user_role[CANT_READ]:
             raise SecurityException(f'Cannot read this {model_name}! '
                                     f'Insufficient permission.')
@@ -155,20 +196,21 @@ class SecurityLayer(Layer):
         # self.user_role[CAN_UPDATE][model_name] exists
         # now to look at the nitty-gritty of the changes...
 
-        old_model = repo_cls.read(getattr(updated_model, id_attr), id_attr=id_attr)
+        old_model = repo_cls.read(getattr(updated_model, repo_cls.id_attr))
 
-        for action, field, values in \
-                list(dictdiffer.diff(old_model.to_dict(), updated_model.to_dict())):
+        changes = list(dictdiffer.diff(old_model.to_dict(), updated_model.to_dict()))
+
+        for action, field, values in changes:
             if action == 'add':
                 print('Warning: attempt to add a field made. Was this desired?')
                 for couple in values:
-                    for key, _ in couple:
+                    for key, foo in couple:
                         if key not in self.user_role[CAN_UPDATE][model_name]:
                             raise SecurityException(f'Updating the {key} field in '
                                                     f'{model_name} records is not allowed')
             elif action == 'remove':
                 for couple in values:
-                    for key, _ in couple:
+                    for key, foo in couple:
                         if key not in self.user_role[CAN_UPDATE][model_name]:
                             raise SecurityException(f'Updating the {key} field in '
                                                     f'{model_name} records is not allowed')
@@ -176,6 +218,17 @@ class SecurityLayer(Layer):
                 if field not in self.user_role[CAN_UPDATE][model_name]:
                     raise SecurityException(f'Updating the {field} field in '
                                             f'{model_name} records is not allowed')
+
+        # everyone who is not an Admin must request
+        request = ChangeRequest({
+            'author_user_id': self.user.id,
+            'table_name': repo_cls.resource_uri,
+            'row_id': getattr(updated_model, id_attr),
+            'changes': changes,
+            'reason': 'No reason given'
+        })
+        request = ChangeRequest.create(request)
+        raise ChangeRequestException(f'Request created successfully', request)
 
     def on_destroy(self, repo_cls, model_id, id_attr='id'):
         model_name = self._get_model_name_from_repo_cls(repo_cls)

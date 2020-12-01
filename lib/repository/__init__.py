@@ -77,6 +77,19 @@ class Repository(CanMutateData):
     """
     Base Repository Class for basic CRUD operations
     """
+    id_attr: str = 'id'
+
+    @classmethod
+    def on_create(cls, model):
+        _call_layers('create', cls, new_model=model)
+
+    @classmethod
+    def on_update(cls, model, id_attr='id'):
+        _call_layers('update', cls, new_model=model, id_attr=id_attr)
+
+    @classmethod
+    def on_destroy(cls, model_id, id_attr='id'):
+        _call_layers('destroy', cls, model_id=model_id, id_attr=id_attr)
 
     @classmethod
     @abstractmethod
@@ -86,11 +99,11 @@ class Repository(CanMutateData):
         :param model: instance with data
         :return: model
         """
-        _call_layers('create', cls, new_model=model)
+        raise NotImplementedError
 
     @classmethod
     @abstractmethod
-    def read(cls, model_id, id_attr='id'):
+    def read(cls, model_id):
         """
         Read a single Model by it's ID
         :param model_id: model ID
@@ -119,25 +132,23 @@ class Repository(CanMutateData):
 
     @classmethod
     @abstractmethod
-    def update(cls, model, id_attr='id'):
+    def update(cls, model):
         """
         Uses the 'id' column to update the model
         :param model: model instance
-        :param id_attr: Optional. Name of ID attribute (default is 'id')
         :return: model
         """
-        _call_layers('update', cls, new_model=model, id_attr=id_attr)
+        raise NotImplementedError
 
     @classmethod
     @abstractmethod
-    def destroy(cls, model_id, id_attr='id'):
+    def destroy(cls, model_id):
         """
         Deletes the model from the data sink
         :param model_id: model's ID to destroy
-        :param id_attr: Optional. Name of ID attribute (default is 'id')
         :return: None
         """
-        _call_layers('destroy', cls, model_id=model_id, id_attr=id_attr)
+        raise NotImplementedError
 
     @classmethod
     def after_read(cls, model_read, id_attr='id'):

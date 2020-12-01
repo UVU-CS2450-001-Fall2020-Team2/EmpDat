@@ -3,11 +3,6 @@ from tkinter.ttk import *
 
 from ui.window import TkinterWindow
 
-
-# To Do:
-# Make submit button bigger? THIS IS THE PRIORITY CURRENTLY
-
-
 class EditEmployeeWindow(TkinterWindow):
     def __init__(self, event_handlers):
         super().__init__(event_handlers)

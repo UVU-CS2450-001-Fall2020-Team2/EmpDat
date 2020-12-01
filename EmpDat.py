@@ -16,10 +16,11 @@ def bootstrap_ui():
 
 
 def root_account_install():
-    if Employee.read('root') is None:
+    if Employee.read(-1) is None:
         Employee.create(Employee({
-            'id': 'root',
+            'id': -1,
             'password': sha_hash(ROOT_DEFAULT_PASS),
+            'role': 'Admin',
             'last_name': 'Admin',
             'first_name': 'Root',
             'user_group_id': 0,
@@ -30,7 +31,8 @@ def root_account_install():
             'city': 'INVALID',
             'state': 'INVALID',
             'zipcode': '000',
-            'classification_id': 0,
+            'classification_id': 1,
+            'paymethod_id': 1,
             'created_at': datetime.datetime.now(),
             'modified_at': datetime.datetime.now(),
             'date_left': datetime.date.today(),
