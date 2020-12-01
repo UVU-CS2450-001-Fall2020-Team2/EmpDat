@@ -72,6 +72,7 @@ class DatabaseWindow(TkinterWindow):
         #Add tab
         self.import_menu = Menu(self.menubar, tearoff=False)
         self.import_menu.add_command(label="Receipts", command= self.add_receipts)
+        self.import_menu.add_command(label="Receipts", command= self.add_timesheet)
         self.menubar.add_cascade(label="Add", menu=self.import_menu)
         # Admin tab
         if store.AUTHENTICATED_USER.role == 'Admin':
