@@ -158,10 +158,11 @@ class DatabaseController(Controller):
         popupMenu.pack(side= LEFT)
         self.frame2 = Frame(self.main)
         self.frame2.pack(side = TOP)
-        self.date_lbl = tkinter.Label(self.frame2, text='Choose date: ').pack(padx=10, pady=10)
+        self.date_lbl = tkinter.Label(self.frame2, text='Choose date: ')
+        self.date_lbl.pack(side = LEFT)
         self.cal = DateEntry(self.frame2, width=12, background='darkblue',
                     foreground='white', borderwidth=2)
-        self.cal.pack()
+        self.cal.pack(side = LEFT)
         self.frame3 = Frame(self.main)
         self.frame3.pack(side = TOP)
         self.clock_in = tkinter.Label(self.frame3, text = "Clock in: ")
