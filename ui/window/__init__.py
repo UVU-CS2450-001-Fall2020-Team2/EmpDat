@@ -77,7 +77,7 @@ class TkinterWindow(UsesDialog):
         self.master.destroy()
 
 
-class TkinterFrame(Toplevel, UsesDialog):
+class TkinterDialog(Toplevel, UsesDialog):
     """
     Easily creates windows and exposes event handlers for controllers
     """

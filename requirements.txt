@@ -5,3 +5,4 @@ pyfaker
 dictdiffer
 ttkthemes
 tkintertable
+tkcalendar
