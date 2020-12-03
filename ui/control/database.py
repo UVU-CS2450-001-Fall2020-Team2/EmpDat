@@ -31,6 +31,7 @@ class DatabaseController(Controller):
             'add>receipts': self.add_receipts,
             'add>timesheets': self.add_timesheets,
             'admin>review': self.open_change_requests,
+            'export>employees': self.export_to_csv,
         }))
 
     def load(self):
@@ -136,10 +137,8 @@ class DatabaseController(Controller):
         self.amount = tkinter.Entry(self.main)
         self.amount.grid(column = 1, row = 1)
         self.save_btn = Button(self.main, text = "Save", command= None) 
-        #need to change commands
         self.save_btn.grid(column = 0, row = 2)
         self.cancel_btn = Button(self.main, text = "Cancel", command= None) 
-        #need to change commands
         self.cancel_btn.grid(column = 1, row = 2)
 
     def add_timesheets(self):
@@ -194,11 +193,12 @@ class DatabaseController(Controller):
         self.save_btn.pack(side = LEFT)
         self.cancel_btn = Button(self.frame5, text = "Cancel", command= None) 
         self.cancel_btn.pack(side = LEFT)
-        
-        
-
+    
     def open_change_requests(self):
         ChangeRequestsController().show()
+    
+    def export_to_csv(self):
+        self.table.exportTable()
 
     def logout(self):
         exit()
