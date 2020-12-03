@@ -22,6 +22,7 @@ class DatabaseController(Controller):
             'add>receipts': self.add_receipts,
             'add>timesheets': self.add_timesheets,
             'admin>review': self.open_change_requests,
+            'export>employees': self.export_to_csv,
         }))
 
     def load(self):
@@ -127,6 +128,9 @@ class DatabaseController(Controller):
 
     def open_change_requests(self):
         ChangeRequestsController().show()
+
+    def export_to_csv(self):
+        self.view.table.exportTable()
 
     def logout(self):
         exit()
