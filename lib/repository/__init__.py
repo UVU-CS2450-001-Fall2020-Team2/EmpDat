@@ -52,22 +52,20 @@ class CanMutateData:
 
     @classmethod
     @abstractmethod
-    def after_read(cls, model_read, id_attr='id'):
+    def after_read(cls, model_read):
         """
         Called after a model is read
         :param model_read: the model object read from data source
-        :param id_attr: name of ID attribute
         :return: raises Exception if interrupt is desired
         """
         raise NotImplementedError
 
     @classmethod
     @abstractmethod
-    def after_read_many(cls, models_read, id_attr='id'):
+    def after_read_many(cls, models_read):
         """
         Called after many models are read
         :param models_read: model objects read from data source
-        :param id_attr: name of ID attribute
         :return: raises Exception if interrupt is desired
         """
         raise NotImplementedError
@@ -151,12 +149,13 @@ class Repository(CanMutateData):
         raise NotImplementedError
 
     @classmethod
-    def after_read(cls, model_read, id_attr='id'):
-        _call_layers('read_one', cls, new_model=model_read, id_attr=id_attr)
+    def after_read(cls, model_read):
+        _call_layers('read_one', cls, new_model=model_read, id_attr=cls.id_attr)
 
     @classmethod
-    def after_read_many(cls, models_read, id_attr='id'):
+    def after_read_many(cls, models_read):
         _call_layers('read_many', cls, new_model=models_read)
+
 
     @property
     @classmethod

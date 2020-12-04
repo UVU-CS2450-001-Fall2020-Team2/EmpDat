@@ -98,14 +98,10 @@ class Employee(DatabaseRepository, DynamicViewModel, HasRelationships):
 
         employee.cast_fields()
 
-        print(employee)
-
         employee.classification = Classification.to_enum_from_name(employee.classification)
         employee.classification_id = employee.classification.get_id()
         employee.payment_method = PaymentMethod.to_enum_from_name(employee.payment_method)
         employee.paymethod_id = employee.payment_method.get_id()
-
-        print(employee)
 
         return employee
 

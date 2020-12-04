@@ -128,12 +128,12 @@ class DatabaseRepository(Repository, HasValidation):
 
         connection.close()
 
-        cls.after_read(model, cls.id_attr)
+        cls.after_read(model)
 
         return model
 
     @classmethod
-    def read_by(cls, filters=None):
+    def read_by(cls, filters=None, as_dict=False):
         """
         Performs a SELECT * WHERE filterKey (=) filterValue given
 
@@ -144,6 +144,7 @@ class DatabaseRepository(Repository, HasValidation):
                     'age': [('>', 5)],                          # age > 5
                     'number_of_corn': [('>=', 5), ('<', 10)]    # 5 >= number_of_corn < 10
                 }
+        :param as_dict: Return results as dictionary with the `id_attr` as the key
         :return: all rows that fit filter criteria
         """
         if filters is None:
@@ -163,20 +164,31 @@ class DatabaseRepository(Repository, HasValidation):
         model_dicts = result.fetchall() if result is not None else None
         connection.close()
 
-        models = []
-        if model_dicts is not None:
-            for raw in model_dicts:
-                models.append(cls(dict(raw)))  # pylint: disable=too-many-function-args
+        if as_dict:
+            models = {}
+            if model_dicts is not None:
+                for raw in model_dicts:
+                    models[raw[cls.id_attr]] = cls(dict(raw))  # pylint: disable=too-many-function-args
 
-        cls.after_read_many(models_read=models)
+            cls.after_read_many(models_read=models.values())
 
-        return models
+            return models
+        else:
+            models = []
+            if model_dicts is not None:
+                for raw in model_dicts:
+                    models.append(cls(dict(raw)))  # pylint: disable=too-many-function-args
+
+            cls.after_read_many(models_read=models)
+
+            return models
 
     @classmethod
-    def read_all(cls):
+    def read_all(cls, as_dict=False):
         """
         Performs a SELECT * on the entire table
 
+        :param as_dict: Return results as dictionary with the `id_attr` as the key
         :return: all rows
         """
         connection = cls._open_connection()
@@ -186,16 +198,28 @@ class DatabaseRepository(Repository, HasValidation):
         model_dicts = result.fetchall() if result is not None else None
         connection.close()
 
-        models = []
-        if model_dicts is not None:
-            for raw in model_dicts:
-                if raw[0] == -1:
-                    continue
-                models.append(cls(dict(raw)))  # pylint: disable=too-many-function-args
+        if as_dict:
+            models = {}
+            if model_dicts is not None:
+                for raw in model_dicts:
+                    if raw[0] == -1:
+                        continue
+                    models[raw[cls.id_attr]] = cls(dict(raw))  # pylint: disable=too-many-function-args
 
-        cls.after_read_many(models_read=models)
+            cls.after_read_many(models_read=models.values())
 
-        return models
+            return models
+        else:
+            models = []
+            if model_dicts is not None:
+                for raw in model_dicts:
+                    if raw[0] == -1:
+                        continue
+                    models.append(cls(dict(raw)))  # pylint: disable=too-many-function-args
+
+            cls.after_read_many(models_read=models)
+
+            return models
 
     @classmethod
     def update(cls, model):
