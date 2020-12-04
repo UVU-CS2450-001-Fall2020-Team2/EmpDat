@@ -1,6 +1,11 @@
+import datetime
+import time
+
 from lib.cli import import_csv
 from lib.layer.security import ChangeRequestException, SecurityException
 from lib.model.employee import Employee
+from lib.model.receipt import Receipt
+from lib.model.time_sheet import TimeSheet
 from ui.control import Controller
 from ui.control.change_requests import ChangeRequestsController
 from ui.window.database import DatabaseWindow
@@ -13,14 +18,14 @@ class DatabaseController(Controller):
     def __init__(self):
         super().__init__(DatabaseWindow({
             'new_employee': self.new_employee,
+            'new_receipt': self.new_receipt,
+            'new_timesheet': self.new_timesheet,
             'save': self.save,
             'delete': self.delete,
             'file>logout': self.logout,
             'import>employees': self.import_employees,
             'import>receipts': self.import_receipts,
             'import>timesheets': self.import_timesheets,
-            'add>receipts': self.add_receipts,
-            'add>timesheets': self.add_timesheets,
             'admin>review': self.open_change_requests,
             'export>employees': self.export_to_csv,
         }))
@@ -31,9 +36,6 @@ class DatabaseController(Controller):
         for employee in employees:
             i += 1
             self.view.add_to_result(employee.id, employee.to_view_model())
-        #
-        # if i == 0:
-        #     self.view.add_to_result(-1, {'No Employees found!': 'Click Import > Employees to begin'})
 
         self.view.table.autoResizeColumns()
 
@@ -78,7 +80,6 @@ class DatabaseController(Controller):
         self.refresh()
 
     def new_employee(self):
-        print('new employee!')
         self.view.new_employee()
 
     def import_employees(self):
@@ -108,19 +109,64 @@ class DatabaseController(Controller):
         self.view.set_status(f'Importing time sheets successful!')
         self.refresh()
 
-    def add_receipts(self):
+    def new_receipt(self):
+        def on_save(dialog, employee_id: int, amount: float):
+            try:
+                amount = float(amount)
+            except ValueError:
+                self.view.show_error('Error', 'Invalid amount given!')
+                return
 
-        def on_save(dialog):
-            print('on save!')
+            if Employee.read(employee_id):
+                receipt = Receipt({
+                    'user_id': employee_id,
+                    'amount': amount
+                })
+                try:
+                    Receipt.create(receipt)
+                    self.view.show_info('Info', f'Receipt created successfully!')
+                except SecurityException as e:
+                    self.view.show_error('Error', f'Unable to create receipt: {e}')
+                    return
+                except ChangeRequestException:
+                    self.view.show_info('Info', 'A change request has been created and will be reviewed.')
             dialog.destroy()
 
         AddReceiptDialog({
             'save': on_save
         }, Employee.read_all())
 
-    def add_timesheets(self):
-        def on_save(dialog):
-            print('on save!')
+    def new_timesheet(self):
+        def on_save(dialog, employee_id: int, date: datetime.date, hour_in, min_in, hour_out, min_out):
+            try:
+                hour_in = int(hour_in)
+                min_in = int(min_in)
+                hour_out = int(hour_out)
+                min_out = int(min_out)
+            except ValueError:
+                self.view.show_error('Error', 'Invalid dates given!')
+                return
+
+            time_begin = time.strptime("%-H:%-M", f"{hour_in}:{min_in}")
+            time_end = time.strptime("%-H:%-M", f"{hour_out}:{min_out}")
+            datetime_begin = datetime.datetime.combine(date, time_begin)
+            datetime_end = datetime.datetime.combine(date, time_end)
+
+            if Employee.read(employee_id):
+                timesheet = TimeSheet({
+                    'user_id': employee_id,
+                    'datetime_begin': datetime_begin,
+                    'datetime_end': datetime_end,
+                })
+                try:
+                    TimeSheet.create(timesheet)
+                    self.view.show_info('Success', f'Timesheet created successfully!')
+                except SecurityException:
+                    self.view.show_error('Error', 'Access Denied')
+                    return
+                except ChangeRequestException:
+                    self.view.show_info('Info', 'A change request has been created and will be reviewed.')
+            dialog.destroy()
 
         AddTimesheetDialog({
             'save': on_save

@@ -54,6 +54,9 @@ class DatabaseWindow(TkinterWindow):
         # New Employee
         # adds a command to the menu option, calling it exit
         self.filemenu.add_command(label="New Employee", command=self.event_handlers['new_employee'])
+        self.filemenu.add_command(label="New Receipt", command=self.event_handlers['new_receipt'])
+        self.filemenu.add_command(label="New Timesheet", command=self.event_handlers['new_timesheet'])
+        self.filemenu.add_separator()
         # Logout
         self.filemenu.add_command(label="Logout", command=self.event_handlers['file>logout'])
         # added "file" to our menu
@@ -65,15 +68,10 @@ class DatabaseWindow(TkinterWindow):
         self.menubar.add_cascade(label="Reports", menu=self.reports_menu)
         # Import tab
         self.import_menu = Menu(self.menubar, tearoff=False)
-        self.import_menu.add_command(label="Employee", command=self.event_handlers['import>employees'])
-        self.import_menu.add_command(label="Receipt", command=self.event_handlers['import>receipts'])
-        self.import_menu.add_command(label="Timesheet", command=self.event_handlers['import>timesheets'])
+        self.import_menu.add_command(label="Employees", command=self.event_handlers['import>employees'])
+        self.import_menu.add_command(label="Receipts", command=self.event_handlers['import>receipts'])
+        self.import_menu.add_command(label="Timesheets", command=self.event_handlers['import>timesheets'])
         self.menubar.add_cascade(label="Import", menu=self.import_menu)
-        #Add tab
-        self.import_menu = Menu(self.menubar, tearoff=False)
-        self.import_menu.add_command(label="New Receipt", command= self.event_handlers['add>receipts'])
-        self.import_menu.add_command(label="New Time Sheet", command= self.event_handlers['add>timesheets'])
-        self.menubar.add_cascade(label="Add", menu=self.import_menu)
         # Admin tab
         if store.AUTHENTICATED_USER.role == 'Admin':
             self.admin_menu = Menu(self.menubar, tearoff=False)
