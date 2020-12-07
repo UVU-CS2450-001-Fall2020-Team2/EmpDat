@@ -6,3 +6,4 @@ dictdiffer
 ttkthemes
 tkintertable
 tkcalendar
+PyInstaller

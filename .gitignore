@@ -1,6 +1,11 @@
 # Python Virtual Environment
 /venv
 
+# Build
+/build
+/dist
+*__pycache__*
+
 # Data
 /data
 *empdat.db*
@@ -17,3 +22,6 @@
 
 # Local History for Visual Studio Code
 .history/
+
+# Extra stuff
+*.DS_Store*

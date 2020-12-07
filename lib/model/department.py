@@ -1,3 +1,6 @@
+"""
+Department Model
+"""
 from sqlalchemy import Table, MetaData, Column, String, Integer
 
 from lib.model import DynamicModel, HasRelationships
@@ -5,6 +8,9 @@ from lib.repository.db import DatabaseRepository
 
 
 class Department(DatabaseRepository, DynamicModel, HasRelationships):
+    """
+    Department model. Unused at the moment
+    """
     resource_uri = 'department'
     field_validators = {
 

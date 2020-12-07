@@ -133,7 +133,7 @@ class DatabaseRepository(Repository, HasValidation):
         return model
 
     @classmethod
-    def read_by(cls, filters=None, as_dict=False):
+    def read_by(cls, filters=None, as_dict=False):  # pylint: disable=arguments-differ
         """
         Performs a SELECT * WHERE filterKey (=) filterValue given
 
@@ -173,18 +173,17 @@ class DatabaseRepository(Repository, HasValidation):
             cls.after_read_many(models_read=models.values())
 
             return models
-        else:
-            models = []
-            if model_dicts is not None:
-                for raw in model_dicts:
-                    models.append(cls(dict(raw)))  # pylint: disable=too-many-function-args
+        models = []
+        if model_dicts is not None:
+            for raw in model_dicts:
+                models.append(cls(dict(raw)))  # pylint: disable=too-many-function-args
 
-            cls.after_read_many(models_read=models)
+        cls.after_read_many(models_read=models)
 
-            return models
+        return models
 
     @classmethod
-    def read_all(cls, as_dict=False):
+    def read_all(cls, as_dict=False):  # pylint: disable=arguments-differ
         """
         Performs a SELECT * on the entire table
 
@@ -209,17 +208,16 @@ class DatabaseRepository(Repository, HasValidation):
             cls.after_read_many(models_read=models.values())
 
             return models
-        else:
-            models = []
-            if model_dicts is not None:
-                for raw in model_dicts:
-                    if raw[0] == -1:
-                        continue
-                    models.append(cls(dict(raw)))  # pylint: disable=too-many-function-args
+        models = []
+        if model_dicts is not None:
+            for raw in model_dicts:
+                if raw[0] == -1:
+                    continue
+                models.append(cls(dict(raw)))  # pylint: disable=too-many-function-args
 
-            cls.after_read_many(models_read=models)
+        cls.after_read_many(models_read=models)
 
-            return models
+        return models
 
     @classmethod
     def update(cls, model):
@@ -230,9 +228,9 @@ class DatabaseRepository(Repository, HasValidation):
         :param id_attr: Optional. Name of ID attribute (default is 'id'). Matches to column
         :return: model instance
         """
-        cls.on_update(model, cls.id_attr)
+        cls.on_update(model)
 
-        if model._has_timestamps:
+        if model._has_timestamps:  # pylint: disable=protected-access
             model.modified_at = datetime.datetime.now()
 
         connection = cls._open_connection()
@@ -251,7 +249,7 @@ class DatabaseRepository(Repository, HasValidation):
         :param id_attr: Optional. Name of ID attribute (default is 'id'). Matches to column
         :return: None
         """
-        cls.on_destroy(model_id, cls.id_attr)
+        cls.on_destroy(model_id)
 
         connection = cls._open_connection()
         table = cls.table(DatabaseRepository.metadata)
@@ -262,7 +260,8 @@ class DatabaseRepository(Repository, HasValidation):
     @classmethod
     def run_statement(cls, statement):
         """
-        Performs any statement given. Note that timestamps are NOT updated here nor are Layers called
+        Performs any statement given. Note that timestamps are
+        NOT updated here nor are Layers called
 
         :param statement: can be created like the following:
             table = self.table(DatabaseRepository.metadata)

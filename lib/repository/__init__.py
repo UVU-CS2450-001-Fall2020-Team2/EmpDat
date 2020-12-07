@@ -79,15 +79,39 @@ class Repository(CanMutateData):
 
     @classmethod
     def on_create(cls, model):
+        """
+        Calls the on_create method on all registered layers
+
+        Repository implementations MUST call this manually, as layers
+        are an opt-in process
+        :param model: model newly created
+        :return: None
+        """
         _call_layers('create', cls, new_model=model)
 
     @classmethod
-    def on_update(cls, model, id_attr='id'):
-        _call_layers('update', cls, new_model=model, id_attr=id_attr)
+    def on_update(cls, model):
+        """
+        Calls the on_update method on all registered layers
+
+        Repository implementations MUST call this manually, as layers
+        are an opt-in process
+        :param model: model newly updated
+        :return: None
+        """
+        _call_layers('update', cls, new_model=model, id_attr=cls.id_attr)
 
     @classmethod
-    def on_destroy(cls, model_id, id_attr='id'):
-        _call_layers('destroy', cls, model_id=model_id, id_attr=id_attr)
+    def on_destroy(cls, model_id):
+        """
+        Calls the on_destroy method on all registered layers
+
+        Repository implementations MUST call this manually, as layers
+        are an opt-in process
+        :param model_id: ID of deleted model (or to-be deleted)
+        :return: None
+        """
+        _call_layers('destroy', cls, model_id=model_id, id_attr=cls.id_attr)
 
     @classmethod
     @abstractmethod
@@ -155,7 +179,6 @@ class Repository(CanMutateData):
     @classmethod
     def after_read_many(cls, models_read):
         _call_layers('read_many', cls, new_model=models_read)
-
 
     @property
     @classmethod

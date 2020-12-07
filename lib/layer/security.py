@@ -78,7 +78,7 @@ class ChangeRequestException(Exception):
     Thrown when a change request is entered instead of changing the data source directly
     """
 
-    def __init__(self, message, request=None, *args):
+    def __init__(self, message, *args, request=None):
         super().__init__(message, *args)
         self.request = request
 
@@ -128,7 +128,7 @@ class SecurityLayer(Layer):
             'reason': 'No reason given'
         })
         request = ChangeRequest.create(request)
-        raise ChangeRequestException(f'Request created successfully', request)
+        raise ChangeRequestException('Request created successfully', request)
 
     def on_read_one(self, repo_cls, model):
         model_name = self._get_model_name_from_repo_cls(repo_cls)
@@ -204,13 +204,13 @@ class SecurityLayer(Layer):
             if action == 'add':
                 print('Warning: attempt to add a field made. Was this desired?')
                 for couple in values:
-                    for key, foo in couple:
+                    for key, ignored in couple:
                         if key not in self.user_role[CAN_UPDATE][model_name]:
                             raise SecurityException(f'Updating the {key} field in '
                                                     f'{model_name} records is not allowed')
             elif action == 'remove':
                 for couple in values:
-                    for key, foo in couple:
+                    for key, ignored in couple:
                         if key not in self.user_role[CAN_UPDATE][model_name]:
                             raise SecurityException(f'Updating the {key} field in '
                                                     f'{model_name} records is not allowed')
@@ -228,7 +228,7 @@ class SecurityLayer(Layer):
             'reason': 'No reason given'
         })
         request = ChangeRequest.create(request)
-        raise ChangeRequestException(f'Request created successfully', request)
+        raise ChangeRequestException('Request created successfully', request)
 
     def on_destroy(self, repo_cls, model_id, id_attr='id'):
         model_name = self._get_model_name_from_repo_cls(repo_cls)
