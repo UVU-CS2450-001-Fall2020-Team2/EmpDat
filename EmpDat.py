@@ -3,7 +3,7 @@ Main entry into the application
 """
 import datetime
 
-from lib import *
+from lib import ROOT_DEFAULT_PASS, DB_URL
 from lib.cli import dispatch_cmd
 from lib.model.employee import Employee
 from lib.repository.db import database_setup
@@ -12,10 +12,18 @@ from ui.control.login import LoginController
 
 
 def bootstrap_ui():
+    """
+    Starts the UI
+    :return: None
+    """
     LoginController().show()
 
 
 def root_account_install():
+    """
+    Adds the superadmin root account to the database if it isn't there
+    :return:
+    """
     if Employee.read(-1) is None:
         Employee.create(Employee({
             'id': -1,

@@ -1,3 +1,7 @@
+"""
+The root of the command line interface for EmpDat
+"""
+
 import sys
 
 from lib.cli.import_csv import import_employees, import_receipts, import_timesheets
@@ -19,6 +23,11 @@ COMMANDS = {
 
 
 def dispatch_cmd():
+    """
+    The EmpDat main script will call this when an argument is given
+    :return: bool if command succeeded
+    """
+
     args = sys.argv
     if len(args) < 2:
         return False
@@ -32,4 +41,3 @@ def dispatch_cmd():
     COMMANDS[cmd]['method'](*args[2:])
 
     return True
-

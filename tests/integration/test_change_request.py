@@ -42,12 +42,12 @@ if __name__ == '__main__':
             Employee.update(saved)
             print('Changed w/o change request')
             assert False
-        except SecurityException as e:
-            print(e)
+        except SecurityException as error:
+            print(error)
             assert False
-        except ChangeRequestException as e:
+        except ChangeRequestException as error:
             print('change request entered!')
-            print(e.request.changes)
+            print(error.request.changes)
 
             assert True
 

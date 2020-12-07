@@ -1,3 +1,7 @@
+"""
+Controller for Change Requests admin window
+"""
+
 from lib.model.change_request import ChangeRequest
 from ui import store
 from ui.control import Controller
@@ -5,26 +9,37 @@ from ui.window.change_requests import ChangeRequestsWindow
 
 
 class ChangeRequestsController(Controller):
+    """
+    Controller for Change Requests admin window
+    """
 
     def __init__(self):
+        """
+        Supplies the approve and reject methods to the view
+        """
         super().__init__(ChangeRequestsWindow({
             'approve': self.approve,
             'reject': self.reject,
         }))
 
     def load(self):
+        """
+        Loads all change requests and has the view display them
+        :return: None
+        """
         change_requests = ChangeRequest.read_all()
         i = 0
         for request in change_requests:
             i += 1
             self.view.add_to_result(request.id, request.to_view_model())
 
-        # if i == 0:
-        #     self.view.add_to_result(-1, {'No Employees found!': 'Click Import > Employees to begin'})
-
         self.view.table.autoResizeColumns()
 
     def refresh(self):
+        """
+        Wipes and refreshes change requests view
+        :return: None
+        """
         self.load()
         self.view.table.redraw()
 
@@ -34,6 +49,10 @@ class ChangeRequestsController(Controller):
         super().show()
 
     def approve(self):
+        """
+        On approve change
+        :return: None
+        """
         ids = self.view.table.get_selectedRecordNames()
         for request_id in ids:
             request = ChangeRequest.read(request_id)
@@ -42,6 +61,10 @@ class ChangeRequestsController(Controller):
         self.refresh()
 
     def reject(self):
+        """
+        On reject change
+        :return: None
+        """
         ids = self.view.table.get_selectedRecordNames()
         for request_id in ids:
             ChangeRequest.destroy(request_id)

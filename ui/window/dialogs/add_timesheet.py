@@ -1,5 +1,9 @@
-from tkinter import *
-from tkinter.ttk import *
+"""
+View for Adding Timesheets
+"""
+
+from tkinter import StringVar, RIGHT, TOP, LEFT, BOTTOM
+from tkinter.ttk import Label, Entry, Button, Frame
 
 from tkcalendar import DateEntry
 
@@ -7,9 +11,27 @@ from ui.widgets.employee_picker import EmployeePicker
 from ui.window import TkinterDialog
 
 
+def _focus_next_widget(event) -> tuple:
+    event.widget.tk_focusNext().focus()
+    return ("break",)
+
+
 class AddTimesheetDialog(TkinterDialog):
+    """
+    Dialog for Adding Timesheets
+    """
 
     def __init__(self, event_handlers, employees):
+        """
+        Shows:
+            - employee
+            - date
+            - time in
+            - time out
+
+        :param event_handlers: Expects 'save'
+        :param employees: list of valid employees
+        """
         super().__init__(event_handlers)
 
         hour_validator = (
@@ -44,10 +66,10 @@ class AddTimesheetDialog(TkinterDialog):
         self.frame3.pack(side=TOP)
         self.clock_in = Label(self.frame3, text="Time in: ")
         self.hour_1 = Entry(self.frame3, width=2, validate='key', validatecommand=hour_validator)
-        self.hour_1.bind("<Tab>", self.focus_next_widget)
+        self.hour_1.bind("<Tab>", _focus_next_widget)
         self.colon_1 = Label(self.frame3, text=':')
         self.min_1 = Entry(self.frame3, width=2, validate='key', validatecommand=minute_validator)
-        self.min_1.bind("<Tab>", self.focus_next_widget)
+        self.min_1.bind("<Tab>", _focus_next_widget)
         self.clock_in.pack(side=LEFT)
         self.min_1.pack(side=RIGHT)
         self.colon_1.pack(side=RIGHT)
@@ -58,10 +80,10 @@ class AddTimesheetDialog(TkinterDialog):
         self.frame4.pack(side=TOP)
         self.clock_out = Label(self.frame4, text="Time out: ")
         self.hour_2 = Entry(self.frame4, width=2, validate='key', validatecommand=hour_validator)
-        self.hour_2.bind("<Tab>", self.focus_next_widget)
+        self.hour_2.bind("<Tab>", _focus_next_widget)
         self.colon_2 = Label(self.frame4, text=':')
         self.min_2 = Entry(self.frame4, width=2, validate='key', validatecommand=minute_validator)
-        self.min_2.bind("<Tab>", self.focus_next_widget)
+        self.min_2.bind("<Tab>", _focus_next_widget)
         self.clock_out.pack(side=LEFT)
         self.min_2.pack(side=RIGHT)
         self.colon_2.pack(side=RIGHT)
@@ -70,13 +92,14 @@ class AddTimesheetDialog(TkinterDialog):
         # Actions
         self.frame5 = Frame(self)
         self.frame5.pack(side=BOTTOM)
-        self.save_btn = Button(self.frame5, text="Save", command=lambda: self.event_handlers['save'](
-            self,
-            int(self.employee_id.get()),
-            self.cal.get_date(),
-            f"{self.hour_1.get()}:{self.min_1.get()}",
-            f"{self.hour_2.get()}:{self.min_2.get()}"
-        ))
+        self.save_btn = Button(self.frame5, text="Save",
+                               command=lambda: self.event_handlers['save'](
+                                   self,
+                                   int(self.employee_id.get()),
+                                   self.cal.get_date(),
+                                   f"{self.hour_1.get()}:{self.min_1.get()}",
+                                   f"{self.hour_2.get()}:{self.min_2.get()}"
+                               ))
         self.save_btn.pack(side=LEFT)
         self.cancel_btn = Button(self.frame5, text="Cancel", command=self.destroy)
         self.cancel_btn.pack(side=RIGHT)
@@ -92,6 +115,14 @@ class AddTimesheetDialog(TkinterDialog):
         ))
 
     def hour_validator(self, action: str, val_before: str, char_to_change: str):
+        """
+        Validates any hour field. See tkinter validators for more info
+
+        :param action: 0 is deletion, 1 is addition, -1 is something else
+        :param val_before: value before change
+        :param char_to_change: character to add or delete
+        :return: bool is_valid
+        """
         if int(action) == 0:
             return True
 
@@ -112,8 +143,15 @@ class AddTimesheetDialog(TkinterDialog):
         self.bell()  # .bell() plays that ding sound telling you there was invalid input
         return False
 
-
     def minute_validator(self, action: str, val_before: str, char_to_change: str):
+        """
+        Validates any minute field. See tkinter validators for more info
+
+        :param action: 0 is deletion, 1 is addition, -1 is something else
+        :param val_before: value before change
+        :param char_to_change: character to add or delete
+        :return: bool is_valid
+        """
         if int(action) == 0:
             return True
 
@@ -133,7 +171,3 @@ class AddTimesheetDialog(TkinterDialog):
         # Its wronnnngggg
         self.bell()  # .bell() plays that ding sound telling you there was invalid input
         return False
-
-    def focus_next_widget(self, event):
-        event.widget.tk_focusNext().focus()
-        return ("break")

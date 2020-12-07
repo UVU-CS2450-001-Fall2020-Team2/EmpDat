@@ -1,3 +1,6 @@
+"""
+Timesheet Model
+"""
 from sqlalchemy import Table, MetaData, Column, String, Integer, DateTime, Boolean, BigInteger
 
 from lib.model import DynamicModel, HasRelationships, register_database_model
@@ -6,6 +9,9 @@ from lib.repository.db import DatabaseRepository
 
 @register_database_model
 class TimeSheet(DatabaseRepository, DynamicModel, HasRelationships):
+    """
+    Timesheet Model
+    """
     resource_uri = 'time_sheet'
     field_validators = {
 
@@ -28,6 +34,10 @@ class TimeSheet(DatabaseRepository, DynamicModel, HasRelationships):
         return []
 
     def to_hours(self):
+        """
+        Converts timestamps to time in hours
+        :return: float
+        """
         difference = self.datetime_end - self.datetime_begin
         return difference.total_sections() / 3600  # seconds to hour
 
