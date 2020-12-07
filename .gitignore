@@ -1,6 +1,10 @@
 # Python Virtual Environment
 /venv
 
+# Build
+/build
+/dist
+
 # Data
 /data
 *empdat.db*

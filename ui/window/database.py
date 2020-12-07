@@ -13,8 +13,8 @@ class DatabaseWindow(TkinterWindow):
         super().__init__(event_handlers)
 
         self.results = {}
-        self.edit_icon = PhotoImage(file="ui/icons/pencil.gif")
-        self.delete_icon = PhotoImage(file="ui/icons/trash.gif")
+        # self.edit_icon = PhotoImage(file="ui/icons/pencil.gif")
+        # self.delete_icon = PhotoImage(file="ui/icons/trash.gif")
 
         self.main = self.master
         self.main.geometry('1024x768')

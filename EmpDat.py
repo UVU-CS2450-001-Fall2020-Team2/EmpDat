@@ -39,6 +39,7 @@ def root_account_install():
             'notes': ''
         }))
 
+
 if __name__ == '__main__':
     database_setup({
         'DB_URL': DB_URL
