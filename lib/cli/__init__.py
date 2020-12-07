@@ -5,6 +5,7 @@ The root of the command line interface for EmpDat
 import sys
 
 from lib.cli.import_csv import import_employees, import_receipts, import_timesheets
+from lib.cli.payroll import run_payroll
 
 COMMANDS = {
     'import_employees': {
@@ -19,6 +20,10 @@ COMMANDS = {
         'method': import_timesheets,
         'args': 1
     },
+    'run_payroll': {
+        'method': run_payroll,
+        'args': 1
+    }
 }
 
 

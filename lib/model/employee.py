@@ -89,6 +89,18 @@ class Employee(DatabaseRepository, DynamicViewModel, HasRelationships):
         """
         return f"{self.first_name} {self.last_name}"
 
+    def get_balance(self):
+        if self.classification.name == Hourly.name:
+            return self.classification.issue_payment(self.id, self.hourly_rate)
+        elif self.classification.name == Salaried.name:
+            return self.classification.issue_payment(self.salary)
+        elif self.classification.name == Commissioned.name:
+            return self.classification.issue_payment(self.id, self.salary, self.commission_rate)
+        return 0
+
+    def get_payment_method(self):
+        return self.payment_method.issue(self)
+
     @classmethod
     def from_view_model(cls, view_model: dict):
         employee = Employee.read(int(view_model[cls.view_columns['id']]))
@@ -214,7 +226,7 @@ class Classification:
     name: str = ''
 
     @abstractmethod
-    def issue_payment(self, **kwargs):
+    def issue_payment(self, *args):
         """
         Abstract Method to issue payments
         """
@@ -275,7 +287,7 @@ class Hourly(Classification):
 
         timesheets = TimeSheet.read_by({
             'user_id': employee_id,
-            'paid': ('!=', True)
+            'paid': False
         })
         total = sum([timesheet.to_hours() for timesheet in timesheets])
         money += hourly_rate * total
@@ -320,7 +332,7 @@ class Commissioned(Classification):
 
         receipts = Receipt.read_by({
             'user_id': employee_id,
-            'paid': ('!=', True)
+            'paid': False
         })
         total = sum([receipt.amount for receipt in receipts])
         money += total * (commission / 100)

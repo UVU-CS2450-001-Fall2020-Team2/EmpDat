@@ -39,7 +39,7 @@ class TimeSheet(DatabaseRepository, DynamicModel, HasRelationships):
         :return: float
         """
         difference = self.datetime_end - self.datetime_begin
-        return difference.total_sections() / 3600  # seconds to hour
+        return difference.total_seconds() / 3600  # seconds to hour
 
     @classmethod
     def table(cls, metadata=MetaData()) -> Table:
