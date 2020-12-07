@@ -133,11 +133,16 @@ class DatabaseController(Controller):
         Uses import csv library from CLI
         :return: None
         """
-        import_csv.import_employees(
-            self.view.show_file_picker(
-                title='Import Employees (CSV)',
-                filetypes=('*.csv', '*.txt')
-            ), from_cmd=False)
+        filepath = self.view.show_file_picker(
+            title='Import Employees (CSV)',
+            filetypes=(('CSV File', '*.csv'), ('Text File', '*.txt'))
+        )
+
+        if not filepath:
+            self.view.set_status('Importing employees cancelled')
+            return
+
+        import_csv.import_employees(filepath, from_cmd=False)
         self.view.set_status('Importing employees successful!')
         self.refresh()
 
@@ -146,11 +151,16 @@ class DatabaseController(Controller):
         Uses import csv library from CLI
         :return: None
         """
-        import_csv.import_receipts(
-            self.view.show_file_picker(
-                title='Import Receipts (CSV)',
-                filetypes=('*.txt', '*.csv')
-            ), from_cmd=False)
+        filepath = self.view.show_file_picker(
+            title='Import Receipts',
+            filetypes=(('Text File', '*.txt'), ('CSV File', '*.csv'))
+        )
+
+        if not filepath:
+            self.view.set_status('Importing receipts cancelled')
+            return
+
+        import_csv.import_receipts(filepath, from_cmd=False)
         self.view.set_status('Importing receipts successful!')
         self.refresh()
 
@@ -159,11 +169,16 @@ class DatabaseController(Controller):
         Uses import csv library from CLI
         :return: None
         """
-        import_csv.import_timesheets(
-            self.view.show_file_picker(
-                title='Import Time Sheets (CSV)',
-                filetypes=('*.txt', '*.csv')
-            ), from_cmd=False)
+        filepath = self.view.show_file_picker(
+            title='Import Time Sheets',
+            filetypes=(('Text File', '*.txt'), ('CSV File', '*.csv'))
+        )
+
+        if not filepath:
+            self.view.set_status('Importing time sheets cancelled')
+            return
+
+        import_csv.import_timesheets(filepath, from_cmd=False)
         self.view.set_status('Importing time sheets successful!')
         self.refresh()
 
@@ -172,6 +187,7 @@ class DatabaseController(Controller):
         Shows the add receipt dialog and saves it
         :return: None
         """
+
         def on_save(dialog, employee_id: int, amount: float):
             try:
                 amount = float(amount)
@@ -204,6 +220,7 @@ class DatabaseController(Controller):
         Shows the add timesheet dialog and saves it
         :return: None
         """
+
         def on_save(dialog, employee_id: int, date: datetime.date,  # pylint: disable=too-many-arguments
                     hour_in, min_in, hour_out, min_out):
             try:
