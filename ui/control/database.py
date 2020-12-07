@@ -7,6 +7,7 @@ import sys
 import time
 
 from lib.cli import import_csv
+from lib.cli.payroll import run_payroll
 from lib.layer.security import ChangeRequestException, SecurityException
 from lib.model.employee import Employee
 from lib.model.receipt import Receipt
@@ -39,6 +40,7 @@ class DatabaseController(Controller):
             'new_employee': self.new_employee,
             'new_receipt': self.new_receipt,
             'new_timesheet': self.new_timesheet,
+            'run_payroll': self.run_payroll,
             'save': self.save,
             'delete': self.delete,
             'file>logout': self.logout,
@@ -80,6 +82,9 @@ class DatabaseController(Controller):
         self.load()
 
         super().show()
+
+    def run_payroll(self):
+        run_payroll("paylog.txt")
 
     def save(self):
         """

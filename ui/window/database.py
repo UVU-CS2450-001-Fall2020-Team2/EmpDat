@@ -24,6 +24,7 @@ class DatabaseWindow(TkinterWindow):
             'new_employee'
             'new_receipt'
             'new_timesheet'
+            'run_payroll'
             'save'
             'delete'
             'file>logout'
@@ -86,14 +87,21 @@ class DatabaseWindow(TkinterWindow):
         self.filemenu.add_command(label="New Timesheet",
                                   command=self.event_handlers['new_timesheet'])
         self.filemenu.add_separator()
+        # TODO change my password
+        self.filemenu.add_command(label="Change My Password",
+                                  command=None)
+        if store.AUTHENTICATED_USER.role == 'Admin' or store.AUTHENTICATED_USER.role == 'Accounting':
+            self.filemenu.add_command(label="Run Payroll",
+                                      command=self.event_handlers['run_payroll'])
+        self.filemenu.add_separator()
         # Logout
         self.filemenu.add_command(label="Logout", command=self.event_handlers['file>logout'])
         # added "file" to our menu
         self.menubar.add_cascade(label="File", menu=self.filemenu)
         # Reports Tab
         self.reports_menu = Menu(self.menubar, tearoff=False)
-        self.reports_menu.add_command(label="Paylog (CSV)",
-                                      command=None)
+        # self.reports_menu.add_command(label="Paylog (CSV)",
+        #                               command=None)
         self.reports_menu.add_command(label="Employee Directory (CSV)",
                                       command=self.event_handlers['export>employees'])
         self.menubar.add_cascade(label="Reports", menu=self.reports_menu)
@@ -111,6 +119,9 @@ class DatabaseWindow(TkinterWindow):
             self.admin_menu = Menu(self.menubar, tearoff=False)
             self.admin_menu.add_command(label="Review Change Requests",
                                         command=self.event_handlers['admin>review'])
+            # TODO change others password
+            self.admin_menu.add_command(label="Change Passwords",
+                                        command=None)
             self.menubar.add_cascade(label="Admin", menu=self.admin_menu)
 
     def create_footer(self):
