@@ -5,10 +5,12 @@
 /build
 /dist
 *__pycache__*
+/doc
 
 # Data
 /data
 *empdat.db*
+/paylog.txt
 
 # IDE-related folders
 /.idea
