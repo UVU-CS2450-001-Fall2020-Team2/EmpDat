@@ -1,3 +1,7 @@
+"""
+Login Controller class
+"""
+
 from lib.layer.security import SecurityLayer
 from lib.model.employee import Employee
 from ui import store
@@ -7,13 +11,26 @@ from ui.window.login import LoginWindow
 
 
 class LoginController(Controller):
+    """
+    Manages login
+    """
 
     def __init__(self):
+        """
+        Uses Login Window
+        """
         super().__init__(LoginWindow({
             'submit': self.login
         }))
 
     def login(self, username, password):
+        """
+        If authentication is successful, the database window is spawned
+
+        :param username: str
+        :param password: str
+        :return: None
+        """
         if not self.view.validate():
             return
 
@@ -22,7 +39,6 @@ class LoginController(Controller):
             store.AUTHENTICATED_USER = authenticated
             SecurityLayer(authenticated)
             print("Logged in as user ID", authenticated.id)
-            # TODO send to main database page
             self.view.destroy()
             DatabaseController().show()
         else:

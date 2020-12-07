@@ -1,3 +1,5 @@
+# pylint: skip-file
+
 """
 Customizations to tkintertable
 """
@@ -12,7 +14,8 @@ class EmpDatTableCanvas(TableCanvas):
     Override for TableCanvas
     """
 
-    def __init__(self, *args, col_modifiers: dict = None, on_change=None, on_unsaved=None, on_selected=None, **kwargs):
+    def __init__(self, *args, col_modifiers: dict = None, on_change=None,
+                 on_unsaved=None, on_selected=None, **kwargs):
         """
         TableCanvas constructor
         :param args: blanket passthrough
@@ -30,7 +33,8 @@ class EmpDatTableCanvas(TableCanvas):
                     }
                 }
         :param on_change: callback called on every change
-        :param on_unsaved: callback called on every change, passes 1 parameter on whether there are pending changes
+        :param on_unsaved: callback called on every change, passes 1 parameter
+                            on whether there are pending changes
         :param on_selected: callback called on when a row is selected
         :param kwargs: blanket passthrough
         """
@@ -58,7 +62,7 @@ class EmpDatTableCanvas(TableCanvas):
                               and self.col_modifiers[col]['read_only']):
             return
         # absrow = self.get_AbsoluteRow(row)
-        h = self.rowheight
+        height = self.rowheight
         model = self.getModel()
         cellvalue = self.model.getCellRecord(row, col)
         if Formula.isFormula(cellvalue):
@@ -128,7 +132,7 @@ class EmpDatTableCanvas(TableCanvas):
         self.cellentry.bind('<KeyRelease>', callback)
         self.cellentry.focus_set()
         self.entrywin = self.create_window(x1 + self.inset, y1 + self.inset,
-                                           width=w - self.inset * 2, height=h - self.inset * 2,
+                                           width=w - self.inset * 2, height=height - self.inset * 2,
                                            window=self.cellentry, anchor='nw',
                                            tag='entry')
 

@@ -1,4 +1,8 @@
-from sqlalchemy import Table, MetaData, Column, String, Integer, DateTime, Boolean, Float, BigInteger
+"""
+Receipt Model
+"""
+from sqlalchemy import Table, MetaData, Column, String, \
+    Integer, DateTime, Boolean, Float, BigInteger
 
 from lib.model import DynamicModel, HasRelationships, register_database_model
 from lib.repository.db import DatabaseRepository
@@ -6,6 +10,9 @@ from lib.repository.db import DatabaseRepository
 
 @register_database_model
 class Receipt(DatabaseRepository, DynamicModel, HasRelationships):
+    """
+    Receipt Model
+    """
     resource_uri = 'receipt'
     field_validators = {
 

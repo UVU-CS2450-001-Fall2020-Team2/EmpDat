@@ -1,13 +1,25 @@
-from tkinter import *
-from tkinter.ttk import *
+"""
+View for Adding Receipts
+"""
+from tkinter import StringVar, RIGHT
+from tkinter.ttk import Label, Entry, Button
 
 from ui.widgets.employee_picker import EmployeePicker
 from ui.window import TkinterDialog
 
 
 class AddReceiptDialog(TkinterDialog):
+    """
+    Dialog for Adding Receipts
+    """
 
     def __init__(self, event_handlers, employees):
+        """
+        Shows the employee picker and an amount
+
+        :param event_handlers: Expects 'save'
+        :param employees: list of valid employees
+        """
         super().__init__(event_handlers)
 
         # Employee Picker
@@ -20,7 +32,8 @@ class AddReceiptDialog(TkinterDialog):
         # Amount
         self.amount_lbl = Label(self, text="Total Sale:")
         self.amount_lbl.grid(column=0, row=1)
-        validator = (self.register(self.validate), '%d', '%s', '%S')  # action, val_before, char_to_change
+        validator = (self.register(self.validate), '%d', '%s', '%S')
+        # ---------------------------------------- action, val_before, char_to_change
         self.amount = Entry(self, validate='key', validatecommand=validator, justify=RIGHT)
         self.amount.grid(column=1, row=1)
 
@@ -33,7 +46,7 @@ class AddReceiptDialog(TkinterDialog):
                                )
                                )
         self.save_btn.grid(column=0, row=2)
-        self.cancel_btn = Button(self, text="Cancel", command=lambda: self.destroy())
+        self.cancel_btn = Button(self, text="Cancel", command=self.destroy)
         self.cancel_btn.grid(column=1, row=2)
 
         self.master.bind('<Return>', lambda: self.event_handlers['save'](
@@ -43,6 +56,14 @@ class AddReceiptDialog(TkinterDialog):
         ))
 
     def validate(self, action: str, val_before: str, char_to_change: str):
+        """
+        Validates the receipt field. See tkinter validators for more info
+
+        :param action: 0 is deletion, 1 is addition, -1 is something else
+        :param val_before: value before change
+        :param char_to_change: character to add or delete
+        :return: bool is_valid
+        """
         if int(action) == 0:
             return True
 

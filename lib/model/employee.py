@@ -3,7 +3,8 @@ Employee Data Model
 """
 from abc import abstractmethod
 
-from sqlalchemy import MetaData, Table, Column, String, DateTime, Float, Integer, Text, Date, BigInteger
+from sqlalchemy import MetaData, Table, Column, String, \
+    DateTime, Float, Integer, Text, Date, BigInteger
 
 from lib.model import DynamicViewModel, HasRelationships, register_database_model
 from lib.model.receipt import Receipt
@@ -12,7 +13,7 @@ from lib.repository.db import DatabaseRepository
 from lib.utils import sha_hash
 
 
-@register_database_model
+@register_database_model  # pylint: disable=too-many-ancestors
 class Employee(DatabaseRepository, DynamicViewModel, HasRelationships):
     """
     Tied directly to the 'employee' table
@@ -56,15 +57,10 @@ class Employee(DatabaseRepository, DynamicViewModel, HasRelationships):
         'notes': 'Notes',
     }
     field_casts = {
-        'id': lambda s: int(s),
-        'salary': lambda s: float(s) if s is not None else None,
-        'hourly_rate': lambda s: float(s) if s is not None else None,
-        'commission_rate': lambda s: float(s) if s is not None else None,
-        # 'start_date': lambda d: datetime.date.fromtimestamp(d),  # pylint: disable=unnecessary-lambda
-        # 'date_of_birth': lambda d: datetime.date.fromtimestamp(d),  # pylint: disable=unnecessary-lambda
-        # 'date_left': lambda d: datetime.date.fromtimestamp(d),  # pylint: disable=unnecessary-lambda
-        # 'created_at': lambda d: datetime.datetime.fromtimestamp(d),  # pylint: disable=unnecessary-lambda
-        # 'modified_at': lambda d: datetime.datetime.fromtimestamp(d),  # pylint: disable=unnecessary-lambda
+        'id': lambda s: int(s),  # pylint: disable=unnecessary-lambda
+        'salary': lambda s: float(s) if s is not None else None,  # pylint: disable=unnecessary-lambda
+        'hourly_rate': lambda s: float(s) if s is not None else None,  # pylint: disable=unnecessary-lambda
+        'commission_rate': lambda s: float(s) if s is not None else None,  # pylint: disable=unnecessary-lambda
     }
 
     def __init__(self, data):
@@ -87,6 +83,10 @@ class Employee(DatabaseRepository, DynamicViewModel, HasRelationships):
         ]
 
     def get_name(self):
+        """
+        Returns the Employee first and last name
+        :return: str
+        """
         return f"{self.first_name} {self.last_name}"
 
     @classmethod
@@ -98,15 +98,23 @@ class Employee(DatabaseRepository, DynamicViewModel, HasRelationships):
 
         employee.cast_fields()
 
-        employee.classification = Classification.to_enum_from_name(employee.classification)
-        employee.classification_id = employee.classification.get_id()
-        employee.payment_method = PaymentMethod.to_enum_from_name(employee.payment_method)
-        employee.paymethod_id = employee.payment_method.get_id()
+        employee.classification = Classification.to_enum_from_name(  # pylint: disable=attribute-defined-outside-init
+            employee.classification)
+        employee.classification_id = employee.classification.get_id()  # pylint: disable=attribute-defined-outside-init
+        employee.payment_method = PaymentMethod.to_enum_from_name(  # pylint: disable=attribute-defined-outside-init
+            employee.payment_method)
+        employee.paymethod_id = employee.payment_method.get_id()  # pylint: disable=attribute-defined-outside-init
 
         return employee
 
     @classmethod
     def authenticate(cls, username, password):
+        """
+        Authenticates an employee as a user
+        :param username: str
+        :param password: str
+        :return: Employee
+        """
         employees = Employee.read_by(filters={
             'id': int(username)
         })
@@ -170,6 +178,11 @@ pay_methods_dict = {}
 
 
 def register_classification(cls):
+    """
+    Decorator that adds classification to the global registry
+    :param cls: class
+    :return: Class
+    """
     classifications.append(cls)
     classifications_dict[cls.name] = {
         'class': cls,
@@ -179,6 +192,11 @@ def register_classification(cls):
 
 
 def register_payment_method(cls):
+    """
+    Decorator that adds payment method to the global registry
+    :param cls: class
+    :return: Class
+    """
     pay_methods.append(cls)
     pay_methods_dict[cls.name] = {
         'class': cls,
@@ -195,9 +213,6 @@ class Classification:
     """
     name: str = ''
 
-    def __init__(self):
-        pass
-
     @abstractmethod
     def issue_payment(self, **kwargs):
         """
@@ -209,19 +224,38 @@ class Classification:
         return self.name
 
     @classmethod
-    def from_enum(cls, id):
-        return classifications[id - 1]()
+    def from_enum(cls, index):
+        """
+        Converts from the Classification ID to the classification instance
+        :param index: int
+        :return: class instance
+        """
+        return classifications[index - 1]()
 
     @classmethod
     def to_enum(cls, clz):
+        """
+        Converts from the classification instance to an ID
+        :param clz: class instance
+        :return: int
+        """
         return classifications[classifications_dict[clz.name]['id']]
 
     @classmethod
     def to_enum_from_name(cls, name):
+        """
+        Converts from the classification class to the name
+        :param clz: class
+        :return: str
+        """
         return classifications[classifications_dict[name]['id'] - 1]
 
     @classmethod
     def get_id(cls):
+        """
+        Gets the registered ID
+        :return: ID int
+        """
         return classifications_dict[cls.name]['id']
 
 
@@ -232,13 +266,7 @@ class Hourly(Classification):
     """
     name = 'Hourly'
 
-    def __init__(self):
-        """
-        This method is the constructor for the Hourly classification
-        """
-        super().__init__()
-
-    def issue_payment(self, employee_id, hourly_rate):
+    def issue_payment(self, employee_id, hourly_rate):  # pylint: disable=arguments-differ
         """
         This method issues payment to hourly classification
         :returns: money paid to hourly employee
@@ -249,21 +277,14 @@ class Hourly(Classification):
             'user_id': employee_id,
             'paid': ('!=', True)
         })
-        s = sum([timesheet.to_hours() for timesheet in timesheets])
-        money += hourly_rate * s
+        total = sum([timesheet.to_hours() for timesheet in timesheets])
+        money += hourly_rate * total
 
         for timesheet in timesheets:
             timesheet.paid = True
             TimeSheet.update(timesheet)
 
         return money
-
-    # def add_timecard(self, time):
-    #     """
-    #     This method is used to add a new time card to hourly employee
-    #     :param time: List of hours worked
-    #     """
-    #     self.time_list.append(time)
 
 
 @register_classification
@@ -273,13 +294,7 @@ class Salaried(Classification):
     """
     name = 'Salary'
 
-    def __init__(self):
-        """
-        This method is the constructor for the Salaried classification
-        """
-        super().__init__()
-
-    def issue_payment(self, salary):
+    def issue_payment(self, salary):  # pylint: disable=arguments-differ
         """
         This method issues salaried employee payment
         :return: Returns Bimonthly payment(float)
@@ -294,16 +309,7 @@ class Commissioned(Classification):
     """
     name = 'Commission'
 
-    def __init__(self):
-        """
-        This method is the constructor to make employee commissioned
-        :param employee: instance of Employee class(uses super)
-        :param salary: salary ammount paid to employee
-        :param comm: commission percentage
-        """
-        super().__init__()
-
-    def issue_payment(self, employee_id, salary, commission):
+    def issue_payment(self, employee_id, salary, commission):  # pylint: disable=arguments-differ
         """
         This method issues payment to commission class employee
         :param commission:
@@ -316,8 +322,8 @@ class Commissioned(Classification):
             'user_id': employee_id,
             'paid': ('!=', True)
         })
-        s = sum([receipt.amount for receipt in receipts])
-        money += s * (commission / 100)
+        total = sum([receipt.amount for receipt in receipts])
+        money += total * (commission / 100)
 
         for receipt in receipts:
             receipt.paid = True
@@ -325,24 +331,12 @@ class Commissioned(Classification):
 
         return money
 
-    # def add_receipt(self, rcpt):
-    #     """
-    #     This method is used to add a new reciept
-    #     :param rcpt: add list containing receipts which is converted to float points
-    #     """
-    #     self.rcpt_list.append(float(rcpt))
-
 
 class PaymentMethod:
     """
     Abstract payment class, allows for each employee to have a payment method that can be issued
     """
     name: str = ''
-
-    def __init__(self):
-        """
-        This method is the constructor for the paymethod
-        """
 
     @abstractmethod
     def issue(self, employee: Employee):
@@ -352,19 +346,38 @@ class PaymentMethod:
         raise NotImplementedError
 
     @classmethod
-    def from_enum(cls, id):
-        return pay_methods[id - 1]()
+    def from_enum(cls, index):
+        """
+        Converts from ID to class instance
+        :param index: int
+        :return: class instance
+        """
+        return pay_methods[index - 1]()
 
     @classmethod
     def to_enum(cls, clz):
+        """
+        Converts from class to ID
+        :param clz: instance
+        :return: id int
+        """
         return pay_methods[pay_methods_dict[clz.name]['id']]
 
     @classmethod
     def to_enum_from_name(cls, name):
+        """
+        Converts from name to ID
+        :param name: str
+        :return: id int
+        """
         return pay_methods[pay_methods_dict[name]['id'] - 1]
 
     @classmethod
     def get_id(cls):
+        """
+        Gets ID from current class
+        :return: id int
+        """
         return pay_methods_dict[cls.name]['id']
 
     def __str__(self):
@@ -377,12 +390,6 @@ class DirectMethod(PaymentMethod):
     Direct method payment class, inherits from PaymentMethod to use abstract issue method
     """
     name = 'Direct Deposit'
-
-    def __init__(self):
-        """
-        This method is the constructor
-        """
-        super().__init__()
 
     def issue(self, employee):
         """
@@ -403,12 +410,6 @@ class MailMethod(PaymentMethod):
     Direct method payment class, inherits from PaymentMethod to use abstract issue method
     """
     name = 'Mail'
-
-    def __init__(self):
-        """
-        This method is the constructor
-        """
-        super().__init__()
 
     def issue(self, employee):
         """

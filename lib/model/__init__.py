@@ -1,7 +1,7 @@
 """
 Model base classes and traits
 """
-from abc import abstractmethod
+from abc import abstractmethod, ABC
 
 database_models = []
 
@@ -17,6 +17,12 @@ def register_database_model(cls):
 
 
 def find_model_by_name(model_name):
+    """
+    Returns model class by it's string class name if it has been previously registered
+    See register_database_model
+    :param model_name: str
+    :return: Model class
+    """
     for db_model in database_models:
         if db_model.__name__.lower() == model_name.lower():
             return db_model
@@ -26,13 +32,12 @@ def find_model_by_name(model_name):
 class DynamicModel:
     """
     This Model attribute will allow fields to be completely dynamic
-    """
 
+    reserved_keywords:
+        Properties that become directly part of the object
+        rather than part of the 'data' dict.
+        Can be overridden.
     """
-    Properties that become directly part of the object
-    rather than part of the 'data' dict.
-    Can be overridden.
-    """  # pylint: disable=pointless-string-statement
     reserved_keywords = [
         'data',
         '_has_timestamps'
@@ -48,6 +53,21 @@ class DynamicModel:
         self.cast_fields()
 
     def cast_fields(self):
+        """
+        Casts fields as specified in the field_casts dict. See also field_casts()
+
+        Dictionary structure:
+        {   [variable name]: [function doing conversion]  }
+
+        Example:
+            field_casts = {
+                'id': lambda s: int(s),
+                'salary': lambda s: float(s) if s is not None else None,
+                'hourly_rate': lambda s: float(s) if s is not None else None,
+                'commission_rate': lambda s: float(s) if s is not None else None,
+            }
+        :return: None
+        """
         for field in self.field_casts:
             if field in self.data:
                 self.data[field] = self.field_casts[field](self.data[field])
@@ -100,13 +120,42 @@ class DynamicModel:
         raise NotImplementedError
 
 
-class DynamicViewModel(DynamicModel):
+class DynamicViewModel(DynamicModel, ABC):
+    """
+    Extends DynamicModel and adds view model conversion for presentation.
+
+    View models are simple dictionaries.
+
+    view_columns:
+        This maps the database fields with it's prettier view
+
+        Structure:
+        {   [database field]: [what to display] }
+
+        Example:
+        {
+            'id': 'ID',
+            'social_security_number': 'SSN',
+            'address_line1': 'Address'
+        }
+    """
     view_columns: dict = {}
 
-    def __init__(self, data: dict):
+    def __init__(self, data: dict):  # pylint: disable=useless-super-delegation
+        """
+        Only calls super constructor
+
+        :param data: dict
+        """
         super().__init__(data)
 
     def to_view_model(self):
+        """
+        Uses the view_columns dictionary and converts the model
+        instance into a dictionary ready for presentation
+
+        :return: view model dictionary
+        """
         view_model = {}
         for key, value in self.view_columns.items():
             if getattr(self, key):
@@ -115,15 +164,18 @@ class DynamicViewModel(DynamicModel):
 
     @classmethod
     def from_view_model(cls, view_model: dict):
+        """
+        Converts from a view model (preferably from the view) back to a model
+
+        :param view_model: dictionary
+        :return: Model
+        """
         data = {}
         for key, value in cls.view_columns.items():
             if getattr(view_model, value):
                 data[key] = view_model[value]
 
         return cls(data)
-
-    def get_name(self):
-        raise NotImplementedError
 
 
 class HasRelationships:

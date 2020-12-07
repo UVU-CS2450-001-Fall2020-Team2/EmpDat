@@ -1,4 +1,9 @@
+"""
+Main Controller of application
+"""
+
 import datetime
+import sys
 import time
 
 from lib.cli import import_csv
@@ -13,9 +18,23 @@ from ui.window.dialogs.add_receipt import AddReceiptDialog
 from ui.window.dialogs.add_timesheet import AddTimesheetDialog
 
 
+def _open_change_requests():
+    """
+    Shows change requests window
+    :return: None
+    """
+    ChangeRequestsController().show()
+
+
 class DatabaseController(Controller):
+    """
+    Controller for the employee table view
+    """
 
     def __init__(self):
+        """
+        Uses DatabaseWindow
+        """
         super().__init__(DatabaseWindow({
             'new_employee': self.new_employee,
             'new_receipt': self.new_receipt,
@@ -26,11 +45,15 @@ class DatabaseController(Controller):
             'import>employees': self.import_employees,
             'import>receipts': self.import_receipts,
             'import>timesheets': self.import_timesheets,
-            'admin>review': self.open_change_requests,
+            'admin>review': _open_change_requests,
             'export>employees': self.export_to_csv,
         }))
 
     def load(self):
+        """
+        Loads all employees and displays them on the table
+        :return: None
+        """
         employees = Employee.read_all()
         i = 0
         for employee in employees:
@@ -40,17 +63,29 @@ class DatabaseController(Controller):
         self.view.table.autoResizeColumns()
 
     def refresh(self):
+        """
+        Wipes and reloads the table
+        :return: None
+        """
         self.view.destroy_results()
         self.load()
         self.view.table.unsaved = []
         self.view.table.redraw()
 
     def show(self):
+        """
+        Overrides show to load data first
+        :return: None
+        """
         self.load()
 
         super().show()
 
     def save(self):
+        """
+        When Save is pressed, the change is either performed, or a change request is submitted
+        :return: None
+        """
         change_request_submitted = False
         for employee_id in self.view.table.unsaved:
             view_model = self.view.table.model.data[employee_id]
@@ -62,54 +97,81 @@ class DatabaseController(Controller):
 
         if change_request_submitted:
             self.view.show_info('Request to Change Submitted!')
-            self.view.set_status(f'Request to Change {len(self.view.table.unsaved)} employees Submitted!')
+            self.view.set_status(f'Request to Change {len(self.view.table.unsaved)} '
+                                 f'employees Submitted!')
         else:
             self.view.set_status(f'Saved {len(self.view.table.unsaved)} employees successfully!')
         self.refresh()
 
     def delete(self):
+        """
+        When Delete is pressed, the change is either performed, or a change request is submitted
+        :return: None
+        """
         ids = self.view.table.get_selectedRecordNames()
         for employee_id in ids:
             try:
                 Employee.destroy(employee_id)
             except SecurityException:
-                self.view.show_error('Access Denied', 'Insufficient permission to delete selected employees')
+                self.view.show_error('Access Denied', 'Insufficient permission to delete '
+                                                      'selected employees')
                 self.refresh()
                 break
-        self.view.show_info('Deletion Successful', 'The selected employee(s) were deleted successfully!')
+        self.view.show_info('Deletion Successful', 'The selected employee(s) '
+                                                   'were deleted successfully!')
         self.refresh()
 
     def new_employee(self):
+        """
+        When New is pressed. TODO
+        :return: None
+        """
         self.view.new_employee()
 
     def import_employees(self):
+        """
+        Uses import csv library from CLI
+        :return: None
+        """
         import_csv.import_employees(
             self.view.show_file_picker(
                 title='Import Employees (CSV)',
                 filetypes=('*.csv', '*.txt')
             ), from_cmd=False)
-        self.view.set_status(f'Importing employees successful!')
+        self.view.set_status('Importing employees successful!')
         self.refresh()
 
     def import_receipts(self):
+        """
+        Uses import csv library from CLI
+        :return: None
+        """
         import_csv.import_receipts(
             self.view.show_file_picker(
                 title='Import Receipts (CSV)',
                 filetypes=('*.txt', '*.csv')
             ), from_cmd=False)
-        self.view.set_status(f'Importing receipts successful!')
+        self.view.set_status('Importing receipts successful!')
         self.refresh()
 
     def import_timesheets(self):
+        """
+        Uses import csv library from CLI
+        :return: None
+        """
         import_csv.import_timesheets(
             self.view.show_file_picker(
                 title='Import Time Sheets (CSV)',
                 filetypes=('*.txt', '*.csv')
             ), from_cmd=False)
-        self.view.set_status(f'Importing time sheets successful!')
+        self.view.set_status('Importing time sheets successful!')
         self.refresh()
 
     def new_receipt(self):
+        """
+        Shows the add receipt dialog and saves it
+        :return: None
+        """
         def on_save(dialog, employee_id: int, amount: float):
             try:
                 amount = float(amount)
@@ -124,12 +186,13 @@ class DatabaseController(Controller):
                 })
                 try:
                     Receipt.create(receipt)
-                    self.view.show_info('Info', f'Receipt created successfully!')
-                except SecurityException as e:
-                    self.view.show_error('Error', f'Unable to create receipt: {e}')
+                    self.view.show_info('Info', 'Receipt created successfully!')
+                except SecurityException as error:
+                    self.view.show_error('Error', f'Unable to create receipt: {error}')
                     return
                 except ChangeRequestException:
-                    self.view.show_info('Info', 'A change request has been created and will be reviewed.')
+                    self.view.show_info('Info', 'A change request has been created '
+                                                'and will be reviewed.')
             dialog.destroy()
 
         AddReceiptDialog({
@@ -137,7 +200,12 @@ class DatabaseController(Controller):
         }, Employee.read_all())
 
     def new_timesheet(self):
-        def on_save(dialog, employee_id: int, date: datetime.date, hour_in, min_in, hour_out, min_out):
+        """
+        Shows the add timesheet dialog and saves it
+        :return: None
+        """
+        def on_save(dialog, employee_id: int, date: datetime.date,  # pylint: disable=too-many-arguments
+                    hour_in, min_in, hour_out, min_out):
             try:
                 hour_in = int(hour_in)
                 min_in = int(min_in)
@@ -160,23 +228,29 @@ class DatabaseController(Controller):
                 })
                 try:
                     TimeSheet.create(timesheet)
-                    self.view.show_info('Success', f'Timesheet created successfully!')
+                    self.view.show_info('Success', 'Timesheet created successfully!')
                 except SecurityException:
                     self.view.show_error('Error', 'Access Denied')
                     return
                 except ChangeRequestException:
-                    self.view.show_info('Info', 'A change request has been created and will be reviewed.')
+                    self.view.show_info('Info', 'A change request has been created '
+                                                'and will be reviewed.')
             dialog.destroy()
 
         AddTimesheetDialog({
             'save': on_save
         }, Employee.read_all())
 
-    def open_change_requests(self):
-        ChangeRequestsController().show()
-
     def export_to_csv(self):
+        """
+        Exports the table to a CSV
+        :return:
+        """
         self.view.table.exportTable()
 
-    def logout(self):
-        exit()
+    def logout(self):  # pylint: disable=no-self-use
+        """
+        Any clean up prior to exiting is done here
+        :return: None
+        """
+        sys.exit()
