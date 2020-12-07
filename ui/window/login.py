@@ -20,7 +20,7 @@ class LoginWindow(TkinterWindow):
 
         main = Frame(self.master)
 
-        icon_image = ImageTk.PhotoImage(Image.open("ui/icons/EmpDat.gif"))
+        icon_image = ui.load_image("ui/icons/EmpDat.gif")
         icon = Label(main, image=icon_image)
         icon.image = icon_image
         icon.pack(padx=10, pady=10)

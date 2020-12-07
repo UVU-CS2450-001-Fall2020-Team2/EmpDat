@@ -5,8 +5,9 @@ import tkinter
 from tkinter import messagebox, Toplevel
 from tkinter.filedialog import askopenfilename
 
-from PIL import Image, ImageTk
 from ttkthemes import ThemedStyle
+
+import ui
 
 
 class UsesDialog:
@@ -66,7 +67,10 @@ class TkinterWindow(UsesDialog):
         style = ThemedStyle(self.master)
         style.theme_use('arc')
 
-        self.master.iconphoto(False, ImageTk.PhotoImage(Image.open("ui/icons/EmpDat.gif")))
+        try:
+            self.master.iconphoto(True, ui.load_image("ui/icons/EmpDat.gif"))
+        except tkinter.TclError:
+            pass
 
         self.event_handlers = event_handlers
 
