@@ -32,7 +32,7 @@ def _open_change_requests():
     ChangeRequestsController().show()
 
 
-def _on_save(view, dialog, employee_id, old_pass: str, password: str, password_confirm: str):
+def _on_password_save(view, dialog, employee_id, old_pass: str, password: str, password_confirm: str):
     employee = Employee.read(employee_id)
 
     if sha_hash(old_pass) != employee.password:
@@ -171,7 +171,7 @@ class DatabaseController(Controller):
         """
 
         def on_save(dialog, old_pass: str, password: str, password_confirm: str):
-            _on_save(self.view, dialog, store.AUTHENTICATED_USER.id, old_pass, password, password_confirm)
+            _on_password_save(self.view, dialog, store.AUTHENTICATED_USER.id, old_pass, password, password_confirm)
 
         MyPasswordDialog({
             'save': on_save
@@ -184,7 +184,7 @@ class DatabaseController(Controller):
         """
 
         def on_save(dialog, employee_id, old_pass: str, password: str, password_confirm: str):
-            _on_save(self.view, dialog, employee_id, old_pass, password, password_confirm)
+            _on_password_save(self.view, dialog, employee_id, old_pass, password, password_confirm)
 
         PasswordDialog({
             'save': on_save
