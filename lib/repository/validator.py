@@ -120,6 +120,7 @@ def _alpha(value: str):
     """
     return _generic_regex([r'^[A-Za-z\.\s]+$'], value)
 
+
 def _numeric(value: str):
     """
     Validates fields to be numeric only
@@ -139,9 +140,14 @@ def _notnull(value):
     return value is not None
 
 
+def _password(value):
+    return _generic_regex([r'(?=.{9,})(?=.*?[^\w\s])(?=.*?[0-9])(?=.*?[A-Z]).*?[a-z].*'], value)
+
+
 _validators = {
     'phone': _phone_number,
     'alpha': _alpha,
     'numeric': _numeric,
-    'notnull': _notnull
+    'notnull': _notnull,
+    'password': _password
 }

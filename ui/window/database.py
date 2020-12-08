@@ -87,12 +87,11 @@ class DatabaseWindow(TkinterWindow):
         self.filemenu.add_command(label="New Timesheet",
                                   command=self.event_handlers['new_timesheet'])
         self.filemenu.add_separator()
-        # TODO change my password
-        self.filemenu.add_command(label="Change My Password",
-                                  command=None)
         if store.AUTHENTICATED_USER.role == 'Admin' or store.AUTHENTICATED_USER.role == 'Accounting':
             self.filemenu.add_command(label="Run Payroll",
                                       command=self.event_handlers['run_payroll'])
+        self.filemenu.add_command(label="Change My Password",
+                                  command=self.event_handlers['change_my_password'])
         self.filemenu.add_separator()
         # Logout
         self.filemenu.add_command(label="Logout", command=self.event_handlers['file>logout'])
@@ -119,9 +118,8 @@ class DatabaseWindow(TkinterWindow):
             self.admin_menu = Menu(self.menubar, tearoff=False)
             self.admin_menu.add_command(label="Review Change Requests",
                                         command=self.event_handlers['admin>review'])
-            # TODO change others password
             self.admin_menu.add_command(label="Change Passwords",
-                                        command=None)
+                                        command=self.event_handlers['admin>change_password'])
             self.menubar.add_cascade(label="Admin", menu=self.admin_menu)
 
     def create_footer(self):
