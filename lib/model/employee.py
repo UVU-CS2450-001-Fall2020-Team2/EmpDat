@@ -1,6 +1,7 @@
 """
 Employee Data Model
 """
+import datetime
 from abc import abstractmethod
 
 from sqlalchemy import MetaData, Table, Column, String, \
@@ -90,6 +91,10 @@ class Employee(DatabaseRepository, DynamicViewModel, HasRelationships):
         return f"{self.first_name} {self.last_name}"
 
     def get_balance(self):
+        """
+        Gets amount owed to employee. Ran during payroll
+        :return: balance float
+        """
         if self.classification.name == Hourly.name:
             return self.classification.issue_payment(self.id, self.hourly_rate)
         elif self.classification.name == Salaried.name:
@@ -99,7 +104,37 @@ class Employee(DatabaseRepository, DynamicViewModel, HasRelationships):
         return 0
 
     def get_payment_method(self):
+        """
+        Returns info for payment method
+        :return: list
+        """
         return self.payment_method.issue(self)
+
+    def update_password(self, new_password: str):
+        self.password = sha_hash(new_password)  # pylint: disable=attribute-defined-outside-init
+        Employee.update(self)
+
+    def __str__(self):
+        return f"{self.first_name} {self.last_name}"
+
+    @classmethod
+    def new_empty(cls):
+        return Employee({
+            'password': '',
+            'role': 'Viewer',
+            'first_name': 'required',
+            'last_name': 'required',
+            'user_group_id': 0,
+            'start_date': datetime.date.today(),
+            'date_of_dirth': datetime.date.today(),
+            'sex': -1,
+            'address_line1': 'required',
+            'city': 'required',
+            'state': 'required',
+            'zipcode': 'required',
+            'classification_id': 'required',
+            'paymethod_id': 'required'
+        })
 
     @classmethod
     def from_view_model(cls, view_model: dict):
@@ -139,13 +174,6 @@ class Employee(DatabaseRepository, DynamicViewModel, HasRelationships):
         if sha_hash(password) == employee.password:
             return employee
         return None
-
-    def update_password(self, new_password: str):
-        self.password = sha_hash(new_password)  # pylint: disable=attribute-defined-outside-init
-        Employee.update(self)
-
-    def __str__(self):
-        return f"{self.first_name} {self.last_name}"
 
     @classmethod
     def table(cls, metadata=MetaData()):
