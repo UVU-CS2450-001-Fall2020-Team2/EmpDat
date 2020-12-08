@@ -76,6 +76,10 @@ class DynamicModel:
     def __dict__(self):
         return self.data
 
+    @classmethod
+    def new_empty(cls):
+        raise NotImplementedError
+
     def to_dict(self):
         """
         This is a helper in case this is used with the DatabaseRepository interface
