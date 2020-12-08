@@ -164,6 +164,8 @@ class DynamicViewModel(DynamicModel, ABC):
         for key, value in self.view_columns.items():
             if getattr(self, key):
                 view_model[value] = getattr(self, key)
+            else:
+                view_model[value] = None
         return view_model
 
     @classmethod

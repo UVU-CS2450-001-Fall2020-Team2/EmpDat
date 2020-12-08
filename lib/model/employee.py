@@ -53,7 +53,7 @@ class Employee(DatabaseRepository, DynamicViewModel, HasRelationships):
         'commission_rate': 'Commission Rate',
         'bank_routing': 'Bank Rounting',
         'bank_account': 'Bank Account',
-        'timesheet': 'Timesheet',
+        # 'timesheet': 'Timesheet',
         'date_left': 'Date Left',
         'notes': 'Notes',
     }
