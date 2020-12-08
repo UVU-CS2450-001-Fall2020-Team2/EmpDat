@@ -65,6 +65,7 @@ class DatabaseWindow(TkinterWindow):
         self.reports_menu = Menu(self.menubar, tearoff=False)
         self.reports_menu.add_command(label="Paylog (CSV)", command=None)
         self.reports_menu.add_command(label="Employee Directory (CSV)", command=self.event_handlers['export>employees'])
+        self.reports_menu.add_command(label="Employee Directory (PDF)", command=self.event_handlers['export>pdf_employees'])
         self.menubar.add_cascade(label="Reports", menu=self.reports_menu)
         # Import tab
         self.import_menu = Menu(self.menubar, tearoff=False)

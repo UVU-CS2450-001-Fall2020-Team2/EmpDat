@@ -1,5 +1,9 @@
 import datetime
 import time
+import pdfkit
+import pandas as pd
+import csv
+
 
 from lib.cli import import_csv
 from lib.layer.security import ChangeRequestException, SecurityException
@@ -28,6 +32,7 @@ class DatabaseController(Controller):
             'import>timesheets': self.import_timesheets,
             'admin>review': self.open_change_requests,
             'export>employees': self.export_to_csv,
+            'export>pdf_employees': self.export_to_pdf,
         }))
 
     def load(self):
@@ -177,6 +182,37 @@ class DatabaseController(Controller):
 
     def export_to_csv(self):
         self.view.table.exportTable()
+
+    def table_to_csv(self, table, sep=None):
+        """Export table data to a comma separated file"""
+
+        parent=table.parentframe
+        filename = tkinter.filedialog.asksaveasfilename(parent=parent,defaultextension='.csv',
+                                                filetypes=[("CSV files","*.csv")] )
+        if not filename:
+            return
+        if sep == None:
+            sep = ','
+        writer = csv.writer(open(filename, "w"), delimiter=sep)
+        model= self.table.getModel()
+        recs = self.model.getAllCells()
+        #take column labels as field names
+        colnames = self.model.columnNames
+        collabels = self.model.columnlabels
+        row=[]
+        for c in colnames:
+            row.append(collabels[c])
+        writer.writerow(row)
+        for row in recs.keys():
+            writer.writerow(recs[row])
+        return writer
+
+    def export_to_pdf(self):
+        emp_csv = self.table_to_csv(self, self.table)
+        #save as html file 
+        emp_csv.to_html("Employee_Table.html") 
+        #html to pdf
+        pdfkit.from_file('Employee_Table.html', 'Employees.pdf')
 
     def logout(self):
         exit()
