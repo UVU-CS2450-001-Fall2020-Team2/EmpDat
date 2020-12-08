@@ -6,3 +6,6 @@ dictdiffer
 ttkthemes
 tkintertable
 tkcalendar
+pandas
+pdfkit
+csv
