@@ -140,6 +140,10 @@ class Employee(DatabaseRepository, DynamicViewModel, HasRelationships):
             return employee
         return None
 
+    def update_password(self, new_password: str):
+        self.password = sha_hash(new_password)  # pylint: disable=attribute-defined-outside-init
+        Employee.update(self)
+
     def __str__(self):
         return f"{self.first_name} {self.last_name}"
 

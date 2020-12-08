@@ -12,11 +12,16 @@ from lib.layer.security import ChangeRequestException, SecurityException
 from lib.model.employee import Employee
 from lib.model.receipt import Receipt
 from lib.model.time_sheet import TimeSheet
+from lib.repository.validator import is_valid_against
+from lib.utils import sha_hash
+from ui import store
 from ui.control import Controller
 from ui.control.change_requests import ChangeRequestsController
 from ui.window.database import DatabaseWindow
 from ui.window.dialogs.add_receipt import AddReceiptDialog
 from ui.window.dialogs.add_timesheet import AddTimesheetDialog
+from ui.window.dialogs.my_password import MyPasswordDialog
+from ui.window.dialogs.others_password import PasswordDialog
 
 
 def _open_change_requests():
@@ -25,6 +30,30 @@ def _open_change_requests():
     :return: None
     """
     ChangeRequestsController().show()
+
+
+def _on_save(view, dialog, employee_id, old_pass: str, password: str, password_confirm: str):
+    employee = Employee.read(employee_id)
+
+    if sha_hash(old_pass) != employee.password:
+        view.show_error('Error', 'Old password does not match!')
+        return
+
+    if password != password_confirm:
+        view.show_error('Error', 'New Passwords do not match!')
+        return
+
+    if not is_valid_against('password', password):
+        view.show_error('Error', 'Passwords must have at least 9 characters (with at least '
+                                      '1 number, 1 special character, and upper and lowercase '
+                                      'characters)!')
+        return
+
+    Employee.read(employee_id).update_password(password)
+
+    view.set_status('Changing password successful!')
+    view.show_info('Info', 'Changing password successful!')
+    dialog.destroy()
 
 
 class DatabaseController(Controller):
@@ -41,6 +70,7 @@ class DatabaseController(Controller):
             'new_receipt': self.new_receipt,
             'new_timesheet': self.new_timesheet,
             'run_payroll': self.run_payroll,
+            'change_my_password': self.change_my_password,
             'save': self.save,
             'delete': self.delete,
             'file>logout': self.logout,
@@ -48,6 +78,7 @@ class DatabaseController(Controller):
             'import>receipts': self.import_receipts,
             'import>timesheets': self.import_timesheets,
             'admin>review': _open_change_requests,
+            'admin>change_password': self.change_password,
             'export>employees': self.export_to_csv,
         }))
 
@@ -133,6 +164,32 @@ class DatabaseController(Controller):
         """
         self.view.new_employee()
 
+    def change_my_password(self):
+        """
+        Shows the change my password dialog and saves it
+        :return: None
+        """
+
+        def on_save(dialog, old_pass: str, password: str, password_confirm: str):
+            _on_save(self.view, dialog, store.AUTHENTICATED_USER.id, old_pass, password, password_confirm)
+
+        MyPasswordDialog({
+            'save': on_save
+        })
+
+    def change_password(self):
+        """
+        Shows the change others' passwords dialog and saves it
+        :return: None
+        """
+
+        def on_save(dialog, employee_id, old_pass: str, password: str, password_confirm: str):
+            _on_save(self.view, dialog, employee_id, old_pass, password, password_confirm)
+
+        PasswordDialog({
+            'save': on_save
+        }, Employee.read_all())
+
     def import_employees(self):
         """
         Uses import csv library from CLI
@@ -149,6 +206,7 @@ class DatabaseController(Controller):
 
         import_csv.import_employees(filepath, from_cmd=False)
         self.view.set_status('Importing employees successful!')
+        self.view.show_info('Info', 'Importing employees successful!')
         self.refresh()
 
     def import_receipts(self):
@@ -167,6 +225,7 @@ class DatabaseController(Controller):
 
         import_csv.import_receipts(filepath, from_cmd=False)
         self.view.set_status('Importing receipts successful!')
+        self.view.show_info('Info', 'Importing receipts successful!')
         self.refresh()
 
     def import_timesheets(self):
@@ -185,6 +244,7 @@ class DatabaseController(Controller):
 
         import_csv.import_timesheets(filepath, from_cmd=False)
         self.view.set_status('Importing time sheets successful!')
+        self.view.show_info('Info', 'Importing time sheets successful!')
         self.refresh()
 
     def new_receipt(self):
