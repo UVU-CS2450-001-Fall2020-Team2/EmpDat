@@ -42,7 +42,7 @@ A virtual environment (a shadow copy of an already installed Python) is recommen
     - Windows: `venv/Scripts/activate.bat`
     - Linux/Unix/Mac: `source venv/bin/activate`
 4. Install dependencies: `pip3 install -r requirements.txt`
-5. Run `python3 EmpDat.py`
+5. Run `python EmpDat.py`
 
 Any time anything needs to be ran or installed within the application, activate the virtual environment using
 Step 3 above. Deactivation can be done with the command `deactivate`.
