@@ -119,7 +119,7 @@ class DatabaseWindow(TkinterWindow):
         self.menubar.add_cascade(label="Reports", menu=self.reports_menu)
         # Import tab
         self.import_menu = Menu(self.menubar, tearoff=False)
-        self.import_menu.add_command(label="Employees",
+        self.import_menu.add_command(label="Employees (Legacy)",
                                      command=self.event_handlers['import>employees'])
         self.import_menu.add_command(label="Receipts",
                                      command=self.event_handlers['import>receipts'])
