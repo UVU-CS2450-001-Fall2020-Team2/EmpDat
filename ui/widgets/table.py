@@ -50,10 +50,12 @@ class EmpDatTableCanvas(TableCanvas):
     def drawText(self, row, col, celltxt, fgcolor=None, align=None):
         """Draw the text inside a cell area"""
 
-        if col in self.col_modifiers and 'render_as' in self.col_modifiers[col]:
-            celltxt = self.col_modifiers[col]['render_as'](celltxt)
+        col_name = self.model.getColumnName(col)
+
+        if col_name in self.col_modifiers and 'render_as' in self.col_modifiers[col_name]:
+            celltxt = self.col_modifiers[col_name]['render_as'](celltxt)
         if len(celltxt) == 0 or celltxt == 'None':
-            celltxt = 'Not set'
+            celltxt = ''
 
         self.delete('celltext' + str(col) + '_' + str(row))
         h = self.rowheight
@@ -129,9 +131,11 @@ class EmpDatTableCanvas(TableCanvas):
     def drawCellEntry(self, row, col, text=None):
         """When the user single/double clicks on a text/number cell, bring up entry window"""
 
-        if self.read_only or (col in self.col_modifiers and
-                              'read_only' in self.col_modifiers[col]
-                              and self.col_modifiers[col]['read_only']):
+        col_name = self.model.getColumnName(col)
+
+        if self.read_only or (col_name in self.col_modifiers and
+                              'read_only' in self.col_modifiers[col_name]
+                              and self.col_modifiers[col_name]['read_only']):
             return
         # absrow = self.get_AbsoluteRow(row)
         height = self.rowheight
@@ -141,6 +145,8 @@ class EmpDatTableCanvas(TableCanvas):
             return
         else:
             text = self.model.getValueAt(row, col)
+        if text == 'None':
+            text = ''
         x1, y1, x2, y2 = self.getCellCoords(row, col)
         w = x2 - x1
         # Draw an entry window
@@ -182,8 +188,8 @@ class EmpDatTableCanvas(TableCanvas):
                 self.on_unsaved(True)
             return
 
-        if col in self.col_modifiers and 'options' in self.col_modifiers[col]:
-            options = self.col_modifiers[col]['options']
+        if col_name in self.col_modifiers and 'options' in self.col_modifiers[col_name]:
+            options = self.col_modifiers[col_name]['options']
 
             self.cellentry = Combobox(self.parentframe, width=20,
                                       textvariable=txtvar,
@@ -198,6 +204,7 @@ class EmpDatTableCanvas(TableCanvas):
                                    # relief=FLAT,
                                    takefocus=1,
                                    font=self.thefont)
+            self.cellentry.selection_range(0, END)
 
         self.cellentry.icursor(END)
         self.cellentry.bind('<Return>', callback)

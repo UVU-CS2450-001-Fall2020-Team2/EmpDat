@@ -6,6 +6,7 @@ from tkinter.ttk import Frame, Button, Label
 
 from lib.layer import security
 from lib.model import employee
+from lib.model.employee import Employee
 from ui import store
 from ui.widgets.table import EmpDatTableCanvas
 from ui.window import TkinterWindow
@@ -44,18 +45,24 @@ class DatabaseWindow(TkinterWindow):
         frame = Frame(self.main)
         frame.pack(fill=BOTH, expand=1)
         self.table = EmpDatTableCanvas(frame, col_modifiers={
-            0: {  # ID
+            Employee.view_columns['id']: {  # ID
                 'read_only': True
             },
-            1: {  # Role
+            Employee.view_columns['role']: {  # Role
                 'options': list(security.ROLES.keys())
             },
-            8: {  # Classification
+            Employee.view_columns['classification']: {  # Classification
                 'options': list(employee.classifications_dict.keys())
             },
-            9: {  # Payment Method
+            Employee.view_columns['payment_method']: {  # Payment Method
                 'options': list(employee.pay_methods_dict.keys())
-            }
+            },
+            Employee.view_columns['sex']: {  # Sex
+                'options': ['Male', 'Female', 'Other']
+            },
+            Employee.view_columns['sex']: {  # Sex
+                'options': ['Male', 'Female', 'Other']
+            },
         }, on_unsaved=lambda x: self.set_save_state('normal' if not x else 'disabled'),
                                        on_selected=lambda: self.set_delete_state('normal'),
                                        data=self.results, rowheight=50)
@@ -132,7 +139,7 @@ class DatabaseWindow(TkinterWindow):
         self.new_button = Button(
             buttons,
             text="New",
-            command=lambda: self.event_handlers['new_employee'],
+            command=self.event_handlers['new_employee'],
         )
         self.search_button = Button(
             buttons,
@@ -185,15 +192,15 @@ class DatabaseWindow(TkinterWindow):
         """
         self.delete_button['state'] = state
 
-    def new_employee(self):
+    def new_employee(self, new_id, view_model):
         """
         Handle employee creation
         :return:
         """
-        # TODO FIX THIS
-        new_id = 12345
-        self.add_to_result(new_id, {})
-        self.table.movetoSelectedRow(recname=new_id)
+        record_id = f"NEW{new_id}"
+        view_model['ID'] = record_id
+        self.add_to_result(record_id, view_model)
+        self.table.movetoSelectedRow(recname=record_id)
 
     def add_to_result(self, record_id, to_add: dict):
         """

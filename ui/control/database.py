@@ -45,8 +45,8 @@ def _on_password_save(view, dialog, employee_id, old_pass: str, password: str, p
 
     if not is_valid_against('password', password):
         view.show_error('Error', 'Passwords must have at least 9 characters (with at least '
-                                      '1 number, 1 special character, and upper and lowercase '
-                                      'characters)!')
+                                 '1 number, 1 special character, and upper and lowercase '
+                                 'characters)!')
         return
 
     Employee.read(employee_id).update_password(password)
@@ -81,6 +81,8 @@ class DatabaseController(Controller):
             'admin>change_password': self.change_password,
             'export>employees': self.export_to_csv,
         }))
+
+        self.new_id = 0
 
     def load(self):
         """
@@ -125,9 +127,18 @@ class DatabaseController(Controller):
         change_request_submitted = False
         for employee_id in self.view.table.unsaved:
             view_model = self.view.table.model.data[employee_id]
+
+            is_new = False
+            if "NEW" in employee_id:
+                view_model[Employee.view_columns['id']] = None
+                is_new = True
+
             employee = Employee.from_view_model(view_model)
             try:
-                Employee.update(employee)
+                if is_new:
+                    Employee.create(employee)
+                else:
+                    Employee.update(employee)
             except ChangeRequestException:
                 change_request_submitted = True
 
@@ -144,25 +155,28 @@ class DatabaseController(Controller):
         When Delete is pressed, the change is either performed, or a change request is submitted
         :return: None
         """
-        ids = self.view.table.get_selectedRecordNames()
-        for employee_id in ids:
-            try:
-                Employee.destroy(employee_id)
-            except SecurityException:
-                self.view.show_error('Access Denied', 'Insufficient permission to delete '
-                                                      'selected employees')
-                self.refresh()
-                break
-        self.view.show_info('Deletion Successful', 'The selected employee(s) '
-                                                   'were deleted successfully!')
-        self.refresh()
+        if self.view.show_confirm(title='Confirm Employee Deletion',
+                                  message='Are you sure you want to delete the employee(s)?'):
+            ids = self.view.table.get_selectedRecordNames()
+            for employee_id in ids:
+                try:
+                    Employee.destroy(employee_id)
+                except SecurityException:
+                    self.view.show_error('Access Denied', 'Insufficient permission to delete '
+                                                          'selected employees')
+                    self.refresh()
+                    break
+            self.view.show_info('Deletion Successful', 'The selected employee(s) '
+                                                       'were deleted successfully!')
+            self.refresh()
 
     def new_employee(self):
         """
-        When New is pressed. TODO
+        When New is pressed.
         :return: None
         """
-        self.view.new_employee()
+        self.view.new_employee(self.new_id, Employee.new_empty().to_view_model())
+        self.new_id += 1
 
     def change_my_password(self):
         """
