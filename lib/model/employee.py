@@ -11,7 +11,7 @@ from lib.model import DynamicViewModel, HasRelationships, register_database_mode
 from lib.model.receipt import Receipt
 from lib.model.time_sheet import TimeSheet
 from lib.repository.db import DatabaseRepository
-from lib.utils import sha_hash
+from lib.utils import sha_hash, date_converter
 
 
 @register_database_model  # pylint: disable=too-many-ancestors
@@ -62,6 +62,9 @@ class Employee(DatabaseRepository, DynamicViewModel, HasRelationships):
         'salary': lambda s: float(s) if s is not None and s != 'None' else None,  # pylint: disable=unnecessary-lambda
         'hourly_rate': lambda s: float(s) if s is not None and s != 'None' else None,  # pylint: disable=unnecessary-lambda
         'commission_rate': lambda s: float(s) if s is not None and s != 'None' else None,  # pylint: disable=unnecessary-lambda
+        'start_date': lambda d: date_converter(d), # pylint: disable=unnecessary-lambda
+        'date_of_birth': lambda d: date_converter(d),  # pylint: disable=unnecessary-lambda
+        'date_left': lambda d: date_converter(d)  # pylint: disable=unnecessary-lambda
     }
 
     def __init__(self, data):

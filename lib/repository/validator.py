@@ -5,6 +5,16 @@ import re
 from abc import abstractmethod
 
 
+class ValidationException(Exception):
+    """
+    Thrown when a validation rule is violated
+    """
+
+    def __init__(self, message, database_field, *args):
+        super().__init__(message, *args)
+        self.database_field = database_field
+
+
 class HasValidation:
     """
     Trait that adds validation to Models
@@ -23,7 +33,7 @@ class HasValidation:
             for data_key, data_value in value.items():
                 if not self.validate(data_key, data_value):
                     # TODO make error message better
-                    raise ValueError(f'{data_key} given is invalid!')
+                    raise ValidationException(f'{data_key} given is invalid', data_key)
             super().__setattr__(key, value)
         else:
             if self.validate(key, value):
@@ -31,7 +41,7 @@ class HasValidation:
             else:
                 # print('no validators')
                 # TODO make error message better
-                raise ValueError(f'{key} given is invalid!')
+                raise ValidationException(f'{key} given is invalid', key)
 
     def validate(self, key, new_value):
         """
