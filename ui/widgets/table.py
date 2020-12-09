@@ -7,6 +7,7 @@ import math
 from tkinter import END, StringVar
 from tkinter.ttk import Entry, Combobox
 
+from tkcalendar import DateEntry
 from tkintertable import TableCanvas, Formula
 
 
@@ -183,9 +184,9 @@ class EmpDatTableCanvas(TableCanvas):
             if self.on_change:
                 self.on_change()
             if len(self.unsaved) > 0:
-                self.on_unsaved(False)
+                self.on_unsaved(False, row, col)
             else:
-                self.on_unsaved(True)
+                self.on_unsaved(True, row, col)
             return
 
         if col_name in self.col_modifiers and 'options' in self.col_modifiers[col_name]:
@@ -197,11 +198,14 @@ class EmpDatTableCanvas(TableCanvas):
                                       font=self.thefont)
             self.cellentry['values'] = options
             self.cellentry.bind('<<ComboboxSelected>>', callback)
+        elif col_name in self.col_modifiers and 'date' in self.col_modifiers[col_name]:
+            self.cellentry = DateEntry(self.parentframe, width=20,
+                                       textvariable=txtvar,
+                                       takefocus=1,
+                                       font=self.thefont)
         else:
             self.cellentry = Entry(self.parentframe, width=20,
                                    textvariable=txtvar,
-                                   # bg=self.entrybackgr,
-                                   # relief=FLAT,
                                    takefocus=1,
                                    font=self.thefont)
             self.cellentry.selection_range(0, END)

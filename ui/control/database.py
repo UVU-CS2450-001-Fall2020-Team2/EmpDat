@@ -12,7 +12,7 @@ from lib.layer.security import ChangeRequestException, SecurityException
 from lib.model.employee import Employee
 from lib.model.receipt import Receipt
 from lib.model.time_sheet import TimeSheet
-from lib.repository.validator import is_valid_against
+from lib.repository.validator import is_valid_against, ValidationException
 from lib.utils import sha_hash
 from ui import store
 from ui.control import Controller
@@ -104,7 +104,7 @@ class DatabaseController(Controller):
         """
         self.view.destroy_results()
         self.load()
-        self.view.table.unsaved = []
+        self.view.table.unsaved = set()
         self.view.table.redraw()
 
     def show(self):
@@ -117,37 +117,59 @@ class DatabaseController(Controller):
         super().show()
 
     def run_payroll(self):
-        run_payroll("paylog.txt")
+        filepath = self.view.show_file_picker(
+            title='Save Payroll',
+            filetypes=(('Text File', '*.txt'))
+        )
+
+        if not filepath:
+            self.view.set_status('Payroll cancelled')
+            return
+
+        run_payroll(filepath)
+        self.view.show_info('Success', f'Payroll was processed and was written to: {filepath}!')
 
     def save(self):
         """
         When Save is pressed, the change is either performed, or a change request is submitted
         :return: None
         """
+        self.view.on_before_save()
         change_request_submitted = False
         for employee_id in self.view.table.unsaved:
             view_model = self.view.table.model.data[employee_id]
 
             is_new = False
-            if "NEW" in employee_id:
+            if isinstance(employee_id, str) and "NEW" in employee_id:
                 view_model[Employee.view_columns['id']] = None
                 is_new = True
 
-            employee = Employee.from_view_model(view_model)
             try:
+                employee = Employee.from_view_model(view_model)
                 if is_new:
                     Employee.create(employee)
                 else:
                     Employee.update(employee)
             except ChangeRequestException:
                 change_request_submitted = True
+            except SecurityException:
+                self.view.highlight_invalid_rows([employee_id])
+                self.view.show_error('Error', 'Access Denied')
+                return
+            except ValidationException as error:
+                self.view.highlight_invalid_cell(employee_id, Employee.view_columns[error.database_field])
+                self.view.show_error('Error', f'Invalid data: {error}')
+                self.view.set_status(f'Invalid data: {error}')
+                return
+
 
         if change_request_submitted:
-            self.view.show_info('Request to Change Submitted!')
+            self.view.show_info('Success', 'Request to Change Submitted!')
             self.view.set_status(f'Request to Change {len(self.view.table.unsaved)} '
                                  f'employees Submitted!')
         else:
             self.view.set_status(f'Saved {len(self.view.table.unsaved)} employees successfully!')
+            self.view.master.bell()
         self.refresh()
 
     def delete(self):

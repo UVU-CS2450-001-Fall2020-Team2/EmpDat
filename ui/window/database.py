@@ -60,10 +60,16 @@ class DatabaseWindow(TkinterWindow):
             Employee.view_columns['sex']: {  # Sex
                 'options': ['Male', 'Female', 'Other']
             },
-            Employee.view_columns['sex']: {  # Sex
-                'options': ['Male', 'Female', 'Other']
+            Employee.view_columns['start_date']: {  # Start Date
+                'date'
             },
-        }, on_unsaved=lambda x: self.set_save_state('normal' if not x else 'disabled'),
+            Employee.view_columns['date_of_birth']: {  # DOB
+                'date'
+            },
+            Employee.view_columns['date_left']: {  # Date Left
+                'date'
+            },
+        }, on_unsaved=self.on_table_unsaved,
                                        on_selected=lambda: self.set_delete_state('normal'),
                                        data=self.results, rowheight=50)
         self.table.show()
@@ -175,6 +181,36 @@ class DatabaseWindow(TkinterWindow):
         self.search_button.pack(side=RIGHT, anchor=E)
 
         buttons.pack(side=RIGHT, fill=X, expand=1)
+
+    def on_table_unsaved(self, is_unchanged: bool, row=None, col=None):
+        self.set_save_state('normal' if not is_unchanged else 'disabled')
+        if row and col:
+            if not is_unchanged:
+                self.table.model.setColorAt(row, col, 'gold')
+            else:
+                self.table.model.setColorAt(row, col, 'white')
+            self.table.redrawTable()
+
+    def on_before_save(self):
+        for row_name in self.table.unsaved:
+            row_index = self.table.model.getRecordIndex(row_name)
+            for col in range(0,self.table.model.getColumnCount()):
+                self.table.model.setColorAt(row_index, col, 'white')
+                self.table.redrawCell(row_index, col)
+
+    def highlight_invalid_rows(self, ids):
+        for row_id in ids:
+            row_index = self.table.model.getRecordIndex(row_id)
+            for col in range(0, self.table.model.getColumnCount()):
+                self.table.model.setColorAt(row_index, col, 'coral')
+                self.table.redrawCell(row_index, col)
+
+    def highlight_invalid_cell(self, row_id, col_name):
+        row_index = self.table.model.getRecordIndex(row_id)
+        col_index = self.table.model.getColumnIndex(col_name)
+
+        self.table.model.setColorAt(row_index, col_index, 'coral')
+        self.table.redrawCell(row_index, col_index)
 
     def set_save_state(self, state):
         """
