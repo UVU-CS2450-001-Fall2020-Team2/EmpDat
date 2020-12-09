@@ -40,6 +40,18 @@ class UsesDialog:
         messagebox.showinfo(title=title, message=message, **options)
 
     @classmethod
+    def show_confirm(cls, title, message, **options):
+        """
+        Helper method for showing a confirmation dialog
+        Calls tkinter.messagebox.askyesno
+        :param title: Title
+        :param message: Message
+        :param options: Options.
+        :return: bool True if "yes" was clicked
+        """
+        return messagebox.askyesno(title=title, message=message, **options)
+
+    @classmethod
     def show_warning(cls, title, message, **options):
         """
         Helper method for showing an warning dialog

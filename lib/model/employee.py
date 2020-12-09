@@ -29,10 +29,10 @@ class Employee(DatabaseRepository, DynamicViewModel, HasRelationships):
     }
     view_columns = {
         'id': 'ID',
-        'social_security_number': 'SSN',
         'role': 'Role',
         'first_name': 'First Name',
         'last_name': 'Last Name',
+        'social_security_number': 'SSN',
         'start_date': 'Start Date',
         'date_of_birth': 'DOB',
         'sex': 'Sex',
@@ -59,9 +59,9 @@ class Employee(DatabaseRepository, DynamicViewModel, HasRelationships):
     }
     field_casts = {
         'id': lambda s: int(s),  # pylint: disable=unnecessary-lambda
-        'salary': lambda s: float(s) if s is not None else None,  # pylint: disable=unnecessary-lambda
-        'hourly_rate': lambda s: float(s) if s is not None else None,  # pylint: disable=unnecessary-lambda
-        'commission_rate': lambda s: float(s) if s is not None else None,  # pylint: disable=unnecessary-lambda
+        'salary': lambda s: float(s) if s is not None and s != 'None' else None,  # pylint: disable=unnecessary-lambda
+        'hourly_rate': lambda s: float(s) if s is not None and s != 'None' else None,  # pylint: disable=unnecessary-lambda
+        'commission_rate': lambda s: float(s) if s is not None and s != 'None' else None,  # pylint: disable=unnecessary-lambda
     }
 
     def __init__(self, data):
@@ -126,21 +126,24 @@ class Employee(DatabaseRepository, DynamicViewModel, HasRelationships):
             'last_name': 'required',
             'user_group_id': 0,
             'start_date': datetime.date.today(),
-            'date_of_dirth': datetime.date.today(),
-            'sex': -1,
+            'date_of_birth': datetime.date.today(),
+            'sex': 'Not Set',
             'address_line1': 'required',
             'city': 'required',
             'state': 'required',
             'zipcode': 'required',
-            'classification_id': 'required',
-            'paymethod_id': 'required'
+            'classification_id': 0,
+            'paymethod_id': 0
         })
 
     @classmethod
     def from_view_model(cls, view_model: dict):
-        employee = Employee.read(int(view_model[cls.view_columns['id']]))
+        if view_model[cls.view_columns['id']]:
+            employee = Employee.read(int(view_model[cls.view_columns['id']]))
+        else:
+            employee = Employee.new_empty()
         for key, value in cls.view_columns.items():
-            if value in view_model:
+            if value in view_model and key != 'id':
                 setattr(employee, key, view_model[value])
 
         employee.cast_fields()
@@ -188,7 +191,7 @@ class Employee(DatabaseRepository, DynamicViewModel, HasRelationships):
                      Column('first_name', String(64)),
                      Column('start_date', Date),
                      Column('date_of_birth', Date),
-                     Column('sex', Integer),
+                     Column('sex', String(16)),
                      Column('address_line1', String(128)),
                      Column('address_line2', String(128), nullable=True),
                      Column('city', String(45)),
