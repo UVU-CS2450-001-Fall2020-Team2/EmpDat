@@ -22,10 +22,24 @@ class Employee(DatabaseRepository, DynamicViewModel, HasRelationships):
     resource_uri = 'employee'
     field_validators = {
         'id': 'numeric',
+        # 'role': 'role',
         'last_name': 'alpha',
         'first_name': 'alpha',
-        # 'phone_number': 'phone',
-        # 'emergency_contact_phone': 'phone',
+        'state': 'state_code',
+        'classification_id': lambda idx: True if classifications[idx - 1] else False,
+        'paymethod_id': lambda idx: True if pay_methods[idx - 1] else False,
+    }
+    field_optional_validators = {
+        'social_security_number': 'ssn',
+        'email': 'email',
+        'phone_number': 'phone',
+        'emergency_contact_name': 'alpha',
+        'emergency_contact_phone': 'phone',
+        'salary': 'numeric',
+        'hourly_rate': 'numeric',
+        'commission_rate': 'numeric',
+        'bank_routing': 'bank_routing',
+        'bank_account': 'numeric',
     }
     view_columns = {
         'id': 'ID',
@@ -147,6 +161,10 @@ class Employee(DatabaseRepository, DynamicViewModel, HasRelationships):
             employee = Employee.new_empty()
         for key, value in cls.view_columns.items():
             if value in view_model and key != 'id':
+                if view_model[value]:
+                    view_model[value] = view_model[value].strip()
+                    if view_model[value] == '' or view_model[value] == 'None':
+                        view_model[value] = None
                 setattr(employee, key, view_model[value])
 
         employee.cast_fields()
