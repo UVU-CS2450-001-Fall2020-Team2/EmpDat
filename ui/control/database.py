@@ -5,6 +5,10 @@ Main Controller of application
 import datetime
 import sys
 import time
+import pdfkit
+import pandas as pd
+import csv
+
 
 from lib.cli import import_csv
 from lib.cli.payroll import run_payroll
@@ -80,6 +84,7 @@ class DatabaseController(Controller):
             'admin>review': _open_change_requests,
             'admin>change_password': self.change_password,
             'export>employees': self.export_to_csv,
+            'export>pdf_employees': self.export_to_pdf,
         }))
 
         self.new_id = 0
@@ -366,9 +371,36 @@ class DatabaseController(Controller):
         """
         self.view.table.exportTable()
 
-    def logout(self):  # pylint: disable=no-self-use
-        """
-        Any clean up prior to exiting is done here
-        :return: None
-        """
-        sys.exit()
+    def table_to_csv(self, table, sep=None):
+        """Export table data to a comma separated file"""
+
+        parent=table.parentframe
+        filename = tkinter.filedialog.asksaveasfilename(parent=parent,defaultextension='.csv',
+                                                filetypes=[("CSV files","*.csv")] )
+        if not filename:
+            return
+        if sep == None:
+            sep = ','
+        writer = csv.writer(open(filename, "w"), delimiter=sep)
+        model= self.table.getModel()
+        recs = self.model.getAllCells()
+        #take column labels as field names
+        colnames = self.model.columnNames
+        collabels = self.model.columnlabels
+        row=[]
+        for c in colnames:
+            row.append(collabels[c])
+        writer.writerow(row)
+        for row in recs.keys():
+            writer.writerow(recs[row])
+        return writer
+
+    def export_to_pdf(self):
+        emp_csv = self.table_to_csv(self, self.table)
+        #save as html file 
+        emp_csv.to_html("Employee_Table.html") 
+        #html to pdf
+        pdfkit.from_file('Employee_Table.html', 'Employees.pdf')
+
+    def logout(self):
+        exit()
