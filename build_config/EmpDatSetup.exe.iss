@@ -22,7 +22,7 @@ DefaultDirName={autopf}\{#MyAppName}
 DisableProgramGroupPage=yes
 ; Uncomment the following line to run in non administrative install mode (install for current user only.)
 ;PrivilegesRequired=lowest
-OutputDir=C:\Users\kevint\PycharmProjects\EmpDat\dist\win
+OutputDir=C:\Users\kevint\PycharmProjects\EmpDat\dist
 OutputBaseFilename=EmpDatSetup
 SetupIconFile=C:\Users\kevint\PycharmProjects\EmpDat\ui\icons\EmpDat.ico
 Compression=lzma
@@ -36,8 +36,8 @@ Name: "english"; MessagesFile: "compiler:Default.isl"
 Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked
 
 [Files]
-Source: "C:\Users\kevint\PycharmProjects\EmpDat\dist\win\EmpDat\{#MyAppExeName}"; DestDir: "{app}"; Flags: ignoreversion
-Source: "C:\Users\kevint\PycharmProjects\EmpDat\dist\win\EmpDat\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "C:\Users\kevint\PycharmProjects\EmpDat\dist\EmpDat.exe\{#MyAppExeName}"; DestDir: "{app}"; Flags: ignoreversion
+Source: "C:\Users\kevint\PycharmProjects\EmpDat\dist\EmpDat.exe\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 
 [Icons]

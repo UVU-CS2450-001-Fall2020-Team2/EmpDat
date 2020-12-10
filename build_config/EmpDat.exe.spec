@@ -3,9 +3,11 @@
 block_cipher = None
 
 
-a = Analysis(['EmpDat.py'],
+a = Analysis(['..\\EmpDat.py'],
              pathex=['C:\\Users\\kevint\\PycharmProjects\\EmpDat'],
-             binaries=[],
+             binaries=[
+                ('..\\dist\\wkhtmltopdf.exe', '.')
+             ],
              datas=[],
              hiddenimports=[],
              hookspath=[],
@@ -26,7 +28,7 @@ exe = EXE(pyz,
           bootloader_ignore_signals=False,
           strip=False,
           upx=True,
-          console=False , icon='ui\\icons\\EmpDat.ico')
+          console=False , icon='..\\ui\\icons\\EmpDat.ico')
 coll = COLLECT(exe,
                a.binaries,
                a.zipfiles,
@@ -34,4 +36,4 @@ coll = COLLECT(exe,
                strip=False,
                upx=True,
                upx_exclude=[],
-               name='win\\EmpDat')
+               name='EmpDat.exe')

@@ -1,6 +1,7 @@
 """
 Employee Data Model
 """
+import datetime
 from abc import abstractmethod
 
 from sqlalchemy import MetaData, Table, Column, String, \
@@ -10,7 +11,7 @@ from lib.model import DynamicViewModel, HasRelationships, register_database_mode
 from lib.model.receipt import Receipt
 from lib.model.time_sheet import TimeSheet
 from lib.repository.db import DatabaseRepository
-from lib.utils import sha_hash
+from lib.utils import sha_hash, date_converter
 
 
 @register_database_model  # pylint: disable=too-many-ancestors
@@ -21,17 +22,31 @@ class Employee(DatabaseRepository, DynamicViewModel, HasRelationships):
     resource_uri = 'employee'
     field_validators = {
         'id': 'numeric',
+        # 'role': 'role',
         'last_name': 'alpha',
         'first_name': 'alpha',
-        # 'phone_number': 'phone',
-        # 'emergency_contact_phone': 'phone',
+        'state': 'state_code',
+        'classification_id': lambda idx: True if classifications[idx - 1] else False,
+        'paymethod_id': lambda idx: True if pay_methods[idx - 1] else False,
+    }
+    field_optional_validators = {
+        'social_security_number': 'ssn',
+        'email': 'email',
+        'phone_number': 'phone',
+        'emergency_contact_name': 'alpha',
+        'emergency_contact_phone': 'phone',
+        'salary': 'numeric',
+        'hourly_rate': 'numeric',
+        'commission_rate': 'numeric',
+        'bank_routing': 'bank_routing',
+        'bank_account': 'numeric',
     }
     view_columns = {
         'id': 'ID',
-        'social_security_number': 'SSN',
         'role': 'Role',
         'first_name': 'First Name',
         'last_name': 'Last Name',
+        'social_security_number': 'SSN',
         'start_date': 'Start Date',
         'date_of_birth': 'DOB',
         'sex': 'Sex',
@@ -52,15 +67,18 @@ class Employee(DatabaseRepository, DynamicViewModel, HasRelationships):
         'commission_rate': 'Commission Rate',
         'bank_routing': 'Bank Rounting',
         'bank_account': 'Bank Account',
-        'timesheet': 'Timesheet',
+        # 'timesheet': 'Timesheet',
         'date_left': 'Date Left',
         'notes': 'Notes',
     }
     field_casts = {
         'id': lambda s: int(s),  # pylint: disable=unnecessary-lambda
-        'salary': lambda s: float(s) if s is not None else None,  # pylint: disable=unnecessary-lambda
-        'hourly_rate': lambda s: float(s) if s is not None else None,  # pylint: disable=unnecessary-lambda
-        'commission_rate': lambda s: float(s) if s is not None else None,  # pylint: disable=unnecessary-lambda
+        'salary': lambda s: float(s) if s is not None and s != 'None' else None,  # pylint: disable=unnecessary-lambda
+        'hourly_rate': lambda s: float(s) if s is not None and s != 'None' else None,  # pylint: disable=unnecessary-lambda
+        'commission_rate': lambda s: float(s) if s is not None and s != 'None' else None,  # pylint: disable=unnecessary-lambda
+        'start_date': lambda d: date_converter(d), # pylint: disable=unnecessary-lambda
+        'date_of_birth': lambda d: date_converter(d),  # pylint: disable=unnecessary-lambda
+        'date_left': lambda d: date_converter(d)  # pylint: disable=unnecessary-lambda
     }
 
     def __init__(self, data):
@@ -90,6 +108,10 @@ class Employee(DatabaseRepository, DynamicViewModel, HasRelationships):
         return f"{self.first_name} {self.last_name}"
 
     def get_balance(self):
+        """
+        Gets amount owed to employee. Ran during payroll
+        :return: balance float
+        """
         if self.classification.name == Hourly.name:
             return self.classification.issue_payment(self.id, self.hourly_rate)
         elif self.classification.name == Salaried.name:
@@ -99,13 +121,50 @@ class Employee(DatabaseRepository, DynamicViewModel, HasRelationships):
         return 0
 
     def get_payment_method(self):
+        """
+        Returns info for payment method
+        :return: list
+        """
         return self.payment_method.issue(self)
+
+    def update_password(self, new_password: str):
+        self.password = sha_hash(new_password)  # pylint: disable=attribute-defined-outside-init
+        Employee.update(self)
+
+    def __str__(self):
+        return f"{self.first_name} {self.last_name}"
+
+    @classmethod
+    def new_empty(cls):
+        return Employee({
+            'password': '',
+            'role': 'Viewer',
+            'first_name': 'required',
+            'last_name': 'required',
+            'user_group_id': 0,
+            'start_date': datetime.date.today(),
+            'date_of_birth': datetime.date.today(),
+            'sex': 'Not Set',
+            'address_line1': 'required',
+            'city': 'required',
+            'state': 'required',
+            'zipcode': 'required',
+            'classification_id': 0,
+            'paymethod_id': 0
+        })
 
     @classmethod
     def from_view_model(cls, view_model: dict):
-        employee = Employee.read(int(view_model[cls.view_columns['id']]))
+        if view_model[cls.view_columns['id']]:
+            employee = Employee.read(int(view_model[cls.view_columns['id']]))
+        else:
+            employee = Employee.new_empty()
         for key, value in cls.view_columns.items():
-            if value in view_model:
+            if value in view_model and key != 'id':
+                if view_model[value]:
+                    view_model[value] = view_model[value].strip()
+                    if view_model[value] == '' or view_model[value] == 'None':
+                        view_model[value] = None
                 setattr(employee, key, view_model[value])
 
         employee.cast_fields()
@@ -140,9 +199,6 @@ class Employee(DatabaseRepository, DynamicViewModel, HasRelationships):
             return employee
         return None
 
-    def __str__(self):
-        return f"{self.first_name} {self.last_name}"
-
     @classmethod
     def table(cls, metadata=MetaData()):
         return Table(cls.resource_uri, metadata,
@@ -156,7 +212,7 @@ class Employee(DatabaseRepository, DynamicViewModel, HasRelationships):
                      Column('first_name', String(64)),
                      Column('start_date', Date),
                      Column('date_of_birth', Date),
-                     Column('sex', Integer),
+                     Column('sex', String(16)),
                      Column('address_line1', String(128)),
                      Column('address_line2', String(128), nullable=True),
                      Column('city', String(45)),

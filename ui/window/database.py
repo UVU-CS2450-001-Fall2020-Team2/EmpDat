@@ -6,6 +6,7 @@ from tkinter.ttk import Frame, Button, Label
 
 from lib.layer import security
 from lib.model import employee
+from lib.model.employee import Employee
 from ui import store
 from ui.widgets.table import EmpDatTableCanvas
 from ui.window import TkinterWindow
@@ -44,19 +45,70 @@ class DatabaseWindow(TkinterWindow):
         frame = Frame(self.main)
         frame.pack(fill=BOTH, expand=1)
         self.table = EmpDatTableCanvas(frame, col_modifiers={
-            0: {  # ID
+            Employee.view_columns['id']: {  # ID
                 'read_only': True
             },
-            1: {  # Role
+            Employee.view_columns['role']: {  # Role
                 'options': list(security.ROLES.keys())
             },
-            8: {  # Classification
+            Employee.view_columns['social_security_number']: {  # SSN
+                'validator': 'ssn'
+            },
+            Employee.view_columns['start_date']: {  # Start Date
+                'date': True,
+                'validator': 'date',
+            },
+            Employee.view_columns['date_of_birth']: {  # DOB
+                'date': True,
+                'validator': 'date',
+            },
+            Employee.view_columns['sex']: {  # Sex
+                'options': ['Male', 'Female', 'Other']
+            },
+            Employee.view_columns['state']: {  # State
+                'validator': 'state_code'
+            },
+            Employee.view_columns['zipcode']: {  # Postal Code
+                'validator': 'numeric'
+            },
+            Employee.view_columns['email']: {  # Email
+                'validator': 'email'
+            },
+            Employee.view_columns['phone_number']: {  # Phone Number
+                'validator': 'phone'
+            },
+            Employee.view_columns['emergency_contact_name']: {
+                'validator': 'alpha'
+            },
+            Employee.view_columns['emergency_contact_phone']: {
+                'validator': 'phone'
+            },
+            Employee.view_columns['classification']: {  # Classification
                 'options': list(employee.classifications_dict.keys())
             },
-            9: {  # Payment Method
+            Employee.view_columns['payment_method']: {  # Payment Method
                 'options': list(employee.pay_methods_dict.keys())
-            }
-        }, on_unsaved=lambda x: self.set_save_state('normal' if not x else 'disabled'),
+            },
+            Employee.view_columns['salary']: {
+                'validator': 'numeric'
+            },
+            Employee.view_columns['hourly_rate']: {
+                'validator': 'numeric'
+            },
+            Employee.view_columns['commission_rate']: {
+                'validator': 'numeric'
+            },
+            Employee.view_columns['bank_routing']: {
+                'validator': 'bank_routing'
+            },
+            Employee.view_columns['bank_account']: {
+                'validator': 'numeric'
+            },
+            Employee.view_columns['date_left']: {  # Date Left
+                'date': True,
+                'validator': 'date',
+            },
+        }, on_unsaved=self.on_table_unsaved,
                                        on_selected=lambda: self.set_delete_state('normal'),
                                        data=self.results, rowheight=50)
         self.table.show()
@@ -87,12 +139,11 @@ class DatabaseWindow(TkinterWindow):
         self.filemenu.add_command(label="New Timesheet",
                                   command=self.event_handlers['new_timesheet'])
         self.filemenu.add_separator()
-        # TODO change my password
-        self.filemenu.add_command(label="Change My Password",
-                                  command=None)
         if store.AUTHENTICATED_USER.role == 'Admin' or store.AUTHENTICATED_USER.role == 'Accounting':
             self.filemenu.add_command(label="Run Payroll",
                                       command=self.event_handlers['run_payroll'])
+        self.filemenu.add_command(label="Change My Password",
+                                  command=self.event_handlers['change_my_password'])
         self.filemenu.add_separator()
         # Logout
         self.filemenu.add_command(label="Logout", command=self.event_handlers['file>logout'])
@@ -104,10 +155,12 @@ class DatabaseWindow(TkinterWindow):
         #                               command=None)
         self.reports_menu.add_command(label="Employee Directory (CSV)",
                                       command=self.event_handlers['export>employees'])
+        self.reports_menu.add_command(label="Employee Directory (PDF)",
+                                      command=self.event_handlers['export>pdf_employees'])
         self.menubar.add_cascade(label="Reports", menu=self.reports_menu)
         # Import tab
         self.import_menu = Menu(self.menubar, tearoff=False)
-        self.import_menu.add_command(label="Employees",
+        self.import_menu.add_command(label="Employees (Legacy)",
                                      command=self.event_handlers['import>employees'])
         self.import_menu.add_command(label="Receipts",
                                      command=self.event_handlers['import>receipts'])
@@ -119,9 +172,8 @@ class DatabaseWindow(TkinterWindow):
             self.admin_menu = Menu(self.menubar, tearoff=False)
             self.admin_menu.add_command(label="Review Change Requests",
                                         command=self.event_handlers['admin>review'])
-            # TODO change others password
             self.admin_menu.add_command(label="Change Passwords",
-                                        command=None)
+                                        command=self.event_handlers['admin>change_password'])
             self.menubar.add_cascade(label="Admin", menu=self.admin_menu)
 
     def create_footer(self):
@@ -134,7 +186,14 @@ class DatabaseWindow(TkinterWindow):
         self.new_button = Button(
             buttons,
             text="New",
-            command=lambda: self.event_handlers['new_employee'],
+            command=self.event_handlers['new_employee'],
+        )
+        self.refresh_button = Button(
+            buttons,
+            text="Refresh",
+            command=lambda: self.event_handlers['refresh']() if len(self.table.unsaved) > 0
+                                                                and self.show_confirm(
+                'Are you sure?', 'There are unsaved changes. Refresh anyway?') else None,
         )
         self.search_button = Button(
             buttons,
@@ -155,6 +214,7 @@ class DatabaseWindow(TkinterWindow):
         )
 
         self.new_button.pack(side=LEFT, anchor=W)
+        self.refresh_button.pack(side=LEFT, anchor=W)
         Label(buttons,
               text=f"({store.AUTHENTICATED_USER.first_name} "
               f"{store.AUTHENTICATED_USER.last_name})") \
@@ -170,6 +230,36 @@ class DatabaseWindow(TkinterWindow):
         self.search_button.pack(side=RIGHT, anchor=E)
 
         buttons.pack(side=RIGHT, fill=X, expand=1)
+
+    def on_table_unsaved(self, is_unchanged: bool, row=None, col=None):
+        self.set_save_state('normal' if not is_unchanged else 'disabled')
+        if row and col:
+            if not is_unchanged:
+                self.table.model.setColorAt(row, col, 'gold')
+            else:
+                self.table.model.setColorAt(row, col, 'white')
+            self.table.redrawTable()
+
+    def on_before_save(self):
+        for row_name in self.table.unsaved:
+            row_index = self.table.model.getRecordIndex(row_name)
+            for col in range(0, self.table.model.getColumnCount()):
+                self.table.model.setColorAt(row_index, col, 'white')
+                self.table.redrawCell(row_index, col)
+
+    def highlight_invalid_rows(self, ids):
+        for row_id in ids:
+            row_index = self.table.model.getRecordIndex(row_id)
+            for col in range(0, self.table.model.getColumnCount()):
+                self.table.model.setColorAt(row_index, col, 'coral')
+                self.table.redrawCell(row_index, col)
+
+    def highlight_invalid_cell(self, row_id, col_name):
+        row_index = self.table.model.getRecordIndex(row_id)
+        col_index = self.table.model.getColumnIndex(col_name)
+
+        self.table.model.setColorAt(row_index, col_index, 'coral')
+        self.table.redrawCell(row_index, col_index)
 
     def set_save_state(self, state):
         """
@@ -187,15 +277,16 @@ class DatabaseWindow(TkinterWindow):
         """
         self.delete_button['state'] = state
 
-    def new_employee(self):
+    def new_employee(self, new_id, view_model):
         """
         Handle employee creation
         :return:
         """
-        # TODO FIX THIS
-        new_id = 12345
-        self.add_to_result(new_id, {})
-        self.table.movetoSelectedRow(recname=new_id)
+        record_id = f"NEW{new_id}"
+        view_model['ID'] = record_id
+        self.add_to_result(record_id, view_model)
+        self.table.movetoSelectedRow(recname=record_id)
+        self.table.set_yviews('moveto', 1)
 
     def add_to_result(self, record_id, to_add: dict):
         """
