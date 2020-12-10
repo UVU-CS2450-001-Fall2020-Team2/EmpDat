@@ -51,23 +51,62 @@ class DatabaseWindow(TkinterWindow):
             Employee.view_columns['role']: {  # Role
                 'options': list(security.ROLES.keys())
             },
+            Employee.view_columns['social_security_number']: {  # SSN
+                'validator': 'ssn'
+            },
+            Employee.view_columns['start_date']: {  # Start Date
+                'date': True,
+                'validator': 'date',
+            },
+            Employee.view_columns['date_of_birth']: {  # DOB
+                'date': True,
+                'validator': 'date',
+            },
+            Employee.view_columns['sex']: {  # Sex
+                'options': ['Male', 'Female', 'Other']
+            },
+            Employee.view_columns['state']: {  # State
+                'validator': 'state_code'
+            },
+            Employee.view_columns['zipcode']: {  # Postal Code
+                'validator': 'numeric'
+            },
+            Employee.view_columns['email']: {  # Email
+                'validator': 'email'
+            },
+            Employee.view_columns['phone_number']: {  # Phone Number
+                'validator': 'phone'
+            },
+            Employee.view_columns['emergency_contact_name']: {
+                'validator': 'alpha'
+            },
+            Employee.view_columns['emergency_contact_phone']: {
+                'validator': 'phone'
+            },
             Employee.view_columns['classification']: {  # Classification
                 'options': list(employee.classifications_dict.keys())
             },
             Employee.view_columns['payment_method']: {  # Payment Method
                 'options': list(employee.pay_methods_dict.keys())
             },
-            Employee.view_columns['sex']: {  # Sex
-                'options': ['Male', 'Female', 'Other']
+            Employee.view_columns['salary']: {
+                'validator': 'numeric'
             },
-            Employee.view_columns['start_date']: {  # Start Date
-                'date'
+            Employee.view_columns['hourly_rate']: {
+                'validator': 'numeric'
             },
-            Employee.view_columns['date_of_birth']: {  # DOB
-                'date'
+            Employee.view_columns['commission_rate']: {
+                'validator': 'numeric'
+            },
+            Employee.view_columns['bank_routing']: {
+                'validator': 'bank_routing'
+            },
+            Employee.view_columns['bank_account']: {
+                'validator': 'numeric'
             },
             Employee.view_columns['date_left']: {  # Date Left
-                'date'
+                'date': True,
+                'validator': 'date',
             },
         }, on_unsaved=self.on_table_unsaved,
                                        on_selected=lambda: self.set_delete_state('normal'),

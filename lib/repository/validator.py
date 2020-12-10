@@ -54,6 +54,9 @@ class HasValidation:
         """
         if self.field_validators and key in self.field_validators:
             return is_valid_against(self.field_validators[key], new_value)
+        if self.field_optional_validators and key in self.field_optional_validators:
+            if new_value and new_value != '' and new_value != 'None':
+                return is_valid_against(self.field_optional_validators[key], new_value)
         return True
 
     @property
@@ -73,6 +76,25 @@ class HasValidation:
         """
         raise NotImplementedError
 
+    @property
+    @classmethod
+    @abstractmethod
+    def field_optional_validators(cls) -> dict:
+        """
+        The field_validators dictionary specifies validation
+        rules for model properties
+        It is recommended to set this as a class-wide variable.
+        Must be a dictionary.
+
+        These fields can also be blank
+
+        Example:
+        field_optional_validators = {
+            'myfield': 'phone'
+        }
+        """
+        raise NotImplementedError
+
 
 def is_valid_against(validator_rule, value):
     """
@@ -84,6 +106,8 @@ def is_valid_against(validator_rule, value):
     """
     if isinstance(validator_rule, list):
         return _generic_regex(validator_rule, value)
+    elif callable(validator_rule):
+        return validator_rule(value)
     if validator_rule not in _validators:
         raise NotImplementedError("Validator Type does not exist")
     return _validators[validator_rule](value)
@@ -138,7 +162,7 @@ def _numeric(value: str):
     :param value:
     :return: if string is alphabetic
     """
-    return _generic_regex([r'^[0-9\-]+$'], value)
+    return _generic_regex([r'^[0-9\-\.]+$'], value)
 
 
 def _notnull(value):
@@ -151,7 +175,82 @@ def _notnull(value):
 
 
 def _password(value):
+    """
+    Enforces a password policy of:
+        - at least 9 characters total
+        - 1 lowercase letter
+        - 1 uppercase
+        - 1 number
+        - 1 symbol
+    :param value:
+    :return: if acceptable
+    """
     return _generic_regex([r'(?=.{9,})(?=.*?[^\w\s])(?=.*?[0-9])(?=.*?[A-Z]).*?[a-z].*'], value)
+
+
+def _ssn(value):
+    """
+    Validates a field to match the US Social Security Number convention
+
+    :param value:
+    :return: if acceptable
+    """
+    return _generic_regex([r'^(?!000)(?!666)(?!9[0-9][0-9])\d{3}[- ]?(?!00)\d{2}[- ]?(?!0000)\d{4}$'], value)
+
+
+def _state_code(value):
+    """
+    Checks if a state code is valid
+
+    :param value: state code
+    :return: if valid US state code
+    """
+    return value in ["AL", "AK", "AZ", "AR", "CA", "CO", "CT", "DC", "DE", "FL", "GA",
+                     "HI", "ID", "IL", "IN", "IA", "KS", "KY", "LA", "ME", "MD",
+                     "MA", "MI", "MN", "MS", "MO", "MT", "NE", "NV", "NH", "NJ",
+                     "NM", "NY", "NC", "ND", "OH", "OK", "OR", "PA", "RI", "SC",
+                     "SD", "TN", "TX", "UT", "VT", "VA", "WA", "WV", "WI", "WY", "INVALID"]
+
+
+def _role(value):
+    """
+    Checks if a role is valid
+
+    :param value: role
+    :return: if valid role
+    """
+    # TODO fix me, this shouldn't be hardcoded
+    return value in ['Viewer', 'Accounting', 'Reporter', 'Admin']
+
+
+def _email(value):
+    """
+    Validates a field for an email
+
+    :param value: email
+    :return: if acceptable
+    """
+    return _generic_regex([r'(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$)'], value)
+
+
+def _bank_routing(value):
+    """
+    Validates a field for a bank routing number
+
+    :param value: bank route
+    :return: if acceptable
+    """
+    return _generic_regex([r'^[0-9\-\.A-Za-z\s]+$'], value)
+
+
+def _date(value):
+    """
+    Validates a field for a bank routing number
+
+    :param value: bank route
+    :return: if acceptable
+    """
+    return _generic_regex([r'\d{1,2}\/\d{1,2}\/\d{2,4}'], value)
 
 
 _validators = {
@@ -159,5 +258,11 @@ _validators = {
     'alpha': _alpha,
     'numeric': _numeric,
     'notnull': _notnull,
-    'password': _password
+    'password': _password,
+    'ssn': _ssn,
+    'state_code': _state_code,
+    'role': _role,
+    'email': _email,
+    'date': _date,
+    'bank_routing': _bank_routing
 }

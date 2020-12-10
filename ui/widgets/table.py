@@ -5,10 +5,12 @@ Customizations to tkintertable
 """
 import math
 from tkinter import END, StringVar
-from tkinter.ttk import Entry, Combobox
+from tkinter.ttk import Entry, OptionMenu
 
 from tkcalendar import DateEntry
 from tkintertable import TableCanvas, Formula
+
+from lib.repository.validator import is_valid_against
 
 
 class EmpDatTableCanvas(TableCanvas):
@@ -177,7 +179,7 @@ class EmpDatTableCanvas(TableCanvas):
 
             color = self.model.getColorAt(row, col, 'fg')
             self.drawText(row, col, value, color, align=self.align)
-            if e.keysym == 'Return':
+            if not isinstance(e, str) and e.keysym == 'Return':
                 self.delete('entry')
                 # self.drawRect(row, col)
                 # self.gotonextCell(e)
@@ -187,22 +189,41 @@ class EmpDatTableCanvas(TableCanvas):
                 self.on_unsaved(False, row, col)
             else:
                 self.on_unsaved(True, row, col)
+
+            is_required = True if col_name in self.col_modifiers and \
+                                  'required' in self.col_modifiers[col_name] else False
+            if col_name in self.col_modifiers and 'validator' in self.col_modifiers[col_name]:
+                if not is_required and value == '':
+                    self.model.setColorAt(row, col, 'white')
+                    self.redrawCell(row, col)
+                    return
+
+                if callable(self.col_modifiers[col_name]['validator']):
+                    if not self.col_modifiers[col_name]['validator'](value):
+                        self.model.setColorAt(row, col, 'coral')
+                        self.redrawCell(row, col)
+                else:
+                    if not is_valid_against(self.col_modifiers[col_name]['validator'], value):
+                        self.model.setColorAt(row, col, 'coral')
+                        self.redrawCell(row, col)
             return
 
         if col_name in self.col_modifiers and 'options' in self.col_modifiers[col_name]:
-            options = self.col_modifiers[col_name]['options']
+            options = list(self.col_modifiers[col_name]['options'])
 
-            self.cellentry = Combobox(self.parentframe, width=20,
-                                      textvariable=txtvar,
-                                      takefocus=1,
-                                      font=self.thefont)
-            self.cellentry['values'] = options
-            self.cellentry.bind('<<ComboboxSelected>>', callback)
+            if cellvalue in options:
+                first = cellvalue
+                options.remove(first)
+                options.insert(0, first)
+
+            self.cellentry = OptionMenu(self.parentframe, txtvar, *options,
+                                        command=callback)
         elif col_name in self.col_modifiers and 'date' in self.col_modifiers[col_name]:
             self.cellentry = DateEntry(self.parentframe, width=20,
                                        textvariable=txtvar,
                                        takefocus=1,
                                        font=self.thefont)
+            self.cellentry.bind('<<DateEntrySelected>>', callback)
         else:
             self.cellentry = Entry(self.parentframe, width=20,
                                    textvariable=txtvar,
@@ -210,7 +231,10 @@ class EmpDatTableCanvas(TableCanvas):
                                    font=self.thefont)
             self.cellentry.selection_range(0, END)
 
-        self.cellentry.icursor(END)
+        try:
+            self.cellentry.icursor(END)
+        except AttributeError:
+            pass
         self.cellentry.bind('<Return>', callback)
         self.cellentry.bind('<KeyRelease>', callback)
         self.cellentry.focus_set()
