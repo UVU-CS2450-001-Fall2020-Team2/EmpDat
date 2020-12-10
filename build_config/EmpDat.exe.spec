@@ -5,7 +5,9 @@ block_cipher = None
 
 a = Analysis(['..\\EmpDat.py'],
              pathex=['C:\\Users\\kevint\\PycharmProjects\\EmpDat'],
-             binaries=[],
+             binaries=[
+                ('..\\dist\\wkhtmltopdf.exe', '.')
+             ],
              datas=[],
              hiddenimports=[],
              hookspath=[],
@@ -34,5 +36,4 @@ coll = COLLECT(exe,
                strip=False,
                upx=True,
                upx_exclude=[],
-               distpath="..\\win",
                name='EmpDat.exe')

@@ -3,7 +3,7 @@ Generic Window base classes
 """
 import tkinter
 from tkinter import messagebox, Toplevel
-from tkinter.filedialog import askopenfilename
+from tkinter.filedialog import askopenfilename, asksaveasfilename
 
 from ttkthemes import ThemedStyle
 
@@ -64,12 +64,23 @@ class UsesDialog:
         messagebox.showwarning(title=title, message=message, **options)
 
     @classmethod
-    def show_file_picker(cls, title=None, filetypes=None):
+    def show_file_picker(cls, title=None, filetypes=None, **options):
         """
         Helper method for a file picker dialog
+        :param title: Title
+        :param filetypes: valid file types
         :return: filepath selected
         """
-        return askopenfilename(title=title, filetypes=filetypes)
+        return askopenfilename(title=title, filetypes=filetypes, **options)
+
+    def show_save_picker(self, title=None, filetypes=None, **options):
+        """
+        Helper method for a save picker dialog
+        :param title: Title
+        :param filetypes: valid file types
+        :return: filepath selected
+        """
+        return asksaveasfilename(title=title, filetypes=filetypes, **options)
 
 
 class TkinterWindow(UsesDialog):

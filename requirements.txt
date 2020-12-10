@@ -1,4 +1,5 @@
 pysqlite3
+numpy==1.19.3
 sqlalchemy
 pylint
 pyfaker
@@ -7,6 +8,4 @@ ttkthemes
 tkintertable
 tkcalendar
 PyInstaller
-pandas
 pdfkit
-csv

@@ -4,7 +4,7 @@
 Customizations to tkintertable
 """
 import math
-from tkinter import END, StringVar
+from tkinter import END, StringVar, Menu
 from tkinter.ttk import Entry, OptionMenu
 
 from tkcalendar import DateEntry
@@ -250,6 +250,90 @@ class EmpDatTableCanvas(TableCanvas):
 
         self.on_selected()
         super().handle_left_click(event)
+
+    def popupMenu(self, event, rows=None, cols=None, outside=None):
+        """Add left and right click behaviour for canvas, should not have to override
+            this function, it will take its values from defined dicts in constructor"""
+
+        defaultactions = {"Set Fill Color": lambda: self.setcellColor(rows, cols, key='bg'),
+                          "Set Text Color": lambda: self.setcellColor(rows, cols, key='fg'),
+                          "Copy": lambda: self.copyCell(rows, cols),
+                          "Paste": lambda: self.pasteCell(rows, cols),
+                          "Fill Down": lambda: self.fillDown(rows, cols),
+                          "Fill Right": lambda: self.fillAcross(cols, rows),
+                          "Add Row(s)": lambda: self.addRows(),
+                          "Delete Row(s)": lambda: self.deleteRow(),
+                          "View Record": lambda: self.getRecordInfo(row),
+                          "Clear Data": lambda: self.deleteCells(rows, cols),
+                          "Select All": self.select_All,
+                          "Auto Fit Columns": self.autoResizeColumns,
+                          "Filter Records": self.showFilteringBar,
+                          "New": self.new,
+                          "Load": self.load,
+                          "Save": self.save,
+                          "Import text": self.importTable,
+                          "Export csv": self.exportTable,
+                          "Plot Selected": self.plotSelected,
+                          "Plot Options": self.plotSetup,
+                          "Export Table": self.exportTable,
+                          "Preferences": self.showtablePrefs,
+                          "Formulae->Value": lambda: self.convertFormulae(rows, cols)}
+
+        main = ["Set Fill Color", "Set Text Color", "Copy", "Paste", "Fill Down", "Fill Right",
+                "Clear Data"]
+        general = ["Select All", "Auto Fit Columns", "Filter Records", "Preferences"]
+
+        def createSubMenu(parent, label, commands):
+            menu = Menu(parent, tearoff=0)
+            popupmenu.add_cascade(label=label, menu=menu)
+            for action in commands:
+                menu.add_command(label=action, command=defaultactions[action])
+            return menu
+
+        def add_commands(fieldtype):
+            """Add commands to popup menu for column type and specific cell"""
+            functions = self.columnactions[fieldtype]
+            for f in functions.keys():
+                func = getattr(self, functions[f])
+                popupmenu.add_command(label=f, command=lambda: func(row, col))
+            return
+
+        popupmenu = Menu(self, tearoff=0)
+
+        def popupFocusOut(event):
+            popupmenu.unpost()
+
+        if outside == None:
+            # if outside table, just show general items
+            row = self.get_row_clicked(event)
+            col = self.get_col_clicked(event)
+            coltype = self.model.getColumnType(col)
+
+            def add_defaultcommands():
+                """now add general actions for all cells"""
+                for action in main:
+                    if action == 'Fill Down' and (rows == None or len(rows) <= 1):
+                        continue
+                    if action == 'Fill Right' and (cols == None or len(cols) <= 1):
+                        continue
+                    else:
+                        popupmenu.add_command(label=action, command=defaultactions[action])
+                return
+
+            if coltype in self.columnactions:
+                add_commands(coltype)
+            add_defaultcommands()
+
+        for action in general:
+            popupmenu.add_command(label=action, command=defaultactions[action])
+
+        popupmenu.add_separator()
+        # createSubMenu(popupmenu, 'File', filecommands)
+        # createSubMenu(popupmenu, 'Plot', plotcommands)
+        popupmenu.bind("<FocusOut>", popupFocusOut)
+        popupmenu.focus_set()
+        popupmenu.post(event.x_root, event.y_root)
+        return popupmenu
 
     # def deleteRowByRecname(self, recname):
     #     """Delete a row"""

@@ -5,11 +5,8 @@ Main Controller of application
 import datetime
 import sys
 import time
-import pdfkit
-import pandas as pd
-import csv
 
-
+from lib import exporter
 from lib.cli import import_csv
 from lib.cli.payroll import run_payroll
 from lib.layer.security import ChangeRequestException, SecurityException
@@ -77,6 +74,7 @@ class DatabaseController(Controller):
             'change_my_password': self.change_my_password,
             'save': self.save,
             'delete': self.delete,
+            'refresh': self.refresh,
             'file>logout': self.logout,
             'import>employees': self.import_employees,
             'import>receipts': self.import_receipts,
@@ -122,7 +120,7 @@ class DatabaseController(Controller):
         super().show()
 
     def run_payroll(self):
-        filepath = self.view.show_file_picker(
+        filepath = self.view.show_save_picker(
             title='Save Payroll',
             filetypes=(('Text File', '*.txt'))
         )
@@ -166,7 +164,6 @@ class DatabaseController(Controller):
                 self.view.show_error('Error', f'Invalid data: {error}')
                 self.view.set_status(f'Invalid data: {error}')
                 return
-
 
         if change_request_submitted:
             self.view.show_info('Success', 'Request to Change Submitted!')
@@ -315,6 +312,8 @@ class DatabaseController(Controller):
                 except ChangeRequestException:
                     self.view.show_info('Info', 'A change request has been created '
                                                 'and will be reviewed.')
+
+            self.view.set_status('Receipt creation successful!')
             dialog.destroy()
 
         AddReceiptDialog({
@@ -358,6 +357,7 @@ class DatabaseController(Controller):
                 except ChangeRequestException:
                     self.view.show_info('Info', 'A change request has been created '
                                                 'and will be reviewed.')
+            self.view.set_status('Timesheet creation successful!')
             dialog.destroy()
 
         AddTimesheetDialog({
@@ -371,36 +371,26 @@ class DatabaseController(Controller):
         """
         self.view.table.exportTable()
 
-    def table_to_csv(self, table, sep=None):
-        """Export table data to a comma separated file"""
-
-        parent=table.parentframe
-        filename = tkinter.filedialog.asksaveasfilename(parent=parent,defaultextension='.csv',
-                                                filetypes=[("CSV files","*.csv")] )
-        if not filename:
-            return
-        if sep == None:
-            sep = ','
-        writer = csv.writer(open(filename, "w"), delimiter=sep)
-        model= self.table.getModel()
-        recs = self.model.getAllCells()
-        #take column labels as field names
-        colnames = self.model.columnNames
-        collabels = self.model.columnlabels
-        row=[]
-        for c in colnames:
-            row.append(collabels[c])
-        writer.writerow(row)
-        for row in recs.keys():
-            writer.writerow(recs[row])
-        return writer
-
     def export_to_pdf(self):
-        emp_csv = self.table_to_csv(self, self.table)
-        #save as html file 
-        emp_csv.to_html("Employee_Table.html") 
-        #html to pdf
-        pdfkit.from_file('Employee_Table.html', 'Employees.pdf')
+        filepath = self.view.show_save_picker(
+            title='Export Employee Directory (PDF)',
+            filetypes=[('PDF Document', '*.pdf')]
+        )
+
+        if not filepath:
+            self.view.set_status('Export cancelled')
+            return
+
+        try:
+            if not exporter.html_to_pdf(exporter.table_to_html(self.view.table.model), filepath):
+                self.view.show_error('Export Failed!', 'An error occurred while creating the PDF!')
+                self.view.set_status('Export Failed!')
+            else:
+                self.view.show_info('Export Success!', 'The PDF was created successfully!')
+                self.view.set_status('Export Success!')
+        except IOError as error:
+            self.view.show_error('Export Failed!', f'An error occurred while creating the PDF! {error}')
+            self.view.set_status('Export Failed!')
 
     def logout(self):
-        exit()
+        sys.exit()

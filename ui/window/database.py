@@ -188,6 +188,13 @@ class DatabaseWindow(TkinterWindow):
             text="New",
             command=self.event_handlers['new_employee'],
         )
+        self.refresh_button = Button(
+            buttons,
+            text="Refresh",
+            command=lambda: self.event_handlers['refresh']() if len(self.table.unsaved) > 0
+                                                                and self.show_confirm(
+                'Are you sure?', 'There are unsaved changes. Refresh anyway?') else None,
+        )
         self.search_button = Button(
             buttons,
             text="Search",
@@ -207,6 +214,7 @@ class DatabaseWindow(TkinterWindow):
         )
 
         self.new_button.pack(side=LEFT, anchor=W)
+        self.refresh_button.pack(side=LEFT, anchor=W)
         Label(buttons,
               text=f"({store.AUTHENTICATED_USER.first_name} "
               f"{store.AUTHENTICATED_USER.last_name})") \
@@ -235,7 +243,7 @@ class DatabaseWindow(TkinterWindow):
     def on_before_save(self):
         for row_name in self.table.unsaved:
             row_index = self.table.model.getRecordIndex(row_name)
-            for col in range(0,self.table.model.getColumnCount()):
+            for col in range(0, self.table.model.getColumnCount()):
                 self.table.model.setColorAt(row_index, col, 'white')
                 self.table.redrawCell(row_index, col)
 
@@ -278,6 +286,7 @@ class DatabaseWindow(TkinterWindow):
         view_model['ID'] = record_id
         self.add_to_result(record_id, view_model)
         self.table.movetoSelectedRow(recname=record_id)
+        self.table.set_yviews('moveto', 1)
 
     def add_to_result(self, record_id, to_add: dict):
         """
