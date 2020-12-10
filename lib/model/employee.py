@@ -147,7 +147,7 @@ class Employee(DatabaseRepository, DynamicViewModel, HasRelationships):
             'sex': 'Not Set',
             'address_line1': 'required',
             'city': 'required',
-            'state': 'required',
+            'state': 'INVALID',
             'zipcode': 'required',
             'classification_id': 0,
             'paymethod_id': 0
