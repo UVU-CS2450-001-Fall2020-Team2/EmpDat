@@ -34,6 +34,12 @@ class LoginController(Controller):
         if not self.view.validate():
             return
 
+        try:
+            int(username)
+        except ValueError as e:
+            self.view.show_error('Invalid Employee ID', 'Please ensure your ID is entered in correctly.')
+            return
+
         authenticated = Employee.authenticate(username, password)
         if authenticated is not None:
             store.AUTHENTICATED_USER = authenticated
