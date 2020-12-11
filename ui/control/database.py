@@ -33,10 +33,10 @@ def _open_change_requests():
     ChangeRequestsController().show()
 
 
-def _on_password_save(view, dialog, employee_id, old_pass: str, password: str, password_confirm: str):
+def _on_password_save(view, dialog, employee_id, old_pass: str, password: str, password_confirm: str, require_old=True):
     employee = Employee.read(employee_id)
 
-    if sha_hash(old_pass) != employee.password:
+    if require_old and sha_hash(old_pass) != employee.password:
         view.show_error('Error', 'Old password does not match!')
         return
 
@@ -221,8 +221,8 @@ class DatabaseController(Controller):
         :return: None
         """
 
-        def on_save(dialog, employee_id, old_pass: str, password: str, password_confirm: str):
-            _on_password_save(self.view, dialog, employee_id, old_pass, password, password_confirm)
+        def on_save(dialog, employee_id, password: str, password_confirm: str):
+            _on_password_save(self.view, dialog, employee_id, None, password, password_confirm, require_old=False)
 
         PasswordDialog({
             'save': on_save
@@ -244,7 +244,6 @@ class DatabaseController(Controller):
 
         import_csv.import_employees(filepath, from_cmd=False)
         self.view.set_status('Importing employees successful!')
-        self.view.show_info('Info', 'Importing employees successful!')
         self.refresh()
 
     def import_receipts(self):
@@ -263,7 +262,6 @@ class DatabaseController(Controller):
 
         import_csv.import_receipts(filepath, from_cmd=False)
         self.view.set_status('Importing receipts successful!')
-        self.view.show_info('Info', 'Importing receipts successful!')
         self.refresh()
 
     def import_timesheets(self):
@@ -282,7 +280,6 @@ class DatabaseController(Controller):
 
         import_csv.import_timesheets(filepath, from_cmd=False)
         self.view.set_status('Importing time sheets successful!')
-        self.view.show_info('Info', 'Importing time sheets successful!')
         self.refresh()
 
     def new_receipt(self):
