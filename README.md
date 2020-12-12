@@ -1,5 +1,5 @@
 # EmpDat
-Is this hard to read? [View this on GitHub!](https://github.com/UVU-CS2450-001-Fall2020-Team2/EmpDat/blob/master/README.md)
+Is this hard to read? [View this on GitHub!](https://uvu-cs2450-001-fall2020-team2.github.io/EmpDat/)
 
 Employee Database Application for CS 2450-001 Fall 2020.
 - Kevin Thorne
