@@ -12,7 +12,7 @@ from ui.widgets.table import EmpDatTableCanvas
 from ui.window import TkinterWindow
 
 
-class DatabaseWindow(TkinterWindow):
+class DatabaseWindow(TkinterWindow):  # pylint: disable=too-many-instance-attributes
     """
     Shows employee table
     """
@@ -139,7 +139,8 @@ class DatabaseWindow(TkinterWindow):
         self.filemenu.add_command(label="New Timesheet",
                                   command=self.event_handlers['new_timesheet'])
         self.filemenu.add_separator()
-        if store.AUTHENTICATED_USER.role == 'Admin' or store.AUTHENTICATED_USER.role == 'Accounting':
+        if store.AUTHENTICATED_USER.role == 'Admin' \
+                or store.AUTHENTICATED_USER.role == 'Accounting':
             self.filemenu.add_command(label="Run Payroll",
                                       command=self.event_handlers['run_payroll'])
         self.filemenu.add_command(label="Change My Password",
@@ -237,6 +238,13 @@ class DatabaseWindow(TkinterWindow):
         buttons.pack(side=RIGHT, fill=X, expand=1)
 
     def on_table_unsaved(self, is_unchanged: bool, row=None, col=None):
+        """
+        Called when there is something unsaved
+        :param is_unchanged: is the table 'dirty'
+        :param row: which row changed
+        :param col: which col changed
+        :return: None
+        """
         self.set_save_state('normal' if not is_unchanged else 'disabled')
         if row and col:
             if not is_unchanged:
@@ -246,6 +254,10 @@ class DatabaseWindow(TkinterWindow):
             self.table.redrawTable()
 
     def on_before_save(self):
+        """
+        Called before Save
+        :return: None
+        """
         for row_name in self.table.unsaved:
             row_index = self.table.model.getRecordIndex(row_name)
             for col in range(0, self.table.model.getColumnCount()):
@@ -253,6 +265,11 @@ class DatabaseWindow(TkinterWindow):
                 self.table.redrawCell(row_index, col)
 
     def highlight_invalid_rows(self, ids):
+        """
+        Highlights invalid rows from IDs given
+        :param ids: list of IDs (strings)
+        :return: None
+        """
         for row_id in ids:
             row_index = self.table.model.getRecordIndex(row_id)
             for col in range(0, self.table.model.getColumnCount()):
@@ -260,6 +277,12 @@ class DatabaseWindow(TkinterWindow):
                 self.table.redrawCell(row_index, col)
 
     def highlight_invalid_cell(self, row_id, col_name):
+        """
+        Highlights invalid cells
+        :param row_id: ID str
+        :param col_name: Column string
+        :return: None
+        """
         row_index = self.table.model.getRecordIndex(row_id)
         col_index = self.table.model.getColumnIndex(col_name)
 

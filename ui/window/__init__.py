@@ -73,7 +73,8 @@ class UsesDialog:
         """
         return askopenfilename(title=title, filetypes=filetypes, **options)
 
-    def show_save_picker(self, title=None, filetypes=None, **options):
+    @classmethod
+    def show_save_picker(cls, title=None, filetypes=None, **options):
         """
         Helper method for a save picker dialog
         :param title: Title

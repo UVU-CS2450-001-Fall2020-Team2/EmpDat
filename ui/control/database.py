@@ -33,7 +33,8 @@ def _open_change_requests():
     ChangeRequestsController().show()
 
 
-def _on_password_save(view, dialog, employee_id, old_pass: str, password: str, password_confirm: str, require_old=True):
+def _on_password_save(view, dialog, employee_id, old_pass: str,  # pylint: disable=too-many-arguments
+                      password: str, password_confirm: str, require_old=True):
     employee = Employee.read(employee_id)
 
     if require_old and sha_hash(old_pass) != employee.password:
@@ -121,6 +122,10 @@ class DatabaseController(Controller):
         super().show()
 
     def run_payroll(self):
+        """
+        Runs the payroll process, asks where to save it
+        :return: None
+        """
         filepath = self.view.show_save_picker(
             title='Save Payroll',
             filetypes=[('Text File', '*.txt')]
@@ -162,7 +167,8 @@ class DatabaseController(Controller):
                 self.view.show_error('Error', 'Access Denied')
                 return
             except ValidationException as error:
-                self.view.highlight_invalid_cell(employee_id, Employee.view_columns[error.database_field])
+                self.view.highlight_invalid_cell(employee_id,
+                                                 Employee.view_columns[error.database_field])
                 self.view.show_error('Error', f'Invalid data: {error}')
                 self.view.set_status(f'Invalid data: {error}')
                 return
@@ -211,7 +217,8 @@ class DatabaseController(Controller):
         """
 
         def on_save(dialog, old_pass: str, password: str, password_confirm: str):
-            _on_password_save(self.view, dialog, store.AUTHENTICATED_USER.id, old_pass, password, password_confirm)
+            _on_password_save(self.view, dialog, store.AUTHENTICATED_USER.id,
+                              old_pass, password, password_confirm)
 
         MyPasswordDialog({
             'save': on_save
@@ -224,7 +231,8 @@ class DatabaseController(Controller):
         """
 
         def on_save(dialog, employee_id, password: str, password_confirm: str):
-            _on_password_save(self.view, dialog, employee_id, None, password, password_confirm, require_old=False)
+            _on_password_save(self.view, dialog, employee_id, None,
+                              password, password_confirm, require_old=False)
 
         PasswordDialog({
             'save': on_save
@@ -366,11 +374,15 @@ class DatabaseController(Controller):
     def export_to_csv(self):
         """
         Exports the table to a CSV
-        :return:
+        :return: None
         """
         self.view.table.exportTable()
 
     def export_to_pdf(self):
+        """
+        Exports the table to a PDF
+        :return: None
+        """
         filepath = self.view.show_save_picker(
             title='Export Employee Directory (PDF)',
             filetypes=[('PDF Document', '*.pdf')]
@@ -388,11 +400,20 @@ class DatabaseController(Controller):
                 self.view.show_info('Export Success!', 'The PDF was created successfully!')
                 self.view.set_status('Export Success!')
         except IOError as error:
-            self.view.show_error('Export Failed!', f'An error occurred while creating the PDF! {error}')
+            self.view.show_error('Export Failed!', f'An error occurred '
+            f'while creating the PDF! {error}')
             self.view.set_status('Export Failed!')
 
-    def about_empdat(self):
+    def about_empdat(self):  # pylint: disable=no-self-use
+        """
+        Shows the About EmpDat Dialog
+        :return: None
+        """
         AboutEmpDatDialog()
 
-    def logout(self):
+    def logout(self):  # pylint: disable=no-self-use
+        """
+        Logout hook. Currently unused. Exits the app
+        :return: None
+        """
         sys.exit()

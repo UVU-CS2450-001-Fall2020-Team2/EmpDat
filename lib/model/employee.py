@@ -26,8 +26,8 @@ class Employee(DatabaseRepository, DynamicViewModel, HasRelationships):
         'last_name': 'alpha',
         'first_name': 'alpha',
         'state': 'state_code',
-        'classification_id': lambda idx: True if classifications[idx - 1] else False,
-        'paymethod_id': lambda idx: True if pay_methods[idx - 1] else False,
+        'classification_id': lambda idx: bool(classifications[idx - 1]),
+        'paymethod_id': lambda idx: bool(pay_methods[idx - 1]),
     }
     field_optional_validators = {
         'social_security_number': 'ssn',
@@ -114,9 +114,9 @@ class Employee(DatabaseRepository, DynamicViewModel, HasRelationships):
         """
         if self.classification.name == Hourly.name:
             return self.classification.issue_payment(self.id, self.hourly_rate)
-        elif self.classification.name == Salaried.name:
+        if self.classification.name == Salaried.name:
             return self.classification.issue_payment(self.salary)
-        elif self.classification.name == Commissioned.name:
+        if self.classification.name == Commissioned.name:
             return self.classification.issue_payment(self.id, self.salary, self.commission_rate)
         return 0
 
@@ -128,6 +128,11 @@ class Employee(DatabaseRepository, DynamicViewModel, HasRelationships):
         return self.payment_method.issue(self)
 
     def update_password(self, new_password: str):
+        """
+        Updates password
+        :param new_password: plaintext password
+        :return: None
+        """
         self.password = sha_hash(new_password)  # pylint: disable=attribute-defined-outside-init
         Employee.update(self)
 

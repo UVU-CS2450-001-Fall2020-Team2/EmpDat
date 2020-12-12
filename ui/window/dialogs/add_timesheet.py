@@ -16,7 +16,7 @@ def _focus_next_widget(event) -> tuple:
     return ("break",)
 
 
-class AddTimesheetDialog(TkinterDialog):
+class AddTimesheetDialog(TkinterDialog):  # pylint: disable=too-many-instance-attributes
     """
     Dialog for Adding Timesheets
     """

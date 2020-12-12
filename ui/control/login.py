@@ -36,8 +36,9 @@ class LoginController(Controller):
 
         try:
             int(username)
-        except ValueError as e:
-            self.view.show_error('Invalid Employee ID', 'Please ensure your ID is entered in correctly.')
+        except ValueError:
+            self.view.show_error('Invalid Employee ID', 'Please ensure '
+                                                        'your ID is entered in correctly.')
             return
 
         authenticated = Employee.authenticate(username, password)

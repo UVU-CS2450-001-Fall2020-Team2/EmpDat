@@ -45,6 +45,10 @@ class TimeSheet(DatabaseRepository, DynamicModel, HasRelationships):
         return difference.total_seconds() / 3600  # seconds to hour
 
     @classmethod
+    def new_empty(cls):
+        raise NotImplementedError
+
+    @classmethod
     def table(cls, metadata=MetaData()) -> Table:
         return Table(cls.resource_uri, metadata,
                      Column('id', BigInteger().with_variant(Integer, "sqlite"), primary_key=True),

@@ -15,6 +15,9 @@ class Department(DatabaseRepository, DynamicModel, HasRelationships):
     field_validators = {
 
     }
+    field_optional_validators = {
+
+    }
     field_casts = {
 
     }
@@ -27,6 +30,10 @@ class Department(DatabaseRepository, DynamicModel, HasRelationships):
 
     def relationship_fields(self) -> list:
         return []
+
+    @classmethod
+    def new_empty(cls):
+        raise NotImplementedError
 
     @classmethod
     def table(cls, metadata=MetaData()) -> Table:
