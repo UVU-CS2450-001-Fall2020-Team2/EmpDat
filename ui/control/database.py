@@ -4,7 +4,6 @@ Main Controller of application
 
 import datetime
 import sys
-import time
 
 from lib import exporter
 from lib.cli import import_csv
@@ -19,6 +18,7 @@ from ui import store
 from ui.control import Controller
 from ui.control.change_requests import ChangeRequestsController
 from ui.window.database import DatabaseWindow
+from ui.window.dialogs.about_empdat import AboutEmpDatDialog
 from ui.window.dialogs.add_receipt import AddReceiptDialog
 from ui.window.dialogs.add_timesheet import AddTimesheetDialog
 from ui.window.dialogs.my_password import MyPasswordDialog
@@ -83,6 +83,7 @@ class DatabaseController(Controller):
             'admin>change_password': self.change_password,
             'export>employees': self.export_to_csv,
             'export>pdf_employees': self.export_to_pdf,
+            'help>about_empdat': self.about_empdat,
         }))
 
         self.new_id = 0
@@ -122,7 +123,7 @@ class DatabaseController(Controller):
     def run_payroll(self):
         filepath = self.view.show_save_picker(
             title='Save Payroll',
-            filetypes=(('Text File', '*.txt'))
+            filetypes=[('Text File', '*.txt')]
         )
 
         if not filepath:
@@ -131,6 +132,7 @@ class DatabaseController(Controller):
 
         run_payroll(filepath)
         self.view.show_info('Success', f'Payroll was processed and was written to: {filepath}!')
+        self.view.set_status('Payroll was processed successfully!')
 
     def save(self):
         """
@@ -334,8 +336,8 @@ class DatabaseController(Controller):
                 self.view.show_error('Error', 'Invalid dates given!')
                 return
 
-            time_begin = time.strptime("%-H:%-M", f"{hour_in}:{min_in}")
-            time_end = time.strptime("%-H:%-M", f"{hour_out}:{min_out}")
+            time_begin = datetime.datetime.strptime(f"{hour_in} {min_in}", "%H %M").time()
+            time_end = datetime.datetime.strptime(f"{hour_out} {min_out}", "%H %M").time()
             datetime_begin = datetime.datetime.combine(date, time_begin)
             datetime_end = datetime.datetime.combine(date, time_end)
 
@@ -388,6 +390,9 @@ class DatabaseController(Controller):
         except IOError as error:
             self.view.show_error('Export Failed!', f'An error occurred while creating the PDF! {error}')
             self.view.set_status('Export Failed!')
+
+    def about_empdat(self):
+        AboutEmpDatDialog()
 
     def logout(self):
         sys.exit()

@@ -176,6 +176,11 @@ class DatabaseWindow(TkinterWindow):
                                         command=self.event_handlers['admin>change_password'])
             self.menubar.add_cascade(label="Admin", menu=self.admin_menu)
 
+        self.help_menu = Menu(self.menubar, tearoff=False)
+        self.help_menu.add_command(label="About EmpDat",
+                                   command=self.event_handlers['help>about_empdat'])
+        self.menubar.add_cascade(label="Help", menu=self.help_menu)
+
     def create_footer(self):
         """
         Creates utility footer

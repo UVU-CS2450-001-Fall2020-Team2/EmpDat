@@ -16,6 +16,9 @@ class TimeSheet(DatabaseRepository, DynamicModel, HasRelationships):
     field_validators = {
 
     }
+    field_optional_validators = {
+
+    }
     field_casts = {
 
     }

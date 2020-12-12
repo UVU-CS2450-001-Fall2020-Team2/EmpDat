@@ -95,10 +95,12 @@ class AddTimesheetDialog(TkinterDialog):
         self.save_btn = Button(self.frame5, text="Save",
                                command=lambda: self.event_handlers['save'](
                                    self,
-                                   int(self.employee_id.get()),
+                                   self.employee_picker.get_value(),
                                    self.cal.get_date(),
-                                   f"{self.hour_1.get()}:{self.min_1.get()}",
-                                   f"{self.hour_2.get()}:{self.min_2.get()}"
+                                   self.hour_1.get(),
+                                   self.min_1.get(),
+                                   self.hour_2.get(),
+                                   self.min_2.get(),
                                ))
         self.save_btn.pack(side=LEFT)
         self.cancel_btn = Button(self.frame5, text="Cancel", command=self.destroy)
@@ -106,7 +108,7 @@ class AddTimesheetDialog(TkinterDialog):
 
         self.master.bind('<Return>', lambda: self.event_handlers['save'](
             self,
-            int(self.employee_id.get()),
+            self.employee_picker.get_value(),
             self.cal.get_date(),
             self.hour_1.get(),
             self.min_1.get(),
