@@ -38,6 +38,10 @@ class Receipt(DatabaseRepository, DynamicModel, HasRelationships):
         return []
 
     @classmethod
+    def new_empty(cls):
+        raise NotImplementedError
+
+    @classmethod
     def table(cls, metadata=MetaData()) -> Table:
         return Table(cls.resource_uri, metadata,
                      Column('id', BigInteger().with_variant(Integer, "sqlite"), primary_key=True),

@@ -32,15 +32,12 @@ class HasValidation:
         if key == 'data':
             for data_key, data_value in value.items():
                 if not self.validate(data_key, data_value):
-                    # TODO make error message better
                     raise ValidationException(f'{data_key} given is invalid', data_key)
             super().__setattr__(key, value)
         else:
             if self.validate(key, value):
                 super().__setattr__(key, value)
             else:
-                # print('no validators')
-                # TODO make error message better
                 raise ValidationException(f'{key} given is invalid', key)
 
     def validate(self, key, new_value):
@@ -106,7 +103,7 @@ def is_valid_against(validator_rule, value):
     """
     if isinstance(validator_rule, list):
         return _generic_regex(validator_rule, value)
-    elif callable(validator_rule):
+    if callable(validator_rule):
         return validator_rule(value)
     if validator_rule not in _validators:
         raise NotImplementedError("Validator Type does not exist")
@@ -195,7 +192,9 @@ def _ssn(value):
     :param value:
     :return: if acceptable
     """
-    return _generic_regex([r'^(?!000)(?!666)(?!9[0-9][0-9])\d{3}[- ]?(?!00)\d{2}[- ]?(?!0000)\d{4}$'], value)
+    return _generic_regex(
+        [r'^(?!000)(?!666)(?!9[0-9][0-9])\d{3}[- ]?(?!00)\d{2}[- ]?(?!0000)\d{4}$'],
+        value)
 
 
 def _state_code(value):
@@ -219,7 +218,7 @@ def _role(value):
     :param value: role
     :return: if valid role
     """
-    # TODO fix me, this shouldn't be hardcoded
+    # TODOFuture fix me, this shouldn't be hardcoded
     return value in ['Viewer', 'Accounting', 'Reporter', 'Admin']
 
 

@@ -7,6 +7,11 @@ from lib.model.employee import Employee, MailMethod, DirectMethod
 
 
 def run_payroll(output_filepath: str):
+    """
+    Runs payroll
+    :param output_filepath: file output
+    :return: None
+    """
     employees = Employee.read_all()
     now = datetime.datetime.now()
     timestamp = now.strftime('%d-%m-%Y %H:%M')

@@ -23,6 +23,8 @@ class ChangeRequest(DatabaseRepository, DynamicViewModel, HasRelationships):
         # 'phone_number': 'phone',
         # 'emergency_contact_phone': 'phone',
     }
+    field_optional_validators = {
+    }
     field_casts = {
     }
     view_columns = {
@@ -84,6 +86,10 @@ class ChangeRequest(DatabaseRepository, DynamicViewModel, HasRelationships):
         self.approved_at = datetime.datetime.now()  # pylint: disable=attribute-defined-outside-init
 
         ChangeRequest.update(self)
+
+    @classmethod
+    def new_empty(cls):
+        raise NotImplementedError
 
     @classmethod
     def prettify_changes(cls, changes, model_name=None) -> str:

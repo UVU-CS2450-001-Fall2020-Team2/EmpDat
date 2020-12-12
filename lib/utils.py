@@ -26,6 +26,6 @@ def date_converter(date_thing):
         return None
     if isinstance(date_thing, datetime.date):
         return date_thing
-    elif isinstance(date_thing, str):
+    if isinstance(date_thing, str):
         return datetime.datetime.strptime(date_thing, '%Y-%m-%d').date()
     raise ValueError(f'Invalid date "{date_thing}" given')

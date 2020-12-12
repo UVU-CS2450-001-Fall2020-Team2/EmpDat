@@ -78,6 +78,10 @@ class DynamicModel:
 
     @classmethod
     def new_empty(cls):
+        """
+        Creates a new empty object
+        :return: object
+        """
         raise NotImplementedError
 
     def to_dict(self):

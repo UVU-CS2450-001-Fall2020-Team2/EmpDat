@@ -1,3 +1,6 @@
+"""
+About EmpDat dialog window
+"""
 from tkinter.ttk import Label, Button
 
 from ui.window import TkinterDialog
@@ -35,8 +38,14 @@ _LICENSES = """
 
 
 class AboutEmpDatDialog(TkinterDialog):
+    """
+    Shows Team and Libraries used
+    """
 
     def __init__(self):
+        """
+        Labels and a button is all this needs
+        """
         super().__init__({})
 
         self.title('About EmpDat')

@@ -1,3 +1,6 @@
+"""
+Exporter backend
+"""
 import html
 import sys
 
@@ -56,22 +59,22 @@ def table_to_html(table_model):
     return view_models_to_html(view_models)
 
 
-def html_to_pdf(html: str, filepath: str):
+def html_to_pdf(html_str: str, filepath: str):
     """
     Uses PDFKit to convert an HTML string into a PDF, given
     a filepath
 
-    :param html: HTML string
+    :param html_str: HTML string
     :param filepath: File path, preferably from a save as picker
     :return: True on success
     """
     if getattr(sys, 'frozen', False):
         # config = pdfkit.configuration(wkhtmltopdf='/opt/bin/wkhtmltopdf')
-        return pdfkit.from_string(html, filepath, options={
+        return pdfkit.from_string(html_str, filepath, options={
             'quiet': '',
             'orientation': 'landscape'
         })
-    return pdfkit.from_string(html, filepath, options={
+    return pdfkit.from_string(html_str, filepath, options={
         'quiet': '',
         'orientation': 'landscape'
     })

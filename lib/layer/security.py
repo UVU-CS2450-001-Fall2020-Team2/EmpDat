@@ -204,13 +204,13 @@ class SecurityLayer(Layer):
             if action == 'add':
                 print('Warning: attempt to add a field made. Was this desired?')
                 for couple in values:
-                    for key, ignored in couple:
+                    for key, ignored in couple:  # pylint: disable=unused-variable
                         if key not in self.user_role[CAN_UPDATE][model_name]:
                             raise SecurityException(f'Updating the {key} field in '
                                                     f'{model_name} records is not allowed')
             elif action == 'remove':
                 for couple in values:
-                    for key, ignored in couple:
+                    for key, ignored in couple:  # pylint: disable=unused-variable
                         if key not in self.user_role[CAN_UPDATE][model_name]:
                             raise SecurityException(f'Updating the {key} field in '
                                                     f'{model_name} records is not allowed')
