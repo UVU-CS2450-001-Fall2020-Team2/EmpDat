@@ -1,0 +1,573 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
+<meta name="generator" content="pdoc 0.9.2" />
+<title>lib.repository.validator API documentation</title>
+<meta name="description" content="Contains all the validation logic for the backend" />
+<link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/sanitize.min.css" integrity="sha256-PK9q560IAAa6WVRRh76LtCaI8pjTJ2z11v0miyNNjrs=" crossorigin>
+<link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/typography.min.css" integrity="sha256-7l/o7C8jubJiy74VsKTidCy1yBkRtiUGbVkYBylBqUg=" crossorigin>
+<link rel="stylesheet preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/styles/github.min.css" crossorigin>
+<style>:root{--highlight-color:#fe9}.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:30px;overflow:hidden}#sidebar > *:last-child{margin-bottom:2cm}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:1em 0 .50em 0}h3{font-size:1.4em;margin:25px 0 10px 0}h4{margin:0;font-size:105%}h1:target,h2:target,h3:target,h4:target,h5:target,h6:target{background:var(--highlight-color);padding:.2em 0}a{color:#058;text-decoration:none;transition:color .3s ease-in-out}a:hover{color:#e82}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900}pre code{background:#f8f8f8;font-size:.8em;line-height:1.4em}code{background:#f2f2f1;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{background:#f8f8f8;border:0;border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0;padding:1ex}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{margin-top:.6em;font-weight:bold}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-weight:bold;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}dt:target .name{background:var(--highlight-color)}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}td{padding:0 .5em}.admonition{padding:.1em .5em;margin-bottom:1em}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%;height:100vh;overflow:auto;position:sticky;top:0}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.item .name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul{padding-left:1.5em}.toc > ul > li{margin-top:.5em}}</style>
+<style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/highlight.min.js" integrity="sha256-Uv3H6lx7dJmRfRvH8TH6kJD1TSK1aFcwgx+mdg3epi8=" crossorigin></script>
+<script>window.addEventListener('DOMContentLoaded', () => hljs.initHighlighting())</script>
+</head>
+<body>
+<main>
+<article id="content">
+<header>
+<h1 class="title">Module <code>lib.repository.validator</code></h1>
+</header>
+<section id="section-intro">
+<p>Contains all the validation logic for the backend</p>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">&#34;&#34;&#34;
+Contains all the validation logic for the backend
+&#34;&#34;&#34;
+import re
+from abc import abstractmethod
+
+
+class ValidationException(Exception):
+    &#34;&#34;&#34;
+    Thrown when a validation rule is violated
+    &#34;&#34;&#34;
+
+    def __init__(self, message, database_field, *args):
+        super().__init__(message, *args)
+        self.database_field = database_field
+
+
+class HasValidation:
+    &#34;&#34;&#34;
+    Trait that adds validation to Models
+    &#34;&#34;&#34;
+
+    def __setattr__(self, key, value):
+        &#34;&#34;&#34;
+        This overrides when &#39;myobject.mykey&#39; is set when the &#39;mykey&#39; attribute doesn&#39;t exist
+        This will run the value being set through a validator
+
+        :param key: field to set
+        :param value: value to set to field
+        :return: None
+        &#34;&#34;&#34;
+        if key == &#39;data&#39;:
+            for data_key, data_value in value.items():
+                if not self.validate(data_key, data_value):
+                    raise ValidationException(f&#39;{data_key} given is invalid&#39;, data_key)
+            super().__setattr__(key, value)
+        else:
+            if self.validate(key, value):
+                super().__setattr__(key, value)
+            else:
+                raise ValidationException(f&#39;{key} given is invalid&#39;, key)
+
+    def validate(self, key, new_value):
+        &#34;&#34;&#34;
+        Validates a property using the field_validators dict
+        :param key: property name.
+            Models can specify the field_validators dict
+            to tie properties to certain validation rules
+        :param new_value:
+        :return: True if new_value is valid
+        &#34;&#34;&#34;
+        if self.field_validators and key in self.field_validators:
+            return is_valid_against(self.field_validators[key], new_value)
+        if self.field_optional_validators and key in self.field_optional_validators:
+            if new_value and new_value != &#39;&#39; and new_value != &#39;None&#39;:
+                return is_valid_against(self.field_optional_validators[key], new_value)
+        return True
+
+    @property
+    @classmethod
+    @abstractmethod
+    def field_validators(cls) -&gt; dict:
+        &#34;&#34;&#34;
+        The field_validators dictionary specifies validation
+        rules for model properties
+        It is recommended to set this as a class-wide variable.
+        Must be a dictionary.
+
+        Example:
+        field_validators = {
+            &#39;myfield&#39;: &#39;phone&#39;
+        }
+        &#34;&#34;&#34;
+        raise NotImplementedError
+
+    @property
+    @classmethod
+    @abstractmethod
+    def field_optional_validators(cls) -&gt; dict:
+        &#34;&#34;&#34;
+        The field_validators dictionary specifies validation
+        rules for model properties
+        It is recommended to set this as a class-wide variable.
+        Must be a dictionary.
+
+        These fields can also be blank
+
+        Example:
+        field_optional_validators = {
+            &#39;myfield&#39;: &#39;phone&#39;
+        }
+        &#34;&#34;&#34;
+        raise NotImplementedError
+
+
+def is_valid_against(validator_rule, value):
+    &#34;&#34;&#34;
+    Called by HasValidation.validate to properly dispatch
+    the validation rule to the method needed
+    :param validator_rule: rule string
+    :param value: new value
+    :return: bool
+    &#34;&#34;&#34;
+    if isinstance(validator_rule, list):
+        return _generic_regex(validator_rule, value)
+    if callable(validator_rule):
+        return validator_rule(value)
+    if validator_rule not in _validators:
+        raise NotImplementedError(&#34;Validator Type does not exist&#34;)
+    return _validators[validator_rule](value)
+
+
+def _generic_regex(regexes: list, value):
+    &#34;&#34;&#34;
+    A generic regex validator.
+
+    Note that re.match returns the match or None instead
+    of True or False.
+
+    :param regexes: list of Regular Expressions to match
+    :param value: value to check against
+    :return: if value matches the regexes given
+    &#34;&#34;&#34;
+    if isinstance(regexes, str):
+        return re.match(re.compile(regexes), value) is not None
+
+    for regex in regexes:
+        result = re.match(re.compile(regex), str(value))
+        if result is None:
+            return None
+
+    return True
+
+
+def _phone_number(value):
+    &#34;&#34;&#34;
+    Validates fields to be phone number formats only
+
+    :param value:
+    :return: if string is alphabetic
+    &#34;&#34;&#34;
+    return _generic_regex([r&#39;^(\+\d{1,2}\s)?\(?\d{3}\)?[\s.-]\d{3}[\s.-]\d{4}$&#39;], value)
+
+
+def _alpha(value: str):
+    &#34;&#34;&#34;
+    Validates fields to be alphabetic only
+
+    :param value:
+    :return: if string is alphabetic
+    &#34;&#34;&#34;
+    return _generic_regex([r&#39;^[A-Za-z\.\s]+$&#39;], value)
+
+
+def _numeric(value: str):
+    &#34;&#34;&#34;
+    Validates fields to be numeric only
+
+    :param value:
+    :return: if string is alphabetic
+    &#34;&#34;&#34;
+    return _generic_regex([r&#39;^[0-9\-\.]+$&#39;], value)
+
+
+def _notnull(value):
+    &#34;&#34;&#34;
+    Ensure the field is not null
+    :param value:
+    :return: if not null
+    &#34;&#34;&#34;
+    return value is not None
+
+
+def _password(value):
+    &#34;&#34;&#34;
+    Enforces a password policy of:
+        - at least 9 characters total
+        - 1 lowercase letter
+        - 1 uppercase
+        - 1 number
+        - 1 symbol
+    :param value:
+    :return: if acceptable
+    &#34;&#34;&#34;
+    return _generic_regex([r&#39;(?=.{9,})(?=.*?[^\w\s])(?=.*?[0-9])(?=.*?[A-Z]).*?[a-z].*&#39;], value)
+
+
+def _ssn(value):
+    &#34;&#34;&#34;
+    Validates a field to match the US Social Security Number convention
+
+    :param value:
+    :return: if acceptable
+    &#34;&#34;&#34;
+    return _generic_regex(
+        [r&#39;^(?!000)(?!666)(?!9[0-9][0-9])\d{3}[- ]?(?!00)\d{2}[- ]?(?!0000)\d{4}$&#39;],
+        value)
+
+
+def _state_code(value):
+    &#34;&#34;&#34;
+    Checks if a state code is valid
+
+    :param value: state code
+    :return: if valid US state code
+    &#34;&#34;&#34;
+    return value in [&#34;AL&#34;, &#34;AK&#34;, &#34;AZ&#34;, &#34;AR&#34;, &#34;CA&#34;, &#34;CO&#34;, &#34;CT&#34;, &#34;DC&#34;, &#34;DE&#34;, &#34;FL&#34;, &#34;GA&#34;,
+                     &#34;HI&#34;, &#34;ID&#34;, &#34;IL&#34;, &#34;IN&#34;, &#34;IA&#34;, &#34;KS&#34;, &#34;KY&#34;, &#34;LA&#34;, &#34;ME&#34;, &#34;MD&#34;,
+                     &#34;MA&#34;, &#34;MI&#34;, &#34;MN&#34;, &#34;MS&#34;, &#34;MO&#34;, &#34;MT&#34;, &#34;NE&#34;, &#34;NV&#34;, &#34;NH&#34;, &#34;NJ&#34;,
+                     &#34;NM&#34;, &#34;NY&#34;, &#34;NC&#34;, &#34;ND&#34;, &#34;OH&#34;, &#34;OK&#34;, &#34;OR&#34;, &#34;PA&#34;, &#34;RI&#34;, &#34;SC&#34;,
+                     &#34;SD&#34;, &#34;TN&#34;, &#34;TX&#34;, &#34;UT&#34;, &#34;VT&#34;, &#34;VA&#34;, &#34;WA&#34;, &#34;WV&#34;, &#34;WI&#34;, &#34;WY&#34;, &#34;INVALID&#34;]
+
+
+def _role(value):
+    &#34;&#34;&#34;
+    Checks if a role is valid
+
+    :param value: role
+    :return: if valid role
+    &#34;&#34;&#34;
+    # TODOFuture fix me, this shouldn&#39;t be hardcoded
+    return value in [&#39;Viewer&#39;, &#39;Accounting&#39;, &#39;Reporter&#39;, &#39;Admin&#39;]
+
+
+def _email(value):
+    &#34;&#34;&#34;
+    Validates a field for an email
+
+    :param value: email
+    :return: if acceptable
+    &#34;&#34;&#34;
+    return _generic_regex([r&#39;(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$)&#39;], value)
+
+
+def _bank_routing(value):
+    &#34;&#34;&#34;
+    Validates a field for a bank routing number
+
+    :param value: bank route
+    :return: if acceptable
+    &#34;&#34;&#34;
+    return _generic_regex([r&#39;^[0-9\-\.A-Za-z\s]+$&#39;], value)
+
+
+def _date(value):
+    &#34;&#34;&#34;
+    Validates a field for a bank routing number
+
+    :param value: bank route
+    :return: if acceptable
+    &#34;&#34;&#34;
+    return _generic_regex([r&#39;\d{1,2}\/\d{1,2}\/\d{2,4}&#39;], value)
+
+
+_validators = {
+    &#39;phone&#39;: _phone_number,
+    &#39;alpha&#39;: _alpha,
+    &#39;numeric&#39;: _numeric,
+    &#39;notnull&#39;: _notnull,
+    &#39;password&#39;: _password,
+    &#39;ssn&#39;: _ssn,
+    &#39;state_code&#39;: _state_code,
+    &#39;role&#39;: _role,
+    &#39;email&#39;: _email,
+    &#39;date&#39;: _date,
+    &#39;bank_routing&#39;: _bank_routing
+}</code></pre>
+</details>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+<h2 class="section-title" id="header-functions">Functions</h2>
+<dl>
+<dt id="lib.repository.validator.is_valid_against"><code class="name flex">
+<span>def <span class="ident">is_valid_against</span></span>(<span>validator_rule, value)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Called by HasValidation.validate to properly dispatch
+the validation rule to the method needed
+:param validator_rule: rule string
+:param value: new value
+:return: bool</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def is_valid_against(validator_rule, value):
+    &#34;&#34;&#34;
+    Called by HasValidation.validate to properly dispatch
+    the validation rule to the method needed
+    :param validator_rule: rule string
+    :param value: new value
+    :return: bool
+    &#34;&#34;&#34;
+    if isinstance(validator_rule, list):
+        return _generic_regex(validator_rule, value)
+    if callable(validator_rule):
+        return validator_rule(value)
+    if validator_rule not in _validators:
+        raise NotImplementedError(&#34;Validator Type does not exist&#34;)
+    return _validators[validator_rule](value)</code></pre>
+</details>
+</dd>
+</dl>
+</section>
+<section>
+<h2 class="section-title" id="header-classes">Classes</h2>
+<dl>
+<dt id="lib.repository.validator.HasValidation"><code class="flex name class">
+<span>class <span class="ident">HasValidation</span></span>
+</code></dt>
+<dd>
+<div class="desc"><p>Trait that adds validation to Models</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class HasValidation:
+    &#34;&#34;&#34;
+    Trait that adds validation to Models
+    &#34;&#34;&#34;
+
+    def __setattr__(self, key, value):
+        &#34;&#34;&#34;
+        This overrides when &#39;myobject.mykey&#39; is set when the &#39;mykey&#39; attribute doesn&#39;t exist
+        This will run the value being set through a validator
+
+        :param key: field to set
+        :param value: value to set to field
+        :return: None
+        &#34;&#34;&#34;
+        if key == &#39;data&#39;:
+            for data_key, data_value in value.items():
+                if not self.validate(data_key, data_value):
+                    raise ValidationException(f&#39;{data_key} given is invalid&#39;, data_key)
+            super().__setattr__(key, value)
+        else:
+            if self.validate(key, value):
+                super().__setattr__(key, value)
+            else:
+                raise ValidationException(f&#39;{key} given is invalid&#39;, key)
+
+    def validate(self, key, new_value):
+        &#34;&#34;&#34;
+        Validates a property using the field_validators dict
+        :param key: property name.
+            Models can specify the field_validators dict
+            to tie properties to certain validation rules
+        :param new_value:
+        :return: True if new_value is valid
+        &#34;&#34;&#34;
+        if self.field_validators and key in self.field_validators:
+            return is_valid_against(self.field_validators[key], new_value)
+        if self.field_optional_validators and key in self.field_optional_validators:
+            if new_value and new_value != &#39;&#39; and new_value != &#39;None&#39;:
+                return is_valid_against(self.field_optional_validators[key], new_value)
+        return True
+
+    @property
+    @classmethod
+    @abstractmethod
+    def field_validators(cls) -&gt; dict:
+        &#34;&#34;&#34;
+        The field_validators dictionary specifies validation
+        rules for model properties
+        It is recommended to set this as a class-wide variable.
+        Must be a dictionary.
+
+        Example:
+        field_validators = {
+            &#39;myfield&#39;: &#39;phone&#39;
+        }
+        &#34;&#34;&#34;
+        raise NotImplementedError
+
+    @property
+    @classmethod
+    @abstractmethod
+    def field_optional_validators(cls) -&gt; dict:
+        &#34;&#34;&#34;
+        The field_validators dictionary specifies validation
+        rules for model properties
+        It is recommended to set this as a class-wide variable.
+        Must be a dictionary.
+
+        These fields can also be blank
+
+        Example:
+        field_optional_validators = {
+            &#39;myfield&#39;: &#39;phone&#39;
+        }
+        &#34;&#34;&#34;
+        raise NotImplementedError</code></pre>
+</details>
+<h3>Subclasses</h3>
+<ul class="hlist">
+<li><a title="lib.repository.db.DatabaseRepository" href="db.html#lib.repository.db.DatabaseRepository">DatabaseRepository</a></li>
+</ul>
+<h3>Instance variables</h3>
+<dl>
+<dt id="lib.repository.validator.HasValidation.field_optional_validators"><code class="name">var <span class="ident">field_optional_validators</span></code></dt>
+<dd>
+<div class="desc"><p>classmethod(function) -&gt; method</p>
+<p>Convert a function to be a class method.</p>
+<p>A class method receives the class as implicit first argument,
+just like an instance method receives the instance.
+To declare a class method, use this idiom:</p>
+<p>class C:
+@classmethod
+def f(cls, arg1, arg2, &hellip;):
+&hellip;</p>
+<p>It can be called either on the class (e.g. C.f()) or on an instance
+(e.g. C().f()).
+The instance is ignored except for its class.
+If a class method is called for a derived class, the derived class
+object is passed as the implied first argument.</p>
+<p>Class methods are different than C++ or Java static methods.
+If you want those, see the staticmethod builtin.</p></div>
+</dd>
+<dt id="lib.repository.validator.HasValidation.field_validators"><code class="name">var <span class="ident">field_validators</span></code></dt>
+<dd>
+<div class="desc"><p>classmethod(function) -&gt; method</p>
+<p>Convert a function to be a class method.</p>
+<p>A class method receives the class as implicit first argument,
+just like an instance method receives the instance.
+To declare a class method, use this idiom:</p>
+<p>class C:
+@classmethod
+def f(cls, arg1, arg2, &hellip;):
+&hellip;</p>
+<p>It can be called either on the class (e.g. C.f()) or on an instance
+(e.g. C().f()).
+The instance is ignored except for its class.
+If a class method is called for a derived class, the derived class
+object is passed as the implied first argument.</p>
+<p>Class methods are different than C++ or Java static methods.
+If you want those, see the staticmethod builtin.</p></div>
+</dd>
+</dl>
+<h3>Methods</h3>
+<dl>
+<dt id="lib.repository.validator.HasValidation.validate"><code class="name flex">
+<span>def <span class="ident">validate</span></span>(<span>self, key, new_value)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Validates a property using the field_validators dict
+:param key: property name.
+Models can specify the field_validators dict
+to tie properties to certain validation rules
+:param new_value:
+:return: True if new_value is valid</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def validate(self, key, new_value):
+    &#34;&#34;&#34;
+    Validates a property using the field_validators dict
+    :param key: property name.
+        Models can specify the field_validators dict
+        to tie properties to certain validation rules
+    :param new_value:
+    :return: True if new_value is valid
+    &#34;&#34;&#34;
+    if self.field_validators and key in self.field_validators:
+        return is_valid_against(self.field_validators[key], new_value)
+    if self.field_optional_validators and key in self.field_optional_validators:
+        if new_value and new_value != &#39;&#39; and new_value != &#39;None&#39;:
+            return is_valid_against(self.field_optional_validators[key], new_value)
+    return True</code></pre>
+</details>
+</dd>
+</dl>
+</dd>
+<dt id="lib.repository.validator.ValidationException"><code class="flex name class">
+<span>class <span class="ident">ValidationException</span></span>
+<span>(</span><span>message, database_field, *args)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Thrown when a validation rule is violated</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class ValidationException(Exception):
+    &#34;&#34;&#34;
+    Thrown when a validation rule is violated
+    &#34;&#34;&#34;
+
+    def __init__(self, message, database_field, *args):
+        super().__init__(message, *args)
+        self.database_field = database_field</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li>builtins.Exception</li>
+<li>builtins.BaseException</li>
+</ul>
+</dd>
+</dl>
+</section>
+</article>
+<nav id="sidebar">
+<h1>Index</h1>
+<div class="toc">
+<ul></ul>
+</div>
+<ul id="index">
+<li><h3>Super-module</h3>
+<ul>
+<li><code><a title="lib.repository" href="index.html">lib.repository</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-functions">Functions</a></h3>
+<ul class="">
+<li><code><a title="lib.repository.validator.is_valid_against" href="#lib.repository.validator.is_valid_against">is_valid_against</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-classes">Classes</a></h3>
+<ul>
+<li>
+<h4><code><a title="lib.repository.validator.HasValidation" href="#lib.repository.validator.HasValidation">HasValidation</a></code></h4>
+<ul class="">
+<li><code><a title="lib.repository.validator.HasValidation.field_optional_validators" href="#lib.repository.validator.HasValidation.field_optional_validators">field_optional_validators</a></code></li>
+<li><code><a title="lib.repository.validator.HasValidation.field_validators" href="#lib.repository.validator.HasValidation.field_validators">field_validators</a></code></li>
+<li><code><a title="lib.repository.validator.HasValidation.validate" href="#lib.repository.validator.HasValidation.validate">validate</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="lib.repository.validator.ValidationException" href="#lib.repository.validator.ValidationException">ValidationException</a></code></h4>
+</li>
+</ul>
+</li>
+</ul>
+</nav>
+</main>
+<footer id="footer">
+<p>Generated by <a href="https://pdoc3.github.io/pdoc"><cite>pdoc</cite> 0.9.2</a>.</p>
+</footer>
+</body>
+</html>

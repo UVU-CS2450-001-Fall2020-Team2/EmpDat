@@ -1,0 +1,678 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
+<meta name="generator" content="pdoc 0.9.2" />
+<title>ui.window API documentation</title>
+<meta name="description" content="Generic Window base classes" />
+<link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/sanitize.min.css" integrity="sha256-PK9q560IAAa6WVRRh76LtCaI8pjTJ2z11v0miyNNjrs=" crossorigin>
+<link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/typography.min.css" integrity="sha256-7l/o7C8jubJiy74VsKTidCy1yBkRtiUGbVkYBylBqUg=" crossorigin>
+<link rel="stylesheet preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/styles/github.min.css" crossorigin>
+<style>:root{--highlight-color:#fe9}.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:30px;overflow:hidden}#sidebar > *:last-child{margin-bottom:2cm}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:1em 0 .50em 0}h3{font-size:1.4em;margin:25px 0 10px 0}h4{margin:0;font-size:105%}h1:target,h2:target,h3:target,h4:target,h5:target,h6:target{background:var(--highlight-color);padding:.2em 0}a{color:#058;text-decoration:none;transition:color .3s ease-in-out}a:hover{color:#e82}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900}pre code{background:#f8f8f8;font-size:.8em;line-height:1.4em}code{background:#f2f2f1;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{background:#f8f8f8;border:0;border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0;padding:1ex}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{margin-top:.6em;font-weight:bold}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-weight:bold;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}dt:target .name{background:var(--highlight-color)}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}td{padding:0 .5em}.admonition{padding:.1em .5em;margin-bottom:1em}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%;height:100vh;overflow:auto;position:sticky;top:0}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.item .name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul{padding-left:1.5em}.toc > ul > li{margin-top:.5em}}</style>
+<style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/highlight.min.js" integrity="sha256-Uv3H6lx7dJmRfRvH8TH6kJD1TSK1aFcwgx+mdg3epi8=" crossorigin></script>
+<script>window.addEventListener('DOMContentLoaded', () => hljs.initHighlighting())</script>
+</head>
+<body>
+<main>
+<article id="content">
+<header>
+<h1 class="title">Module <code>ui.window</code></h1>
+</header>
+<section id="section-intro">
+<p>Generic Window base classes</p>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">&#34;&#34;&#34;
+Generic Window base classes
+&#34;&#34;&#34;
+import tkinter
+from tkinter import messagebox, Toplevel
+from tkinter.filedialog import askopenfilename, asksaveasfilename
+
+from ttkthemes import ThemedStyle
+
+import ui
+
+
+class UsesDialog:
+    &#34;&#34;&#34;
+    A helper class for use inside of the views
+    &#34;&#34;&#34;
+
+    @classmethod
+    def show_error(cls, title, message, **options):
+        &#34;&#34;&#34;
+        Helper method for showing an error dialog
+        Calls tkinter.messagebox.showerror
+        :param title: Title
+        :param message: Message
+        :param options: Options
+        :return: None
+        &#34;&#34;&#34;
+        messagebox.showerror(title=title, message=message, **options)
+
+    @classmethod
+    def show_info(cls, title, message, **options):
+        &#34;&#34;&#34;
+        Helper method for showing an info dialog
+        Calls tkinter.messagebox.showinfo
+        :param title: Title
+        :param message: Message
+        :param options: Options
+        :return: None
+        &#34;&#34;&#34;
+        messagebox.showinfo(title=title, message=message, **options)
+
+    @classmethod
+    def show_confirm(cls, title, message, **options):
+        &#34;&#34;&#34;
+        Helper method for showing a confirmation dialog
+        Calls tkinter.messagebox.askyesno
+        :param title: Title
+        :param message: Message
+        :param options: Options.
+        :return: bool True if &#34;yes&#34; was clicked
+        &#34;&#34;&#34;
+        return messagebox.askyesno(title=title, message=message, **options)
+
+    @classmethod
+    def show_warning(cls, title, message, **options):
+        &#34;&#34;&#34;
+        Helper method for showing an warning dialog
+        Calls tkinter.messagebox.showwarning
+        :param title: Title
+        :param message: Message
+        :param options: Options
+        :return: None
+        &#34;&#34;&#34;
+        messagebox.showwarning(title=title, message=message, **options)
+
+    @classmethod
+    def show_file_picker(cls, title=None, filetypes=None, **options):
+        &#34;&#34;&#34;
+        Helper method for a file picker dialog
+        :param title: Title
+        :param filetypes: valid file types
+        :return: filepath selected
+        &#34;&#34;&#34;
+        return askopenfilename(title=title, filetypes=filetypes, **options)
+
+    @classmethod
+    def show_save_picker(cls, title=None, filetypes=None, **options):
+        &#34;&#34;&#34;
+        Helper method for a save picker dialog
+        :param title: Title
+        :param filetypes: valid file types
+        :return: filepath selected
+        &#34;&#34;&#34;
+        return asksaveasfilename(title=title, filetypes=filetypes, **options)
+
+
+class TkinterWindow(UsesDialog):
+    &#34;&#34;&#34;
+    Easily creates windows and exposes event handlers for controllers
+    &#34;&#34;&#34;
+
+    def __init__(self, event_handlers):
+        &#34;&#34;&#34;
+        Creates a new Tkinter instance
+
+        :param event_handlers: Received by the controller.
+                                This contains hooks back to the controller for actions
+        &#34;&#34;&#34;
+        self.master = tkinter.Tk()
+        # self.master.configure(bg=&#39;white&#39;)
+        style = ThemedStyle(self.master)
+        style.theme_use(&#39;arc&#39;)
+
+        try:
+            self.master.iconphoto(True, ui.load_image(&#34;ui/icons/EmpDat.gif&#34;))
+        except tkinter.TclError:
+            pass
+
+        self.event_handlers = event_handlers
+
+    def mainloop(self):
+        &#34;&#34;&#34;
+        Forwards mainloop call to the Tkinter instance
+
+        :return: None
+        &#34;&#34;&#34;
+        self.master.mainloop()
+
+    def destroy(self):
+        &#34;&#34;&#34;
+        Destroys tkinter instance
+
+        :return: None
+        &#34;&#34;&#34;
+        self.master.destroy()
+
+
+class TkinterDialog(Toplevel, UsesDialog):
+    &#34;&#34;&#34;
+    Easily creates windows and exposes event handlers for controllers
+    &#34;&#34;&#34;
+
+    def __init__(self, event_handlers):
+        &#34;&#34;&#34;
+        A TkinterDialog is different as it uses a pre-existing Tkinter instance.
+
+        :param event_handlers: Received by the controller.
+                                This contains hooks back to the controller for actions
+        &#34;&#34;&#34;
+        super().__init__()
+
+        self.event_handlers = event_handlers</code></pre>
+</details>
+</section>
+<section>
+<h2 class="section-title" id="header-submodules">Sub-modules</h2>
+<dl>
+<dt><code class="name"><a title="ui.window.change_requests" href="change_requests.html">ui.window.change_requests</a></code></dt>
+<dd>
+<div class="desc"><p>Change Requests view</p></div>
+</dd>
+<dt><code class="name"><a title="ui.window.database" href="database.html">ui.window.database</a></code></dt>
+<dd>
+<div class="desc"><p>Main View of the Application</p></div>
+</dd>
+<dt><code class="name"><a title="ui.window.dialogs" href="dialogs/index.html">ui.window.dialogs</a></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt><code class="name"><a title="ui.window.login" href="login.html">ui.window.login</a></code></dt>
+<dd>
+<div class="desc"><p>Login GUI Window implemented with Tkinter w/ built-in tester</p></div>
+</dd>
+</dl>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+<h2 class="section-title" id="header-classes">Classes</h2>
+<dl>
+<dt id="ui.window.TkinterDialog"><code class="flex name class">
+<span>class <span class="ident">TkinterDialog</span></span>
+<span>(</span><span>event_handlers)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Easily creates windows and exposes event handlers for controllers</p>
+<p>A TkinterDialog is different as it uses a pre-existing Tkinter instance.</p>
+<p>:param event_handlers: Received by the controller.
+This contains hooks back to the controller for actions</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class TkinterDialog(Toplevel, UsesDialog):
+    &#34;&#34;&#34;
+    Easily creates windows and exposes event handlers for controllers
+    &#34;&#34;&#34;
+
+    def __init__(self, event_handlers):
+        &#34;&#34;&#34;
+        A TkinterDialog is different as it uses a pre-existing Tkinter instance.
+
+        :param event_handlers: Received by the controller.
+                                This contains hooks back to the controller for actions
+        &#34;&#34;&#34;
+        super().__init__()
+
+        self.event_handlers = event_handlers</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li>tkinter.Toplevel</li>
+<li>tkinter.BaseWidget</li>
+<li>tkinter.Misc</li>
+<li>tkinter.Wm</li>
+<li><a title="ui.window.UsesDialog" href="#ui.window.UsesDialog">UsesDialog</a></li>
+</ul>
+<h3>Subclasses</h3>
+<ul class="hlist">
+<li><a title="ui.window.dialogs.about_empdat.AboutEmpDatDialog" href="dialogs/about_empdat.html#ui.window.dialogs.about_empdat.AboutEmpDatDialog">AboutEmpDatDialog</a></li>
+<li><a title="ui.window.dialogs.add_receipt.AddReceiptDialog" href="dialogs/add_receipt.html#ui.window.dialogs.add_receipt.AddReceiptDialog">AddReceiptDialog</a></li>
+<li><a title="ui.window.dialogs.add_timesheet.AddTimesheetDialog" href="dialogs/add_timesheet.html#ui.window.dialogs.add_timesheet.AddTimesheetDialog">AddTimesheetDialog</a></li>
+<li><a title="ui.window.dialogs.my_password.MyPasswordDialog" href="dialogs/my_password.html#ui.window.dialogs.my_password.MyPasswordDialog">MyPasswordDialog</a></li>
+<li><a title="ui.window.dialogs.others_password.PasswordDialog" href="dialogs/others_password.html#ui.window.dialogs.others_password.PasswordDialog">PasswordDialog</a></li>
+</ul>
+<h3>Inherited members</h3>
+<ul class="hlist">
+<li><code><b><a title="ui.window.UsesDialog" href="#ui.window.UsesDialog">UsesDialog</a></b></code>:
+<ul class="hlist">
+<li><code><a title="ui.window.UsesDialog.show_confirm" href="#ui.window.UsesDialog.show_confirm">show_confirm</a></code></li>
+<li><code><a title="ui.window.UsesDialog.show_error" href="#ui.window.UsesDialog.show_error">show_error</a></code></li>
+<li><code><a title="ui.window.UsesDialog.show_file_picker" href="#ui.window.UsesDialog.show_file_picker">show_file_picker</a></code></li>
+<li><code><a title="ui.window.UsesDialog.show_info" href="#ui.window.UsesDialog.show_info">show_info</a></code></li>
+<li><code><a title="ui.window.UsesDialog.show_save_picker" href="#ui.window.UsesDialog.show_save_picker">show_save_picker</a></code></li>
+<li><code><a title="ui.window.UsesDialog.show_warning" href="#ui.window.UsesDialog.show_warning">show_warning</a></code></li>
+</ul>
+</li>
+</ul>
+</dd>
+<dt id="ui.window.TkinterWindow"><code class="flex name class">
+<span>class <span class="ident">TkinterWindow</span></span>
+<span>(</span><span>event_handlers)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Easily creates windows and exposes event handlers for controllers</p>
+<p>Creates a new Tkinter instance</p>
+<p>:param event_handlers: Received by the controller.
+This contains hooks back to the controller for actions</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class TkinterWindow(UsesDialog):
+    &#34;&#34;&#34;
+    Easily creates windows and exposes event handlers for controllers
+    &#34;&#34;&#34;
+
+    def __init__(self, event_handlers):
+        &#34;&#34;&#34;
+        Creates a new Tkinter instance
+
+        :param event_handlers: Received by the controller.
+                                This contains hooks back to the controller for actions
+        &#34;&#34;&#34;
+        self.master = tkinter.Tk()
+        # self.master.configure(bg=&#39;white&#39;)
+        style = ThemedStyle(self.master)
+        style.theme_use(&#39;arc&#39;)
+
+        try:
+            self.master.iconphoto(True, ui.load_image(&#34;ui/icons/EmpDat.gif&#34;))
+        except tkinter.TclError:
+            pass
+
+        self.event_handlers = event_handlers
+
+    def mainloop(self):
+        &#34;&#34;&#34;
+        Forwards mainloop call to the Tkinter instance
+
+        :return: None
+        &#34;&#34;&#34;
+        self.master.mainloop()
+
+    def destroy(self):
+        &#34;&#34;&#34;
+        Destroys tkinter instance
+
+        :return: None
+        &#34;&#34;&#34;
+        self.master.destroy()</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="ui.window.UsesDialog" href="#ui.window.UsesDialog">UsesDialog</a></li>
+</ul>
+<h3>Subclasses</h3>
+<ul class="hlist">
+<li><a title="ui.window.change_requests.ChangeRequestsWindow" href="change_requests.html#ui.window.change_requests.ChangeRequestsWindow">ChangeRequestsWindow</a></li>
+<li><a title="ui.window.database.DatabaseWindow" href="database.html#ui.window.database.DatabaseWindow">DatabaseWindow</a></li>
+<li><a title="ui.window.login.LoginWindow" href="login.html#ui.window.login.LoginWindow">LoginWindow</a></li>
+</ul>
+<h3>Methods</h3>
+<dl>
+<dt id="ui.window.TkinterWindow.destroy"><code class="name flex">
+<span>def <span class="ident">destroy</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Destroys tkinter instance</p>
+<p>:return: None</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def destroy(self):
+    &#34;&#34;&#34;
+    Destroys tkinter instance
+
+    :return: None
+    &#34;&#34;&#34;
+    self.master.destroy()</code></pre>
+</details>
+</dd>
+<dt id="ui.window.TkinterWindow.mainloop"><code class="name flex">
+<span>def <span class="ident">mainloop</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Forwards mainloop call to the Tkinter instance</p>
+<p>:return: None</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def mainloop(self):
+    &#34;&#34;&#34;
+    Forwards mainloop call to the Tkinter instance
+
+    :return: None
+    &#34;&#34;&#34;
+    self.master.mainloop()</code></pre>
+</details>
+</dd>
+</dl>
+<h3>Inherited members</h3>
+<ul class="hlist">
+<li><code><b><a title="ui.window.UsesDialog" href="#ui.window.UsesDialog">UsesDialog</a></b></code>:
+<ul class="hlist">
+<li><code><a title="ui.window.UsesDialog.show_confirm" href="#ui.window.UsesDialog.show_confirm">show_confirm</a></code></li>
+<li><code><a title="ui.window.UsesDialog.show_error" href="#ui.window.UsesDialog.show_error">show_error</a></code></li>
+<li><code><a title="ui.window.UsesDialog.show_file_picker" href="#ui.window.UsesDialog.show_file_picker">show_file_picker</a></code></li>
+<li><code><a title="ui.window.UsesDialog.show_info" href="#ui.window.UsesDialog.show_info">show_info</a></code></li>
+<li><code><a title="ui.window.UsesDialog.show_save_picker" href="#ui.window.UsesDialog.show_save_picker">show_save_picker</a></code></li>
+<li><code><a title="ui.window.UsesDialog.show_warning" href="#ui.window.UsesDialog.show_warning">show_warning</a></code></li>
+</ul>
+</li>
+</ul>
+</dd>
+<dt id="ui.window.UsesDialog"><code class="flex name class">
+<span>class <span class="ident">UsesDialog</span></span>
+</code></dt>
+<dd>
+<div class="desc"><p>A helper class for use inside of the views</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class UsesDialog:
+    &#34;&#34;&#34;
+    A helper class for use inside of the views
+    &#34;&#34;&#34;
+
+    @classmethod
+    def show_error(cls, title, message, **options):
+        &#34;&#34;&#34;
+        Helper method for showing an error dialog
+        Calls tkinter.messagebox.showerror
+        :param title: Title
+        :param message: Message
+        :param options: Options
+        :return: None
+        &#34;&#34;&#34;
+        messagebox.showerror(title=title, message=message, **options)
+
+    @classmethod
+    def show_info(cls, title, message, **options):
+        &#34;&#34;&#34;
+        Helper method for showing an info dialog
+        Calls tkinter.messagebox.showinfo
+        :param title: Title
+        :param message: Message
+        :param options: Options
+        :return: None
+        &#34;&#34;&#34;
+        messagebox.showinfo(title=title, message=message, **options)
+
+    @classmethod
+    def show_confirm(cls, title, message, **options):
+        &#34;&#34;&#34;
+        Helper method for showing a confirmation dialog
+        Calls tkinter.messagebox.askyesno
+        :param title: Title
+        :param message: Message
+        :param options: Options.
+        :return: bool True if &#34;yes&#34; was clicked
+        &#34;&#34;&#34;
+        return messagebox.askyesno(title=title, message=message, **options)
+
+    @classmethod
+    def show_warning(cls, title, message, **options):
+        &#34;&#34;&#34;
+        Helper method for showing an warning dialog
+        Calls tkinter.messagebox.showwarning
+        :param title: Title
+        :param message: Message
+        :param options: Options
+        :return: None
+        &#34;&#34;&#34;
+        messagebox.showwarning(title=title, message=message, **options)
+
+    @classmethod
+    def show_file_picker(cls, title=None, filetypes=None, **options):
+        &#34;&#34;&#34;
+        Helper method for a file picker dialog
+        :param title: Title
+        :param filetypes: valid file types
+        :return: filepath selected
+        &#34;&#34;&#34;
+        return askopenfilename(title=title, filetypes=filetypes, **options)
+
+    @classmethod
+    def show_save_picker(cls, title=None, filetypes=None, **options):
+        &#34;&#34;&#34;
+        Helper method for a save picker dialog
+        :param title: Title
+        :param filetypes: valid file types
+        :return: filepath selected
+        &#34;&#34;&#34;
+        return asksaveasfilename(title=title, filetypes=filetypes, **options)</code></pre>
+</details>
+<h3>Subclasses</h3>
+<ul class="hlist">
+<li><a title="ui.window.TkinterDialog" href="#ui.window.TkinterDialog">TkinterDialog</a></li>
+<li><a title="ui.window.TkinterWindow" href="#ui.window.TkinterWindow">TkinterWindow</a></li>
+</ul>
+<h3>Static methods</h3>
+<dl>
+<dt id="ui.window.UsesDialog.show_confirm"><code class="name flex">
+<span>def <span class="ident">show_confirm</span></span>(<span>title, message, **options)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Helper method for showing a confirmation dialog
+Calls tkinter.messagebox.askyesno
+:param title: Title
+:param message: Message
+:param options: Options.
+:return: bool True if "yes" was clicked</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@classmethod
+def show_confirm(cls, title, message, **options):
+    &#34;&#34;&#34;
+    Helper method for showing a confirmation dialog
+    Calls tkinter.messagebox.askyesno
+    :param title: Title
+    :param message: Message
+    :param options: Options.
+    :return: bool True if &#34;yes&#34; was clicked
+    &#34;&#34;&#34;
+    return messagebox.askyesno(title=title, message=message, **options)</code></pre>
+</details>
+</dd>
+<dt id="ui.window.UsesDialog.show_error"><code class="name flex">
+<span>def <span class="ident">show_error</span></span>(<span>title, message, **options)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Helper method for showing an error dialog
+Calls tkinter.messagebox.showerror
+:param title: Title
+:param message: Message
+:param options: Options
+:return: None</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@classmethod
+def show_error(cls, title, message, **options):
+    &#34;&#34;&#34;
+    Helper method for showing an error dialog
+    Calls tkinter.messagebox.showerror
+    :param title: Title
+    :param message: Message
+    :param options: Options
+    :return: None
+    &#34;&#34;&#34;
+    messagebox.showerror(title=title, message=message, **options)</code></pre>
+</details>
+</dd>
+<dt id="ui.window.UsesDialog.show_file_picker"><code class="name flex">
+<span>def <span class="ident">show_file_picker</span></span>(<span>title=None, filetypes=None, **options)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Helper method for a file picker dialog
+:param title: Title
+:param filetypes: valid file types
+:return: filepath selected</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@classmethod
+def show_file_picker(cls, title=None, filetypes=None, **options):
+    &#34;&#34;&#34;
+    Helper method for a file picker dialog
+    :param title: Title
+    :param filetypes: valid file types
+    :return: filepath selected
+    &#34;&#34;&#34;
+    return askopenfilename(title=title, filetypes=filetypes, **options)</code></pre>
+</details>
+</dd>
+<dt id="ui.window.UsesDialog.show_info"><code class="name flex">
+<span>def <span class="ident">show_info</span></span>(<span>title, message, **options)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Helper method for showing an info dialog
+Calls tkinter.messagebox.showinfo
+:param title: Title
+:param message: Message
+:param options: Options
+:return: None</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@classmethod
+def show_info(cls, title, message, **options):
+    &#34;&#34;&#34;
+    Helper method for showing an info dialog
+    Calls tkinter.messagebox.showinfo
+    :param title: Title
+    :param message: Message
+    :param options: Options
+    :return: None
+    &#34;&#34;&#34;
+    messagebox.showinfo(title=title, message=message, **options)</code></pre>
+</details>
+</dd>
+<dt id="ui.window.UsesDialog.show_save_picker"><code class="name flex">
+<span>def <span class="ident">show_save_picker</span></span>(<span>title=None, filetypes=None, **options)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Helper method for a save picker dialog
+:param title: Title
+:param filetypes: valid file types
+:return: filepath selected</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@classmethod
+def show_save_picker(cls, title=None, filetypes=None, **options):
+    &#34;&#34;&#34;
+    Helper method for a save picker dialog
+    :param title: Title
+    :param filetypes: valid file types
+    :return: filepath selected
+    &#34;&#34;&#34;
+    return asksaveasfilename(title=title, filetypes=filetypes, **options)</code></pre>
+</details>
+</dd>
+<dt id="ui.window.UsesDialog.show_warning"><code class="name flex">
+<span>def <span class="ident">show_warning</span></span>(<span>title, message, **options)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Helper method for showing an warning dialog
+Calls tkinter.messagebox.showwarning
+:param title: Title
+:param message: Message
+:param options: Options
+:return: None</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@classmethod
+def show_warning(cls, title, message, **options):
+    &#34;&#34;&#34;
+    Helper method for showing an warning dialog
+    Calls tkinter.messagebox.showwarning
+    :param title: Title
+    :param message: Message
+    :param options: Options
+    :return: None
+    &#34;&#34;&#34;
+    messagebox.showwarning(title=title, message=message, **options)</code></pre>
+</details>
+</dd>
+</dl>
+</dd>
+</dl>
+</section>
+</article>
+<nav id="sidebar">
+<h1>Index</h1>
+<div class="toc">
+<ul></ul>
+</div>
+<ul id="index">
+<li><h3>Super-module</h3>
+<ul>
+<li><code><a title="ui" href="../index.html">ui</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-submodules">Sub-modules</a></h3>
+<ul>
+<li><code><a title="ui.window.change_requests" href="change_requests.html">ui.window.change_requests</a></code></li>
+<li><code><a title="ui.window.database" href="database.html">ui.window.database</a></code></li>
+<li><code><a title="ui.window.dialogs" href="dialogs/index.html">ui.window.dialogs</a></code></li>
+<li><code><a title="ui.window.login" href="login.html">ui.window.login</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-classes">Classes</a></h3>
+<ul>
+<li>
+<h4><code><a title="ui.window.TkinterDialog" href="#ui.window.TkinterDialog">TkinterDialog</a></code></h4>
+</li>
+<li>
+<h4><code><a title="ui.window.TkinterWindow" href="#ui.window.TkinterWindow">TkinterWindow</a></code></h4>
+<ul class="">
+<li><code><a title="ui.window.TkinterWindow.destroy" href="#ui.window.TkinterWindow.destroy">destroy</a></code></li>
+<li><code><a title="ui.window.TkinterWindow.mainloop" href="#ui.window.TkinterWindow.mainloop">mainloop</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="ui.window.UsesDialog" href="#ui.window.UsesDialog">UsesDialog</a></code></h4>
+<ul class="two-column">
+<li><code><a title="ui.window.UsesDialog.show_confirm" href="#ui.window.UsesDialog.show_confirm">show_confirm</a></code></li>
+<li><code><a title="ui.window.UsesDialog.show_error" href="#ui.window.UsesDialog.show_error">show_error</a></code></li>
+<li><code><a title="ui.window.UsesDialog.show_file_picker" href="#ui.window.UsesDialog.show_file_picker">show_file_picker</a></code></li>
+<li><code><a title="ui.window.UsesDialog.show_info" href="#ui.window.UsesDialog.show_info">show_info</a></code></li>
+<li><code><a title="ui.window.UsesDialog.show_save_picker" href="#ui.window.UsesDialog.show_save_picker">show_save_picker</a></code></li>
+<li><code><a title="ui.window.UsesDialog.show_warning" href="#ui.window.UsesDialog.show_warning">show_warning</a></code></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</nav>
+</main>
+<footer id="footer">
+<p>Generated by <a href="https://pdoc3.github.io/pdoc"><cite>pdoc</cite> 0.9.2</a>.</p>
+</footer>
+</body>
+</html>

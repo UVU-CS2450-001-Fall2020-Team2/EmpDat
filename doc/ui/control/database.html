@@ -1,0 +1,1413 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
+<meta name="generator" content="pdoc 0.9.2" />
+<title>ui.control.database API documentation</title>
+<meta name="description" content="Main Controller of application" />
+<link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/sanitize.min.css" integrity="sha256-PK9q560IAAa6WVRRh76LtCaI8pjTJ2z11v0miyNNjrs=" crossorigin>
+<link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/typography.min.css" integrity="sha256-7l/o7C8jubJiy74VsKTidCy1yBkRtiUGbVkYBylBqUg=" crossorigin>
+<link rel="stylesheet preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/styles/github.min.css" crossorigin>
+<style>:root{--highlight-color:#fe9}.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:30px;overflow:hidden}#sidebar > *:last-child{margin-bottom:2cm}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:1em 0 .50em 0}h3{font-size:1.4em;margin:25px 0 10px 0}h4{margin:0;font-size:105%}h1:target,h2:target,h3:target,h4:target,h5:target,h6:target{background:var(--highlight-color);padding:.2em 0}a{color:#058;text-decoration:none;transition:color .3s ease-in-out}a:hover{color:#e82}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900}pre code{background:#f8f8f8;font-size:.8em;line-height:1.4em}code{background:#f2f2f1;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{background:#f8f8f8;border:0;border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0;padding:1ex}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{margin-top:.6em;font-weight:bold}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-weight:bold;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}dt:target .name{background:var(--highlight-color)}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}td{padding:0 .5em}.admonition{padding:.1em .5em;margin-bottom:1em}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%;height:100vh;overflow:auto;position:sticky;top:0}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.item .name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul{padding-left:1.5em}.toc > ul > li{margin-top:.5em}}</style>
+<style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/highlight.min.js" integrity="sha256-Uv3H6lx7dJmRfRvH8TH6kJD1TSK1aFcwgx+mdg3epi8=" crossorigin></script>
+<script>window.addEventListener('DOMContentLoaded', () => hljs.initHighlighting())</script>
+</head>
+<body>
+<main>
+<article id="content">
+<header>
+<h1 class="title">Module <code>ui.control.database</code></h1>
+</header>
+<section id="section-intro">
+<p>Main Controller of application</p>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">&#34;&#34;&#34;
+Main Controller of application
+&#34;&#34;&#34;
+
+import datetime
+import sys
+
+from lib import exporter
+from lib.cli import import_csv
+from lib.cli.payroll import run_payroll
+from lib.layer.security import ChangeRequestException, SecurityException
+from lib.model.employee import Employee
+from lib.model.receipt import Receipt
+from lib.model.time_sheet import TimeSheet
+from lib.repository.validator import is_valid_against, ValidationException
+from lib.utils import sha_hash
+from ui import store
+from ui.control import Controller
+from ui.control.change_requests import ChangeRequestsController
+from ui.window.database import DatabaseWindow
+from ui.window.dialogs.about_empdat import AboutEmpDatDialog
+from ui.window.dialogs.add_receipt import AddReceiptDialog
+from ui.window.dialogs.add_timesheet import AddTimesheetDialog
+from ui.window.dialogs.my_password import MyPasswordDialog
+from ui.window.dialogs.others_password import PasswordDialog
+
+
+def _open_change_requests():
+    &#34;&#34;&#34;
+    Shows change requests window
+    :return: None
+    &#34;&#34;&#34;
+    ChangeRequestsController().show()
+
+
+def _on_password_save(view, dialog, employee_id, old_pass: str,  # pylint: disable=too-many-arguments
+                      password: str, password_confirm: str, require_old=True):
+    employee = Employee.read(employee_id)
+
+    if require_old and sha_hash(old_pass) != employee.password:
+        view.show_error(&#39;Error&#39;, &#39;Old password does not match!&#39;)
+        return
+
+    if password != password_confirm:
+        view.show_error(&#39;Error&#39;, &#39;New Passwords do not match!&#39;)
+        return
+
+    if not is_valid_against(&#39;password&#39;, password):
+        view.show_error(&#39;Error&#39;, &#39;Passwords must have at least 9 characters (with at least &#39;
+                                 &#39;1 number, 1 special character, and upper and lowercase &#39;
+                                 &#39;characters)!&#39;)
+        return
+
+    Employee.read(employee_id).update_password(password)
+
+    view.set_status(&#39;Changing password successful!&#39;)
+    view.show_info(&#39;Info&#39;, &#39;Changing password successful!&#39;)
+    dialog.destroy()
+
+
+class DatabaseController(Controller):
+    &#34;&#34;&#34;
+    Controller for the employee table view
+    &#34;&#34;&#34;
+
+    def __init__(self):
+        &#34;&#34;&#34;
+        Uses DatabaseWindow
+        &#34;&#34;&#34;
+        super().__init__(DatabaseWindow({
+            &#39;new_employee&#39;: self.new_employee,
+            &#39;new_receipt&#39;: self.new_receipt,
+            &#39;new_timesheet&#39;: self.new_timesheet,
+            &#39;run_payroll&#39;: self.run_payroll,
+            &#39;change_my_password&#39;: self.change_my_password,
+            &#39;save&#39;: self.save,
+            &#39;delete&#39;: self.delete,
+            &#39;refresh&#39;: self.refresh,
+            &#39;file&gt;logout&#39;: self.logout,
+            &#39;import&gt;employees&#39;: self.import_employees,
+            &#39;import&gt;receipts&#39;: self.import_receipts,
+            &#39;import&gt;timesheets&#39;: self.import_timesheets,
+            &#39;admin&gt;review&#39;: _open_change_requests,
+            &#39;admin&gt;change_password&#39;: self.change_password,
+            &#39;export&gt;employees&#39;: self.export_to_csv,
+            &#39;export&gt;pdf_employees&#39;: self.export_to_pdf,
+            &#39;help&gt;about_empdat&#39;: self.about_empdat,
+        }))
+
+        self.new_id = 0
+
+    def load(self):
+        &#34;&#34;&#34;
+        Loads all employees and displays them on the table
+        :return: None
+        &#34;&#34;&#34;
+        employees = Employee.read_all()
+        i = 0
+        for employee in employees:
+            i += 1
+            self.view.add_to_result(employee.id, employee.to_view_model())
+
+        self.view.table.autoResizeColumns()
+
+    def refresh(self):
+        &#34;&#34;&#34;
+        Wipes and reloads the table
+        :return: None
+        &#34;&#34;&#34;
+        self.view.destroy_results()
+        self.load()
+        self.view.table.unsaved = set()
+        self.view.table.redraw()
+
+    def show(self):
+        &#34;&#34;&#34;
+        Overrides show to load data first
+        :return: None
+        &#34;&#34;&#34;
+        self.load()
+
+        super().show()
+
+    def run_payroll(self):
+        &#34;&#34;&#34;
+        Runs the payroll process, asks where to save it
+        :return: None
+        &#34;&#34;&#34;
+        filepath = self.view.show_save_picker(
+            title=&#39;Save Payroll&#39;,
+            filetypes=[(&#39;Text File&#39;, &#39;*.txt&#39;)]
+        )
+
+        if not filepath:
+            self.view.set_status(&#39;Payroll cancelled&#39;)
+            return
+
+        run_payroll(filepath)
+        self.view.show_info(&#39;Success&#39;, f&#39;Payroll was processed and was written to: {filepath}!&#39;)
+        self.view.set_status(&#39;Payroll was processed successfully!&#39;)
+
+    def save(self):
+        &#34;&#34;&#34;
+        When Save is pressed, the change is either performed, or a change request is submitted
+        :return: None
+        &#34;&#34;&#34;
+        self.view.on_before_save()
+        change_request_submitted = False
+        for employee_id in self.view.table.unsaved:
+            view_model = self.view.table.model.data[employee_id]
+
+            is_new = False
+            if isinstance(employee_id, str) and &#34;NEW&#34; in employee_id:
+                view_model[Employee.view_columns[&#39;id&#39;]] = None
+                is_new = True
+
+            try:
+                employee = Employee.from_view_model(view_model)
+                if is_new:
+                    Employee.create(employee)
+                else:
+                    Employee.update(employee)
+            except ChangeRequestException:
+                change_request_submitted = True
+            except SecurityException:
+                self.view.highlight_invalid_rows([employee_id])
+                self.view.show_error(&#39;Error&#39;, &#39;Access Denied&#39;)
+                return
+            except ValidationException as error:
+                self.view.highlight_invalid_cell(employee_id,
+                                                 Employee.view_columns[error.database_field])
+                self.view.show_error(&#39;Error&#39;, f&#39;Invalid data: {error}&#39;)
+                self.view.set_status(f&#39;Invalid data: {error}&#39;)
+                return
+
+        if change_request_submitted:
+            self.view.show_info(&#39;Success&#39;, &#39;Request to Change Submitted!&#39;)
+            self.view.set_status(f&#39;Request to Change {len(self.view.table.unsaved)} &#39;
+                                 f&#39;employees Submitted!&#39;)
+        else:
+            self.view.set_status(f&#39;Saved {len(self.view.table.unsaved)} employees successfully!&#39;)
+            self.view.master.bell()
+        self.refresh()
+
+    def delete(self):
+        &#34;&#34;&#34;
+        When Delete is pressed, the change is either performed, or a change request is submitted
+        :return: None
+        &#34;&#34;&#34;
+        if self.view.show_confirm(title=&#39;Confirm Employee Deletion&#39;,
+                                  message=&#39;Are you sure you want to delete the employee(s)?&#39;):
+            ids = self.view.table.get_selectedRecordNames()
+            for employee_id in ids:
+                try:
+                    Employee.destroy(employee_id)
+                except SecurityException:
+                    self.view.show_error(&#39;Access Denied&#39;, &#39;Insufficient permission to delete &#39;
+                                                          &#39;selected employees&#39;)
+                    self.refresh()
+                    break
+            self.view.show_info(&#39;Deletion Successful&#39;, &#39;The selected employee(s) &#39;
+                                                       &#39;were deleted successfully!&#39;)
+            self.refresh()
+
+    def new_employee(self):
+        &#34;&#34;&#34;
+        When New is pressed.
+        :return: None
+        &#34;&#34;&#34;
+        self.view.new_employee(self.new_id, Employee.new_empty().to_view_model())
+        self.new_id += 1
+
+    def change_my_password(self):
+        &#34;&#34;&#34;
+        Shows the change my password dialog and saves it
+        :return: None
+        &#34;&#34;&#34;
+
+        def on_save(dialog, old_pass: str, password: str, password_confirm: str):
+            _on_password_save(self.view, dialog, store.AUTHENTICATED_USER.id,
+                              old_pass, password, password_confirm)
+
+        MyPasswordDialog({
+            &#39;save&#39;: on_save
+        })
+
+    def change_password(self):
+        &#34;&#34;&#34;
+        Shows the change others&#39; passwords dialog and saves it
+        :return: None
+        &#34;&#34;&#34;
+
+        def on_save(dialog, employee_id, password: str, password_confirm: str):
+            _on_password_save(self.view, dialog, employee_id, None,
+                              password, password_confirm, require_old=False)
+
+        PasswordDialog({
+            &#39;save&#39;: on_save
+        }, Employee.read_all())
+
+    def import_employees(self):
+        &#34;&#34;&#34;
+        Uses import csv library from CLI
+        :return: None
+        &#34;&#34;&#34;
+        filepath = self.view.show_file_picker(
+            title=&#39;Import Employees (CSV)&#39;,
+            filetypes=((&#39;CSV File&#39;, &#39;*.csv&#39;), (&#39;Text File&#39;, &#39;*.txt&#39;))
+        )
+
+        if not filepath:
+            self.view.set_status(&#39;Importing employees cancelled&#39;)
+            return
+
+        import_csv.import_employees(filepath, from_cmd=False)
+        self.view.set_status(&#39;Importing employees successful!&#39;)
+        self.refresh()
+
+    def import_receipts(self):
+        &#34;&#34;&#34;
+        Uses import csv library from CLI
+        :return: None
+        &#34;&#34;&#34;
+        filepath = self.view.show_file_picker(
+            title=&#39;Import Receipts&#39;,
+            filetypes=((&#39;Text File&#39;, &#39;*.txt&#39;), (&#39;CSV File&#39;, &#39;*.csv&#39;))
+        )
+
+        if not filepath:
+            self.view.set_status(&#39;Importing receipts cancelled&#39;)
+            return
+
+        import_csv.import_receipts(filepath, from_cmd=False)
+        self.view.set_status(&#39;Importing receipts successful!&#39;)
+        self.refresh()
+
+    def import_timesheets(self):
+        &#34;&#34;&#34;
+        Uses import csv library from CLI
+        :return: None
+        &#34;&#34;&#34;
+        filepath = self.view.show_file_picker(
+            title=&#39;Import Time Sheets&#39;,
+            filetypes=((&#39;Text File&#39;, &#39;*.txt&#39;), (&#39;CSV File&#39;, &#39;*.csv&#39;))
+        )
+
+        if not filepath:
+            self.view.set_status(&#39;Importing time sheets cancelled&#39;)
+            return
+
+        import_csv.import_timesheets(filepath, from_cmd=False)
+        self.view.set_status(&#39;Importing time sheets successful!&#39;)
+        self.refresh()
+
+    def new_receipt(self):
+        &#34;&#34;&#34;
+        Shows the add receipt dialog and saves it
+        :return: None
+        &#34;&#34;&#34;
+
+        def on_save(dialog, employee_id: int, amount: float):
+            try:
+                amount = float(amount)
+            except ValueError:
+                self.view.show_error(&#39;Error&#39;, &#39;Invalid amount given!&#39;)
+                return
+
+            if Employee.read(employee_id):
+                receipt = Receipt({
+                    &#39;user_id&#39;: employee_id,
+                    &#39;amount&#39;: amount
+                })
+                try:
+                    Receipt.create(receipt)
+                    self.view.show_info(&#39;Info&#39;, &#39;Receipt created successfully!&#39;)
+                except SecurityException as error:
+                    self.view.show_error(&#39;Error&#39;, f&#39;Unable to create receipt: {error}&#39;)
+                    return
+                except ChangeRequestException:
+                    self.view.show_info(&#39;Info&#39;, &#39;A change request has been created &#39;
+                                                &#39;and will be reviewed.&#39;)
+
+            self.view.set_status(&#39;Receipt creation successful!&#39;)
+            dialog.destroy()
+
+        AddReceiptDialog({
+            &#39;save&#39;: on_save
+        }, Employee.read_all())
+
+    def new_timesheet(self):
+        &#34;&#34;&#34;
+        Shows the add timesheet dialog and saves it
+        :return: None
+        &#34;&#34;&#34;
+
+        def on_save(dialog, employee_id: int, date: datetime.date,  # pylint: disable=too-many-arguments
+                    hour_in, min_in, hour_out, min_out):
+            try:
+                hour_in = int(hour_in)
+                min_in = int(min_in)
+                hour_out = int(hour_out)
+                min_out = int(min_out)
+            except ValueError:
+                self.view.show_error(&#39;Error&#39;, &#39;Invalid dates given!&#39;)
+                return
+
+            time_begin = datetime.datetime.strptime(f&#34;{hour_in} {min_in}&#34;, &#34;%H %M&#34;).time()
+            time_end = datetime.datetime.strptime(f&#34;{hour_out} {min_out}&#34;, &#34;%H %M&#34;).time()
+            datetime_begin = datetime.datetime.combine(date, time_begin)
+            datetime_end = datetime.datetime.combine(date, time_end)
+
+            if Employee.read(employee_id):
+                timesheet = TimeSheet({
+                    &#39;user_id&#39;: employee_id,
+                    &#39;datetime_begin&#39;: datetime_begin,
+                    &#39;datetime_end&#39;: datetime_end,
+                })
+                try:
+                    TimeSheet.create(timesheet)
+                    self.view.show_info(&#39;Success&#39;, &#39;Timesheet created successfully!&#39;)
+                except SecurityException:
+                    self.view.show_error(&#39;Error&#39;, &#39;Access Denied&#39;)
+                    return
+                except ChangeRequestException:
+                    self.view.show_info(&#39;Info&#39;, &#39;A change request has been created &#39;
+                                                &#39;and will be reviewed.&#39;)
+            self.view.set_status(&#39;Timesheet creation successful!&#39;)
+            dialog.destroy()
+
+        AddTimesheetDialog({
+            &#39;save&#39;: on_save
+        }, Employee.read_all())
+
+    def export_to_csv(self):
+        &#34;&#34;&#34;
+        Exports the table to a CSV
+        :return: None
+        &#34;&#34;&#34;
+        self.view.table.exportTable()
+
+    def export_to_pdf(self):
+        &#34;&#34;&#34;
+        Exports the table to a PDF
+        :return: None
+        &#34;&#34;&#34;
+        filepath = self.view.show_save_picker(
+            title=&#39;Export Employee Directory (PDF)&#39;,
+            filetypes=[(&#39;PDF Document&#39;, &#39;*.pdf&#39;)]
+        )
+
+        if not filepath:
+            self.view.set_status(&#39;Export cancelled&#39;)
+            return
+
+        try:
+            if not exporter.html_to_pdf(exporter.table_to_html(self.view.table.model), filepath):
+                self.view.show_error(&#39;Export Failed!&#39;, &#39;An error occurred while creating the PDF!&#39;)
+                self.view.set_status(&#39;Export Failed!&#39;)
+            else:
+                self.view.show_info(&#39;Export Success!&#39;, &#39;The PDF was created successfully!&#39;)
+                self.view.set_status(&#39;Export Success!&#39;)
+        except IOError as error:
+            self.view.show_error(&#39;Export Failed!&#39;, f&#39;An error occurred &#39;
+            f&#39;while creating the PDF! {error}&#39;)
+            self.view.set_status(&#39;Export Failed!&#39;)
+
+    def about_empdat(self):  # pylint: disable=no-self-use
+        &#34;&#34;&#34;
+        Shows the About EmpDat Dialog
+        :return: None
+        &#34;&#34;&#34;
+        AboutEmpDatDialog()
+
+    def logout(self):  # pylint: disable=no-self-use
+        &#34;&#34;&#34;
+        Logout hook. Currently unused. Exits the app
+        :return: None
+        &#34;&#34;&#34;
+        sys.exit()</code></pre>
+</details>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+<h2 class="section-title" id="header-classes">Classes</h2>
+<dl>
+<dt id="ui.control.database.DatabaseController"><code class="flex name class">
+<span>class <span class="ident">DatabaseController</span></span>
+</code></dt>
+<dd>
+<div class="desc"><p>Controller for the employee table view</p>
+<p>Uses DatabaseWindow</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class DatabaseController(Controller):
+    &#34;&#34;&#34;
+    Controller for the employee table view
+    &#34;&#34;&#34;
+
+    def __init__(self):
+        &#34;&#34;&#34;
+        Uses DatabaseWindow
+        &#34;&#34;&#34;
+        super().__init__(DatabaseWindow({
+            &#39;new_employee&#39;: self.new_employee,
+            &#39;new_receipt&#39;: self.new_receipt,
+            &#39;new_timesheet&#39;: self.new_timesheet,
+            &#39;run_payroll&#39;: self.run_payroll,
+            &#39;change_my_password&#39;: self.change_my_password,
+            &#39;save&#39;: self.save,
+            &#39;delete&#39;: self.delete,
+            &#39;refresh&#39;: self.refresh,
+            &#39;file&gt;logout&#39;: self.logout,
+            &#39;import&gt;employees&#39;: self.import_employees,
+            &#39;import&gt;receipts&#39;: self.import_receipts,
+            &#39;import&gt;timesheets&#39;: self.import_timesheets,
+            &#39;admin&gt;review&#39;: _open_change_requests,
+            &#39;admin&gt;change_password&#39;: self.change_password,
+            &#39;export&gt;employees&#39;: self.export_to_csv,
+            &#39;export&gt;pdf_employees&#39;: self.export_to_pdf,
+            &#39;help&gt;about_empdat&#39;: self.about_empdat,
+        }))
+
+        self.new_id = 0
+
+    def load(self):
+        &#34;&#34;&#34;
+        Loads all employees and displays them on the table
+        :return: None
+        &#34;&#34;&#34;
+        employees = Employee.read_all()
+        i = 0
+        for employee in employees:
+            i += 1
+            self.view.add_to_result(employee.id, employee.to_view_model())
+
+        self.view.table.autoResizeColumns()
+
+    def refresh(self):
+        &#34;&#34;&#34;
+        Wipes and reloads the table
+        :return: None
+        &#34;&#34;&#34;
+        self.view.destroy_results()
+        self.load()
+        self.view.table.unsaved = set()
+        self.view.table.redraw()
+
+    def show(self):
+        &#34;&#34;&#34;
+        Overrides show to load data first
+        :return: None
+        &#34;&#34;&#34;
+        self.load()
+
+        super().show()
+
+    def run_payroll(self):
+        &#34;&#34;&#34;
+        Runs the payroll process, asks where to save it
+        :return: None
+        &#34;&#34;&#34;
+        filepath = self.view.show_save_picker(
+            title=&#39;Save Payroll&#39;,
+            filetypes=[(&#39;Text File&#39;, &#39;*.txt&#39;)]
+        )
+
+        if not filepath:
+            self.view.set_status(&#39;Payroll cancelled&#39;)
+            return
+
+        run_payroll(filepath)
+        self.view.show_info(&#39;Success&#39;, f&#39;Payroll was processed and was written to: {filepath}!&#39;)
+        self.view.set_status(&#39;Payroll was processed successfully!&#39;)
+
+    def save(self):
+        &#34;&#34;&#34;
+        When Save is pressed, the change is either performed, or a change request is submitted
+        :return: None
+        &#34;&#34;&#34;
+        self.view.on_before_save()
+        change_request_submitted = False
+        for employee_id in self.view.table.unsaved:
+            view_model = self.view.table.model.data[employee_id]
+
+            is_new = False
+            if isinstance(employee_id, str) and &#34;NEW&#34; in employee_id:
+                view_model[Employee.view_columns[&#39;id&#39;]] = None
+                is_new = True
+
+            try:
+                employee = Employee.from_view_model(view_model)
+                if is_new:
+                    Employee.create(employee)
+                else:
+                    Employee.update(employee)
+            except ChangeRequestException:
+                change_request_submitted = True
+            except SecurityException:
+                self.view.highlight_invalid_rows([employee_id])
+                self.view.show_error(&#39;Error&#39;, &#39;Access Denied&#39;)
+                return
+            except ValidationException as error:
+                self.view.highlight_invalid_cell(employee_id,
+                                                 Employee.view_columns[error.database_field])
+                self.view.show_error(&#39;Error&#39;, f&#39;Invalid data: {error}&#39;)
+                self.view.set_status(f&#39;Invalid data: {error}&#39;)
+                return
+
+        if change_request_submitted:
+            self.view.show_info(&#39;Success&#39;, &#39;Request to Change Submitted!&#39;)
+            self.view.set_status(f&#39;Request to Change {len(self.view.table.unsaved)} &#39;
+                                 f&#39;employees Submitted!&#39;)
+        else:
+            self.view.set_status(f&#39;Saved {len(self.view.table.unsaved)} employees successfully!&#39;)
+            self.view.master.bell()
+        self.refresh()
+
+    def delete(self):
+        &#34;&#34;&#34;
+        When Delete is pressed, the change is either performed, or a change request is submitted
+        :return: None
+        &#34;&#34;&#34;
+        if self.view.show_confirm(title=&#39;Confirm Employee Deletion&#39;,
+                                  message=&#39;Are you sure you want to delete the employee(s)?&#39;):
+            ids = self.view.table.get_selectedRecordNames()
+            for employee_id in ids:
+                try:
+                    Employee.destroy(employee_id)
+                except SecurityException:
+                    self.view.show_error(&#39;Access Denied&#39;, &#39;Insufficient permission to delete &#39;
+                                                          &#39;selected employees&#39;)
+                    self.refresh()
+                    break
+            self.view.show_info(&#39;Deletion Successful&#39;, &#39;The selected employee(s) &#39;
+                                                       &#39;were deleted successfully!&#39;)
+            self.refresh()
+
+    def new_employee(self):
+        &#34;&#34;&#34;
+        When New is pressed.
+        :return: None
+        &#34;&#34;&#34;
+        self.view.new_employee(self.new_id, Employee.new_empty().to_view_model())
+        self.new_id += 1
+
+    def change_my_password(self):
+        &#34;&#34;&#34;
+        Shows the change my password dialog and saves it
+        :return: None
+        &#34;&#34;&#34;
+
+        def on_save(dialog, old_pass: str, password: str, password_confirm: str):
+            _on_password_save(self.view, dialog, store.AUTHENTICATED_USER.id,
+                              old_pass, password, password_confirm)
+
+        MyPasswordDialog({
+            &#39;save&#39;: on_save
+        })
+
+    def change_password(self):
+        &#34;&#34;&#34;
+        Shows the change others&#39; passwords dialog and saves it
+        :return: None
+        &#34;&#34;&#34;
+
+        def on_save(dialog, employee_id, password: str, password_confirm: str):
+            _on_password_save(self.view, dialog, employee_id, None,
+                              password, password_confirm, require_old=False)
+
+        PasswordDialog({
+            &#39;save&#39;: on_save
+        }, Employee.read_all())
+
+    def import_employees(self):
+        &#34;&#34;&#34;
+        Uses import csv library from CLI
+        :return: None
+        &#34;&#34;&#34;
+        filepath = self.view.show_file_picker(
+            title=&#39;Import Employees (CSV)&#39;,
+            filetypes=((&#39;CSV File&#39;, &#39;*.csv&#39;), (&#39;Text File&#39;, &#39;*.txt&#39;))
+        )
+
+        if not filepath:
+            self.view.set_status(&#39;Importing employees cancelled&#39;)
+            return
+
+        import_csv.import_employees(filepath, from_cmd=False)
+        self.view.set_status(&#39;Importing employees successful!&#39;)
+        self.refresh()
+
+    def import_receipts(self):
+        &#34;&#34;&#34;
+        Uses import csv library from CLI
+        :return: None
+        &#34;&#34;&#34;
+        filepath = self.view.show_file_picker(
+            title=&#39;Import Receipts&#39;,
+            filetypes=((&#39;Text File&#39;, &#39;*.txt&#39;), (&#39;CSV File&#39;, &#39;*.csv&#39;))
+        )
+
+        if not filepath:
+            self.view.set_status(&#39;Importing receipts cancelled&#39;)
+            return
+
+        import_csv.import_receipts(filepath, from_cmd=False)
+        self.view.set_status(&#39;Importing receipts successful!&#39;)
+        self.refresh()
+
+    def import_timesheets(self):
+        &#34;&#34;&#34;
+        Uses import csv library from CLI
+        :return: None
+        &#34;&#34;&#34;
+        filepath = self.view.show_file_picker(
+            title=&#39;Import Time Sheets&#39;,
+            filetypes=((&#39;Text File&#39;, &#39;*.txt&#39;), (&#39;CSV File&#39;, &#39;*.csv&#39;))
+        )
+
+        if not filepath:
+            self.view.set_status(&#39;Importing time sheets cancelled&#39;)
+            return
+
+        import_csv.import_timesheets(filepath, from_cmd=False)
+        self.view.set_status(&#39;Importing time sheets successful!&#39;)
+        self.refresh()
+
+    def new_receipt(self):
+        &#34;&#34;&#34;
+        Shows the add receipt dialog and saves it
+        :return: None
+        &#34;&#34;&#34;
+
+        def on_save(dialog, employee_id: int, amount: float):
+            try:
+                amount = float(amount)
+            except ValueError:
+                self.view.show_error(&#39;Error&#39;, &#39;Invalid amount given!&#39;)
+                return
+
+            if Employee.read(employee_id):
+                receipt = Receipt({
+                    &#39;user_id&#39;: employee_id,
+                    &#39;amount&#39;: amount
+                })
+                try:
+                    Receipt.create(receipt)
+                    self.view.show_info(&#39;Info&#39;, &#39;Receipt created successfully!&#39;)
+                except SecurityException as error:
+                    self.view.show_error(&#39;Error&#39;, f&#39;Unable to create receipt: {error}&#39;)
+                    return
+                except ChangeRequestException:
+                    self.view.show_info(&#39;Info&#39;, &#39;A change request has been created &#39;
+                                                &#39;and will be reviewed.&#39;)
+
+            self.view.set_status(&#39;Receipt creation successful!&#39;)
+            dialog.destroy()
+
+        AddReceiptDialog({
+            &#39;save&#39;: on_save
+        }, Employee.read_all())
+
+    def new_timesheet(self):
+        &#34;&#34;&#34;
+        Shows the add timesheet dialog and saves it
+        :return: None
+        &#34;&#34;&#34;
+
+        def on_save(dialog, employee_id: int, date: datetime.date,  # pylint: disable=too-many-arguments
+                    hour_in, min_in, hour_out, min_out):
+            try:
+                hour_in = int(hour_in)
+                min_in = int(min_in)
+                hour_out = int(hour_out)
+                min_out = int(min_out)
+            except ValueError:
+                self.view.show_error(&#39;Error&#39;, &#39;Invalid dates given!&#39;)
+                return
+
+            time_begin = datetime.datetime.strptime(f&#34;{hour_in} {min_in}&#34;, &#34;%H %M&#34;).time()
+            time_end = datetime.datetime.strptime(f&#34;{hour_out} {min_out}&#34;, &#34;%H %M&#34;).time()
+            datetime_begin = datetime.datetime.combine(date, time_begin)
+            datetime_end = datetime.datetime.combine(date, time_end)
+
+            if Employee.read(employee_id):
+                timesheet = TimeSheet({
+                    &#39;user_id&#39;: employee_id,
+                    &#39;datetime_begin&#39;: datetime_begin,
+                    &#39;datetime_end&#39;: datetime_end,
+                })
+                try:
+                    TimeSheet.create(timesheet)
+                    self.view.show_info(&#39;Success&#39;, &#39;Timesheet created successfully!&#39;)
+                except SecurityException:
+                    self.view.show_error(&#39;Error&#39;, &#39;Access Denied&#39;)
+                    return
+                except ChangeRequestException:
+                    self.view.show_info(&#39;Info&#39;, &#39;A change request has been created &#39;
+                                                &#39;and will be reviewed.&#39;)
+            self.view.set_status(&#39;Timesheet creation successful!&#39;)
+            dialog.destroy()
+
+        AddTimesheetDialog({
+            &#39;save&#39;: on_save
+        }, Employee.read_all())
+
+    def export_to_csv(self):
+        &#34;&#34;&#34;
+        Exports the table to a CSV
+        :return: None
+        &#34;&#34;&#34;
+        self.view.table.exportTable()
+
+    def export_to_pdf(self):
+        &#34;&#34;&#34;
+        Exports the table to a PDF
+        :return: None
+        &#34;&#34;&#34;
+        filepath = self.view.show_save_picker(
+            title=&#39;Export Employee Directory (PDF)&#39;,
+            filetypes=[(&#39;PDF Document&#39;, &#39;*.pdf&#39;)]
+        )
+
+        if not filepath:
+            self.view.set_status(&#39;Export cancelled&#39;)
+            return
+
+        try:
+            if not exporter.html_to_pdf(exporter.table_to_html(self.view.table.model), filepath):
+                self.view.show_error(&#39;Export Failed!&#39;, &#39;An error occurred while creating the PDF!&#39;)
+                self.view.set_status(&#39;Export Failed!&#39;)
+            else:
+                self.view.show_info(&#39;Export Success!&#39;, &#39;The PDF was created successfully!&#39;)
+                self.view.set_status(&#39;Export Success!&#39;)
+        except IOError as error:
+            self.view.show_error(&#39;Export Failed!&#39;, f&#39;An error occurred &#39;
+            f&#39;while creating the PDF! {error}&#39;)
+            self.view.set_status(&#39;Export Failed!&#39;)
+
+    def about_empdat(self):  # pylint: disable=no-self-use
+        &#34;&#34;&#34;
+        Shows the About EmpDat Dialog
+        :return: None
+        &#34;&#34;&#34;
+        AboutEmpDatDialog()
+
+    def logout(self):  # pylint: disable=no-self-use
+        &#34;&#34;&#34;
+        Logout hook. Currently unused. Exits the app
+        :return: None
+        &#34;&#34;&#34;
+        sys.exit()</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="ui.control.Controller" href="index.html#ui.control.Controller">Controller</a></li>
+</ul>
+<h3>Methods</h3>
+<dl>
+<dt id="ui.control.database.DatabaseController.about_empdat"><code class="name flex">
+<span>def <span class="ident">about_empdat</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Shows the About EmpDat Dialog
+:return: None</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def about_empdat(self):  # pylint: disable=no-self-use
+    &#34;&#34;&#34;
+    Shows the About EmpDat Dialog
+    :return: None
+    &#34;&#34;&#34;
+    AboutEmpDatDialog()</code></pre>
+</details>
+</dd>
+<dt id="ui.control.database.DatabaseController.change_my_password"><code class="name flex">
+<span>def <span class="ident">change_my_password</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Shows the change my password dialog and saves it
+:return: None</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def change_my_password(self):
+    &#34;&#34;&#34;
+    Shows the change my password dialog and saves it
+    :return: None
+    &#34;&#34;&#34;
+
+    def on_save(dialog, old_pass: str, password: str, password_confirm: str):
+        _on_password_save(self.view, dialog, store.AUTHENTICATED_USER.id,
+                          old_pass, password, password_confirm)
+
+    MyPasswordDialog({
+        &#39;save&#39;: on_save
+    })</code></pre>
+</details>
+</dd>
+<dt id="ui.control.database.DatabaseController.change_password"><code class="name flex">
+<span>def <span class="ident">change_password</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Shows the change others' passwords dialog and saves it
+:return: None</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def change_password(self):
+    &#34;&#34;&#34;
+    Shows the change others&#39; passwords dialog and saves it
+    :return: None
+    &#34;&#34;&#34;
+
+    def on_save(dialog, employee_id, password: str, password_confirm: str):
+        _on_password_save(self.view, dialog, employee_id, None,
+                          password, password_confirm, require_old=False)
+
+    PasswordDialog({
+        &#39;save&#39;: on_save
+    }, Employee.read_all())</code></pre>
+</details>
+</dd>
+<dt id="ui.control.database.DatabaseController.delete"><code class="name flex">
+<span>def <span class="ident">delete</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>When Delete is pressed, the change is either performed, or a change request is submitted
+:return: None</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def delete(self):
+    &#34;&#34;&#34;
+    When Delete is pressed, the change is either performed, or a change request is submitted
+    :return: None
+    &#34;&#34;&#34;
+    if self.view.show_confirm(title=&#39;Confirm Employee Deletion&#39;,
+                              message=&#39;Are you sure you want to delete the employee(s)?&#39;):
+        ids = self.view.table.get_selectedRecordNames()
+        for employee_id in ids:
+            try:
+                Employee.destroy(employee_id)
+            except SecurityException:
+                self.view.show_error(&#39;Access Denied&#39;, &#39;Insufficient permission to delete &#39;
+                                                      &#39;selected employees&#39;)
+                self.refresh()
+                break
+        self.view.show_info(&#39;Deletion Successful&#39;, &#39;The selected employee(s) &#39;
+                                                   &#39;were deleted successfully!&#39;)
+        self.refresh()</code></pre>
+</details>
+</dd>
+<dt id="ui.control.database.DatabaseController.export_to_csv"><code class="name flex">
+<span>def <span class="ident">export_to_csv</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Exports the table to a CSV
+:return: None</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def export_to_csv(self):
+    &#34;&#34;&#34;
+    Exports the table to a CSV
+    :return: None
+    &#34;&#34;&#34;
+    self.view.table.exportTable()</code></pre>
+</details>
+</dd>
+<dt id="ui.control.database.DatabaseController.export_to_pdf"><code class="name flex">
+<span>def <span class="ident">export_to_pdf</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Exports the table to a PDF
+:return: None</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def export_to_pdf(self):
+    &#34;&#34;&#34;
+    Exports the table to a PDF
+    :return: None
+    &#34;&#34;&#34;
+    filepath = self.view.show_save_picker(
+        title=&#39;Export Employee Directory (PDF)&#39;,
+        filetypes=[(&#39;PDF Document&#39;, &#39;*.pdf&#39;)]
+    )
+
+    if not filepath:
+        self.view.set_status(&#39;Export cancelled&#39;)
+        return
+
+    try:
+        if not exporter.html_to_pdf(exporter.table_to_html(self.view.table.model), filepath):
+            self.view.show_error(&#39;Export Failed!&#39;, &#39;An error occurred while creating the PDF!&#39;)
+            self.view.set_status(&#39;Export Failed!&#39;)
+        else:
+            self.view.show_info(&#39;Export Success!&#39;, &#39;The PDF was created successfully!&#39;)
+            self.view.set_status(&#39;Export Success!&#39;)
+    except IOError as error:
+        self.view.show_error(&#39;Export Failed!&#39;, f&#39;An error occurred &#39;
+        f&#39;while creating the PDF! {error}&#39;)
+        self.view.set_status(&#39;Export Failed!&#39;)</code></pre>
+</details>
+</dd>
+<dt id="ui.control.database.DatabaseController.import_employees"><code class="name flex">
+<span>def <span class="ident">import_employees</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Uses import csv library from CLI
+:return: None</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def import_employees(self):
+    &#34;&#34;&#34;
+    Uses import csv library from CLI
+    :return: None
+    &#34;&#34;&#34;
+    filepath = self.view.show_file_picker(
+        title=&#39;Import Employees (CSV)&#39;,
+        filetypes=((&#39;CSV File&#39;, &#39;*.csv&#39;), (&#39;Text File&#39;, &#39;*.txt&#39;))
+    )
+
+    if not filepath:
+        self.view.set_status(&#39;Importing employees cancelled&#39;)
+        return
+
+    import_csv.import_employees(filepath, from_cmd=False)
+    self.view.set_status(&#39;Importing employees successful!&#39;)
+    self.refresh()</code></pre>
+</details>
+</dd>
+<dt id="ui.control.database.DatabaseController.import_receipts"><code class="name flex">
+<span>def <span class="ident">import_receipts</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Uses import csv library from CLI
+:return: None</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def import_receipts(self):
+    &#34;&#34;&#34;
+    Uses import csv library from CLI
+    :return: None
+    &#34;&#34;&#34;
+    filepath = self.view.show_file_picker(
+        title=&#39;Import Receipts&#39;,
+        filetypes=((&#39;Text File&#39;, &#39;*.txt&#39;), (&#39;CSV File&#39;, &#39;*.csv&#39;))
+    )
+
+    if not filepath:
+        self.view.set_status(&#39;Importing receipts cancelled&#39;)
+        return
+
+    import_csv.import_receipts(filepath, from_cmd=False)
+    self.view.set_status(&#39;Importing receipts successful!&#39;)
+    self.refresh()</code></pre>
+</details>
+</dd>
+<dt id="ui.control.database.DatabaseController.import_timesheets"><code class="name flex">
+<span>def <span class="ident">import_timesheets</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Uses import csv library from CLI
+:return: None</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def import_timesheets(self):
+    &#34;&#34;&#34;
+    Uses import csv library from CLI
+    :return: None
+    &#34;&#34;&#34;
+    filepath = self.view.show_file_picker(
+        title=&#39;Import Time Sheets&#39;,
+        filetypes=((&#39;Text File&#39;, &#39;*.txt&#39;), (&#39;CSV File&#39;, &#39;*.csv&#39;))
+    )
+
+    if not filepath:
+        self.view.set_status(&#39;Importing time sheets cancelled&#39;)
+        return
+
+    import_csv.import_timesheets(filepath, from_cmd=False)
+    self.view.set_status(&#39;Importing time sheets successful!&#39;)
+    self.refresh()</code></pre>
+</details>
+</dd>
+<dt id="ui.control.database.DatabaseController.load"><code class="name flex">
+<span>def <span class="ident">load</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Loads all employees and displays them on the table
+:return: None</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def load(self):
+    &#34;&#34;&#34;
+    Loads all employees and displays them on the table
+    :return: None
+    &#34;&#34;&#34;
+    employees = Employee.read_all()
+    i = 0
+    for employee in employees:
+        i += 1
+        self.view.add_to_result(employee.id, employee.to_view_model())
+
+    self.view.table.autoResizeColumns()</code></pre>
+</details>
+</dd>
+<dt id="ui.control.database.DatabaseController.logout"><code class="name flex">
+<span>def <span class="ident">logout</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Logout hook. Currently unused. Exits the app
+:return: None</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def logout(self):  # pylint: disable=no-self-use
+    &#34;&#34;&#34;
+    Logout hook. Currently unused. Exits the app
+    :return: None
+    &#34;&#34;&#34;
+    sys.exit()</code></pre>
+</details>
+</dd>
+<dt id="ui.control.database.DatabaseController.new_employee"><code class="name flex">
+<span>def <span class="ident">new_employee</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>When New is pressed.
+:return: None</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def new_employee(self):
+    &#34;&#34;&#34;
+    When New is pressed.
+    :return: None
+    &#34;&#34;&#34;
+    self.view.new_employee(self.new_id, Employee.new_empty().to_view_model())
+    self.new_id += 1</code></pre>
+</details>
+</dd>
+<dt id="ui.control.database.DatabaseController.new_receipt"><code class="name flex">
+<span>def <span class="ident">new_receipt</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Shows the add receipt dialog and saves it
+:return: None</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def new_receipt(self):
+    &#34;&#34;&#34;
+    Shows the add receipt dialog and saves it
+    :return: None
+    &#34;&#34;&#34;
+
+    def on_save(dialog, employee_id: int, amount: float):
+        try:
+            amount = float(amount)
+        except ValueError:
+            self.view.show_error(&#39;Error&#39;, &#39;Invalid amount given!&#39;)
+            return
+
+        if Employee.read(employee_id):
+            receipt = Receipt({
+                &#39;user_id&#39;: employee_id,
+                &#39;amount&#39;: amount
+            })
+            try:
+                Receipt.create(receipt)
+                self.view.show_info(&#39;Info&#39;, &#39;Receipt created successfully!&#39;)
+            except SecurityException as error:
+                self.view.show_error(&#39;Error&#39;, f&#39;Unable to create receipt: {error}&#39;)
+                return
+            except ChangeRequestException:
+                self.view.show_info(&#39;Info&#39;, &#39;A change request has been created &#39;
+                                            &#39;and will be reviewed.&#39;)
+
+        self.view.set_status(&#39;Receipt creation successful!&#39;)
+        dialog.destroy()
+
+    AddReceiptDialog({
+        &#39;save&#39;: on_save
+    }, Employee.read_all())</code></pre>
+</details>
+</dd>
+<dt id="ui.control.database.DatabaseController.new_timesheet"><code class="name flex">
+<span>def <span class="ident">new_timesheet</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Shows the add timesheet dialog and saves it
+:return: None</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def new_timesheet(self):
+    &#34;&#34;&#34;
+    Shows the add timesheet dialog and saves it
+    :return: None
+    &#34;&#34;&#34;
+
+    def on_save(dialog, employee_id: int, date: datetime.date,  # pylint: disable=too-many-arguments
+                hour_in, min_in, hour_out, min_out):
+        try:
+            hour_in = int(hour_in)
+            min_in = int(min_in)
+            hour_out = int(hour_out)
+            min_out = int(min_out)
+        except ValueError:
+            self.view.show_error(&#39;Error&#39;, &#39;Invalid dates given!&#39;)
+            return
+
+        time_begin = datetime.datetime.strptime(f&#34;{hour_in} {min_in}&#34;, &#34;%H %M&#34;).time()
+        time_end = datetime.datetime.strptime(f&#34;{hour_out} {min_out}&#34;, &#34;%H %M&#34;).time()
+        datetime_begin = datetime.datetime.combine(date, time_begin)
+        datetime_end = datetime.datetime.combine(date, time_end)
+
+        if Employee.read(employee_id):
+            timesheet = TimeSheet({
+                &#39;user_id&#39;: employee_id,
+                &#39;datetime_begin&#39;: datetime_begin,
+                &#39;datetime_end&#39;: datetime_end,
+            })
+            try:
+                TimeSheet.create(timesheet)
+                self.view.show_info(&#39;Success&#39;, &#39;Timesheet created successfully!&#39;)
+            except SecurityException:
+                self.view.show_error(&#39;Error&#39;, &#39;Access Denied&#39;)
+                return
+            except ChangeRequestException:
+                self.view.show_info(&#39;Info&#39;, &#39;A change request has been created &#39;
+                                            &#39;and will be reviewed.&#39;)
+        self.view.set_status(&#39;Timesheet creation successful!&#39;)
+        dialog.destroy()
+
+    AddTimesheetDialog({
+        &#39;save&#39;: on_save
+    }, Employee.read_all())</code></pre>
+</details>
+</dd>
+<dt id="ui.control.database.DatabaseController.refresh"><code class="name flex">
+<span>def <span class="ident">refresh</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Wipes and reloads the table
+:return: None</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def refresh(self):
+    &#34;&#34;&#34;
+    Wipes and reloads the table
+    :return: None
+    &#34;&#34;&#34;
+    self.view.destroy_results()
+    self.load()
+    self.view.table.unsaved = set()
+    self.view.table.redraw()</code></pre>
+</details>
+</dd>
+<dt id="ui.control.database.DatabaseController.run_payroll"><code class="name flex">
+<span>def <span class="ident">run_payroll</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Runs the payroll process, asks where to save it
+:return: None</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def run_payroll(self):
+    &#34;&#34;&#34;
+    Runs the payroll process, asks where to save it
+    :return: None
+    &#34;&#34;&#34;
+    filepath = self.view.show_save_picker(
+        title=&#39;Save Payroll&#39;,
+        filetypes=[(&#39;Text File&#39;, &#39;*.txt&#39;)]
+    )
+
+    if not filepath:
+        self.view.set_status(&#39;Payroll cancelled&#39;)
+        return
+
+    run_payroll(filepath)
+    self.view.show_info(&#39;Success&#39;, f&#39;Payroll was processed and was written to: {filepath}!&#39;)
+    self.view.set_status(&#39;Payroll was processed successfully!&#39;)</code></pre>
+</details>
+</dd>
+<dt id="ui.control.database.DatabaseController.save"><code class="name flex">
+<span>def <span class="ident">save</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>When Save is pressed, the change is either performed, or a change request is submitted
+:return: None</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def save(self):
+    &#34;&#34;&#34;
+    When Save is pressed, the change is either performed, or a change request is submitted
+    :return: None
+    &#34;&#34;&#34;
+    self.view.on_before_save()
+    change_request_submitted = False
+    for employee_id in self.view.table.unsaved:
+        view_model = self.view.table.model.data[employee_id]
+
+        is_new = False
+        if isinstance(employee_id, str) and &#34;NEW&#34; in employee_id:
+            view_model[Employee.view_columns[&#39;id&#39;]] = None
+            is_new = True
+
+        try:
+            employee = Employee.from_view_model(view_model)
+            if is_new:
+                Employee.create(employee)
+            else:
+                Employee.update(employee)
+        except ChangeRequestException:
+            change_request_submitted = True
+        except SecurityException:
+            self.view.highlight_invalid_rows([employee_id])
+            self.view.show_error(&#39;Error&#39;, &#39;Access Denied&#39;)
+            return
+        except ValidationException as error:
+            self.view.highlight_invalid_cell(employee_id,
+                                             Employee.view_columns[error.database_field])
+            self.view.show_error(&#39;Error&#39;, f&#39;Invalid data: {error}&#39;)
+            self.view.set_status(f&#39;Invalid data: {error}&#39;)
+            return
+
+    if change_request_submitted:
+        self.view.show_info(&#39;Success&#39;, &#39;Request to Change Submitted!&#39;)
+        self.view.set_status(f&#39;Request to Change {len(self.view.table.unsaved)} &#39;
+                             f&#39;employees Submitted!&#39;)
+    else:
+        self.view.set_status(f&#39;Saved {len(self.view.table.unsaved)} employees successfully!&#39;)
+        self.view.master.bell()
+    self.refresh()</code></pre>
+</details>
+</dd>
+<dt id="ui.control.database.DatabaseController.show"><code class="name flex">
+<span>def <span class="ident">show</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Overrides show to load data first
+:return: None</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def show(self):
+    &#34;&#34;&#34;
+    Overrides show to load data first
+    :return: None
+    &#34;&#34;&#34;
+    self.load()
+
+    super().show()</code></pre>
+</details>
+</dd>
+</dl>
+</dd>
+</dl>
+</section>
+</article>
+<nav id="sidebar">
+<h1>Index</h1>
+<div class="toc">
+<ul></ul>
+</div>
+<ul id="index">
+<li><h3>Super-module</h3>
+<ul>
+<li><code><a title="ui.control" href="index.html">ui.control</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-classes">Classes</a></h3>
+<ul>
+<li>
+<h4><code><a title="ui.control.database.DatabaseController" href="#ui.control.database.DatabaseController">DatabaseController</a></code></h4>
+<ul class="two-column">
+<li><code><a title="ui.control.database.DatabaseController.about_empdat" href="#ui.control.database.DatabaseController.about_empdat">about_empdat</a></code></li>
+<li><code><a title="ui.control.database.DatabaseController.change_my_password" href="#ui.control.database.DatabaseController.change_my_password">change_my_password</a></code></li>
+<li><code><a title="ui.control.database.DatabaseController.change_password" href="#ui.control.database.DatabaseController.change_password">change_password</a></code></li>
+<li><code><a title="ui.control.database.DatabaseController.delete" href="#ui.control.database.DatabaseController.delete">delete</a></code></li>
+<li><code><a title="ui.control.database.DatabaseController.export_to_csv" href="#ui.control.database.DatabaseController.export_to_csv">export_to_csv</a></code></li>
+<li><code><a title="ui.control.database.DatabaseController.export_to_pdf" href="#ui.control.database.DatabaseController.export_to_pdf">export_to_pdf</a></code></li>
+<li><code><a title="ui.control.database.DatabaseController.import_employees" href="#ui.control.database.DatabaseController.import_employees">import_employees</a></code></li>
+<li><code><a title="ui.control.database.DatabaseController.import_receipts" href="#ui.control.database.DatabaseController.import_receipts">import_receipts</a></code></li>
+<li><code><a title="ui.control.database.DatabaseController.import_timesheets" href="#ui.control.database.DatabaseController.import_timesheets">import_timesheets</a></code></li>
+<li><code><a title="ui.control.database.DatabaseController.load" href="#ui.control.database.DatabaseController.load">load</a></code></li>
+<li><code><a title="ui.control.database.DatabaseController.logout" href="#ui.control.database.DatabaseController.logout">logout</a></code></li>
+<li><code><a title="ui.control.database.DatabaseController.new_employee" href="#ui.control.database.DatabaseController.new_employee">new_employee</a></code></li>
+<li><code><a title="ui.control.database.DatabaseController.new_receipt" href="#ui.control.database.DatabaseController.new_receipt">new_receipt</a></code></li>
+<li><code><a title="ui.control.database.DatabaseController.new_timesheet" href="#ui.control.database.DatabaseController.new_timesheet">new_timesheet</a></code></li>
+<li><code><a title="ui.control.database.DatabaseController.refresh" href="#ui.control.database.DatabaseController.refresh">refresh</a></code></li>
+<li><code><a title="ui.control.database.DatabaseController.run_payroll" href="#ui.control.database.DatabaseController.run_payroll">run_payroll</a></code></li>
+<li><code><a title="ui.control.database.DatabaseController.save" href="#ui.control.database.DatabaseController.save">save</a></code></li>
+<li><code><a title="ui.control.database.DatabaseController.show" href="#ui.control.database.DatabaseController.show">show</a></code></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</nav>
+</main>
+<footer id="footer">
+<p>Generated by <a href="https://pdoc3.github.io/pdoc"><cite>pdoc</cite> 0.9.2</a>.</p>
+</footer>
+</body>
+</html>

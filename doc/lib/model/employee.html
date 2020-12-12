@@ -1,0 +1,1919 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
+<meta name="generator" content="pdoc 0.9.2" />
+<title>lib.model.employee API documentation</title>
+<meta name="description" content="Employee Data Model" />
+<link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/sanitize.min.css" integrity="sha256-PK9q560IAAa6WVRRh76LtCaI8pjTJ2z11v0miyNNjrs=" crossorigin>
+<link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/typography.min.css" integrity="sha256-7l/o7C8jubJiy74VsKTidCy1yBkRtiUGbVkYBylBqUg=" crossorigin>
+<link rel="stylesheet preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/styles/github.min.css" crossorigin>
+<style>:root{--highlight-color:#fe9}.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:30px;overflow:hidden}#sidebar > *:last-child{margin-bottom:2cm}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:1em 0 .50em 0}h3{font-size:1.4em;margin:25px 0 10px 0}h4{margin:0;font-size:105%}h1:target,h2:target,h3:target,h4:target,h5:target,h6:target{background:var(--highlight-color);padding:.2em 0}a{color:#058;text-decoration:none;transition:color .3s ease-in-out}a:hover{color:#e82}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900}pre code{background:#f8f8f8;font-size:.8em;line-height:1.4em}code{background:#f2f2f1;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{background:#f8f8f8;border:0;border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0;padding:1ex}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{margin-top:.6em;font-weight:bold}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-weight:bold;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}dt:target .name{background:var(--highlight-color)}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}td{padding:0 .5em}.admonition{padding:.1em .5em;margin-bottom:1em}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%;height:100vh;overflow:auto;position:sticky;top:0}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.item .name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul{padding-left:1.5em}.toc > ul > li{margin-top:.5em}}</style>
+<style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/highlight.min.js" integrity="sha256-Uv3H6lx7dJmRfRvH8TH6kJD1TSK1aFcwgx+mdg3epi8=" crossorigin></script>
+<script>window.addEventListener('DOMContentLoaded', () => hljs.initHighlighting())</script>
+</head>
+<body>
+<main>
+<article id="content">
+<header>
+<h1 class="title">Module <code>lib.model.employee</code></h1>
+</header>
+<section id="section-intro">
+<p>Employee Data Model</p>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">&#34;&#34;&#34;
+Employee Data Model
+&#34;&#34;&#34;
+import datetime
+from abc import abstractmethod
+
+from sqlalchemy import MetaData, Table, Column, String, \
+    DateTime, Float, Integer, Text, Date, BigInteger
+
+from lib.model import DynamicViewModel, HasRelationships, register_database_model
+from lib.model.receipt import Receipt
+from lib.model.time_sheet import TimeSheet
+from lib.repository.db import DatabaseRepository
+from lib.utils import sha_hash, date_converter
+
+
+@register_database_model  # pylint: disable=too-many-ancestors
+class Employee(DatabaseRepository, DynamicViewModel, HasRelationships):
+    &#34;&#34;&#34;
+    Tied directly to the &#39;employee&#39; table
+    &#34;&#34;&#34;
+    resource_uri = &#39;employee&#39;
+    field_validators = {
+        &#39;id&#39;: &#39;numeric&#39;,
+        # &#39;role&#39;: &#39;role&#39;,
+        &#39;last_name&#39;: &#39;alpha&#39;,
+        &#39;first_name&#39;: &#39;alpha&#39;,
+        &#39;state&#39;: &#39;state_code&#39;,
+        &#39;classification_id&#39;: lambda idx: bool(classifications[idx - 1]),
+        &#39;paymethod_id&#39;: lambda idx: bool(pay_methods[idx - 1]),
+    }
+    field_optional_validators = {
+        &#39;social_security_number&#39;: &#39;ssn&#39;,
+        &#39;email&#39;: &#39;email&#39;,
+        &#39;phone_number&#39;: &#39;phone&#39;,
+        &#39;emergency_contact_name&#39;: &#39;alpha&#39;,
+        &#39;emergency_contact_phone&#39;: &#39;phone&#39;,
+        &#39;salary&#39;: &#39;numeric&#39;,
+        &#39;hourly_rate&#39;: &#39;numeric&#39;,
+        &#39;commission_rate&#39;: &#39;numeric&#39;,
+        &#39;bank_routing&#39;: &#39;bank_routing&#39;,
+        &#39;bank_account&#39;: &#39;numeric&#39;,
+    }
+    view_columns = {
+        &#39;id&#39;: &#39;ID&#39;,
+        &#39;role&#39;: &#39;Role&#39;,
+        &#39;first_name&#39;: &#39;First Name&#39;,
+        &#39;last_name&#39;: &#39;Last Name&#39;,
+        &#39;social_security_number&#39;: &#39;SSN&#39;,
+        &#39;start_date&#39;: &#39;Start Date&#39;,
+        &#39;date_of_birth&#39;: &#39;DOB&#39;,
+        &#39;sex&#39;: &#39;Sex&#39;,
+        &#39;address_line1&#39;: &#39;Address&#39;,
+        &#39;address_line2&#39;: &#39;Apt, PO Box, etc.&#39;,
+        &#39;city&#39;: &#39;City&#39;,
+        &#39;state&#39;: &#39;State&#39;,
+        &#39;zipcode&#39;: &#39;Postal Code&#39;,
+        &#39;email&#39;: &#39;Email&#39;,
+        &#39;phone_number&#39;: &#39;Phone Number&#39;,
+        &#39;emergency_contact_name&#39;: &#39;Emergency Contact&#39;,
+        &#39;emergency_contact_relation&#39;: &#39;Emergency Contact Relation&#39;,
+        &#39;emergency_contact_phone&#39;: &#39;Emergency Contact Phone&#39;,
+        &#39;classification&#39;: &#39;Classification&#39;,
+        &#39;payment_method&#39;: &#39;Payment Method&#39;,
+        &#39;salary&#39;: &#39;Salary&#39;,
+        &#39;hourly_rate&#39;: &#39;Hourly Rate&#39;,
+        &#39;commission_rate&#39;: &#39;Commission Rate&#39;,
+        &#39;bank_routing&#39;: &#39;Bank Rounting&#39;,
+        &#39;bank_account&#39;: &#39;Bank Account&#39;,
+        # &#39;timesheet&#39;: &#39;Timesheet&#39;,
+        &#39;date_left&#39;: &#39;Date Left&#39;,
+        &#39;notes&#39;: &#39;Notes&#39;,
+    }
+    field_casts = {
+        &#39;id&#39;: lambda s: int(s),  # pylint: disable=unnecessary-lambda
+        &#39;salary&#39;: lambda s: float(s) if s is not None and s != &#39;None&#39; else None,  # pylint: disable=unnecessary-lambda
+        &#39;hourly_rate&#39;: lambda s: float(s) if s is not None and s != &#39;None&#39; else None,  # pylint: disable=unnecessary-lambda
+        &#39;commission_rate&#39;: lambda s: float(s) if s is not None and s != &#39;None&#39; else None,  # pylint: disable=unnecessary-lambda
+        &#39;start_date&#39;: lambda d: date_converter(d), # pylint: disable=unnecessary-lambda
+        &#39;date_of_birth&#39;: lambda d: date_converter(d),  # pylint: disable=unnecessary-lambda
+        &#39;date_left&#39;: lambda d: date_converter(d)  # pylint: disable=unnecessary-lambda
+    }
+
+    def __init__(self, data):
+        DynamicViewModel.__init__(self, data)
+        DatabaseRepository.__init__(self)
+
+        self.load_relationships()
+
+    def to_dict(self):
+        return self.trim_relationships(DynamicViewModel.to_dict(self))
+
+    def load_relationships(self):
+        self.classification = Classification.from_enum(self.classification_id)
+        self.payment_method = PaymentMethod.from_enum(self.paymethod_id)
+
+    def relationship_fields(self):
+        return [
+            &#39;classification&#39;,
+            &#39;payment_method&#39;
+        ]
+
+    def get_name(self):
+        &#34;&#34;&#34;
+        Returns the Employee first and last name
+        :return: str
+        &#34;&#34;&#34;
+        return f&#34;{self.first_name} {self.last_name}&#34;
+
+    def get_balance(self):
+        &#34;&#34;&#34;
+        Gets amount owed to employee. Ran during payroll
+        :return: balance float
+        &#34;&#34;&#34;
+        if self.classification.name == Hourly.name:
+            return self.classification.issue_payment(self.id, self.hourly_rate)
+        if self.classification.name == Salaried.name:
+            return self.classification.issue_payment(self.salary)
+        if self.classification.name == Commissioned.name:
+            return self.classification.issue_payment(self.id, self.salary, self.commission_rate)
+        return 0
+
+    def get_payment_method(self):
+        &#34;&#34;&#34;
+        Returns info for payment method
+        :return: list
+        &#34;&#34;&#34;
+        return self.payment_method.issue(self)
+
+    def update_password(self, new_password: str):
+        &#34;&#34;&#34;
+        Updates password
+        :param new_password: plaintext password
+        :return: None
+        &#34;&#34;&#34;
+        self.password = sha_hash(new_password)  # pylint: disable=attribute-defined-outside-init
+        Employee.update(self)
+
+    def __str__(self):
+        return f&#34;{self.first_name} {self.last_name}&#34;
+
+    @classmethod
+    def new_empty(cls):
+        return Employee({
+            &#39;password&#39;: &#39;&#39;,
+            &#39;role&#39;: &#39;Viewer&#39;,
+            &#39;first_name&#39;: &#39;required&#39;,
+            &#39;last_name&#39;: &#39;required&#39;,
+            &#39;user_group_id&#39;: 0,
+            &#39;start_date&#39;: datetime.date.today(),
+            &#39;date_of_birth&#39;: datetime.date.today(),
+            &#39;sex&#39;: &#39;Not Set&#39;,
+            &#39;address_line1&#39;: &#39;required&#39;,
+            &#39;city&#39;: &#39;required&#39;,
+            &#39;state&#39;: &#39;INVALID&#39;,
+            &#39;zipcode&#39;: &#39;required&#39;,
+            &#39;classification_id&#39;: 0,
+            &#39;paymethod_id&#39;: 0
+        })
+
+    @classmethod
+    def from_view_model(cls, view_model: dict):
+        if view_model[cls.view_columns[&#39;id&#39;]]:
+            employee = Employee.read(int(view_model[cls.view_columns[&#39;id&#39;]]))
+        else:
+            employee = Employee.new_empty()
+        for key, value in cls.view_columns.items():
+            if value in view_model and key != &#39;id&#39;:
+                if view_model[value]:
+                    view_model[value] = view_model[value].strip()
+                    if view_model[value] == &#39;&#39; or view_model[value] == &#39;None&#39;:
+                        view_model[value] = None
+                setattr(employee, key, view_model[value])
+
+        employee.cast_fields()
+
+        employee.classification = Classification.to_enum_from_name(  # pylint: disable=attribute-defined-outside-init
+            employee.classification)
+        employee.classification_id = employee.classification.get_id()  # pylint: disable=attribute-defined-outside-init
+        employee.payment_method = PaymentMethod.to_enum_from_name(  # pylint: disable=attribute-defined-outside-init
+            employee.payment_method)
+        employee.paymethod_id = employee.payment_method.get_id()  # pylint: disable=attribute-defined-outside-init
+
+        return employee
+
+    @classmethod
+    def authenticate(cls, username, password):
+        &#34;&#34;&#34;
+        Authenticates an employee as a user
+        :param username: str
+        :param password: str
+        :return: Employee
+        &#34;&#34;&#34;
+        employees = Employee.read_by(filters={
+            &#39;id&#39;: int(username)
+        })
+
+        if len(employees) &lt; 1:
+            return None
+
+        employee = employees[0]
+
+        if sha_hash(password) == employee.password:
+            return employee
+        return None
+
+    @classmethod
+    def table(cls, metadata=MetaData()):
+        return Table(cls.resource_uri, metadata,
+                     Column(&#39;id&#39;, BigInteger().with_variant(Integer, &#34;sqlite&#34;), primary_key=True),
+                     Column(&#39;password&#39;, String(255)),
+                     Column(&#39;social_security_number&#39;, String(12)),
+                     Column(&#39;user_group_id&#39;, Integer),
+                     Column(&#39;department_id&#39;, Integer),
+                     Column(&#39;role&#39;, String(64)),
+                     Column(&#39;last_name&#39;, String(64)),
+                     Column(&#39;first_name&#39;, String(64)),
+                     Column(&#39;start_date&#39;, Date),
+                     Column(&#39;date_of_birth&#39;, Date),
+                     Column(&#39;sex&#39;, String(16)),
+                     Column(&#39;address_line1&#39;, String(128)),
+                     Column(&#39;address_line2&#39;, String(128), nullable=True),
+                     Column(&#39;city&#39;, String(45)),
+                     Column(&#39;state&#39;, String(45)),
+                     Column(&#39;zipcode&#39;, String(16)),
+                     Column(&#39;email&#39;, String(45), nullable=True),
+                     Column(&#39;phone_number&#39;, String(45), nullable=True),
+                     Column(&#39;emergency_contact_name&#39;, String(45), nullable=True),
+                     Column(&#39;emergency_contact_relation&#39;, String(45), nullable=True),
+                     Column(&#39;emergency_contact_phone&#39;, String(45), nullable=True),
+                     Column(&#39;classification_id&#39;, Integer),
+                     Column(&#39;paymethod_id&#39;, Integer),
+                     Column(&#39;salary&#39;, Float, nullable=True),
+                     Column(&#39;hourly_rate&#39;, Float, nullable=True),
+                     Column(&#39;commission_rate&#39;, Float, nullable=True),
+                     Column(&#39;bank_routing&#39;, String(32), nullable=True),
+                     Column(&#39;bank_account&#39;, String(32), nullable=True),
+                     Column(&#39;timesheet&#39;, Float, nullable=True),
+                     Column(&#39;created_at&#39;, DateTime),
+                     Column(&#39;modified_at&#39;, DateTime),
+                     Column(&#39;date_left&#39;, Date, nullable=True),
+                     Column(&#39;notes&#39;, Text, nullable=True),
+                     extend_existing=True
+                     )
+
+
+classifications = []
+pay_methods = []
+classifications_dict = {}
+pay_methods_dict = {}
+
+
+def register_classification(cls):
+    &#34;&#34;&#34;
+    Decorator that adds classification to the global registry
+    :param cls: class
+    :return: Class
+    &#34;&#34;&#34;
+    classifications.append(cls)
+    classifications_dict[cls.name] = {
+        &#39;class&#39;: cls,
+        &#39;id&#39;: len(classifications)
+    }
+    return cls
+
+
+def register_payment_method(cls):
+    &#34;&#34;&#34;
+    Decorator that adds payment method to the global registry
+    :param cls: class
+    :return: Class
+    &#34;&#34;&#34;
+    pay_methods.append(cls)
+    pay_methods_dict[cls.name] = {
+        &#39;class&#39;: cls,
+        &#39;id&#39;: len(pay_methods)
+    }
+    return cls
+
+
+class Classification:
+    &#34;&#34;&#34;
+    Abstract class of Employee classification
+
+    Creates the abstract issue payment method which is used for all employee classifications
+    &#34;&#34;&#34;
+    name: str = &#39;&#39;
+
+    @abstractmethod
+    def issue_payment(self, *args):
+        &#34;&#34;&#34;
+        Abstract Method to issue payments
+        &#34;&#34;&#34;
+        raise NotImplementedError
+
+    def __str__(self):
+        return self.name
+
+    @classmethod
+    def from_enum(cls, index):
+        &#34;&#34;&#34;
+        Converts from the Classification ID to the classification instance
+        :param index: int
+        :return: class instance
+        &#34;&#34;&#34;
+        return classifications[index - 1]()
+
+    @classmethod
+    def to_enum(cls, clz):
+        &#34;&#34;&#34;
+        Converts from the classification instance to an ID
+        :param clz: class instance
+        :return: int
+        &#34;&#34;&#34;
+        return classifications[classifications_dict[clz.name][&#39;id&#39;]]
+
+    @classmethod
+    def to_enum_from_name(cls, name):
+        &#34;&#34;&#34;
+        Converts from the classification class to the name
+        :param clz: class
+        :return: str
+        &#34;&#34;&#34;
+        return classifications[classifications_dict[name][&#39;id&#39;] - 1]
+
+    @classmethod
+    def get_id(cls):
+        &#34;&#34;&#34;
+        Gets the registered ID
+        :return: ID int
+        &#34;&#34;&#34;
+        return classifications_dict[cls.name][&#39;id&#39;]
+
+
+@register_classification
+class Hourly(Classification):
+    &#34;&#34;&#34;
+    Class for hourly employee, inherits from classification to use abstract issue payment method
+    &#34;&#34;&#34;
+    name = &#39;Hourly&#39;
+
+    def issue_payment(self, employee_id, hourly_rate):  # pylint: disable=arguments-differ
+        &#34;&#34;&#34;
+        This method issues payment to hourly classification
+        :returns: money paid to hourly employee
+        &#34;&#34;&#34;
+        money = 0
+
+        timesheets = TimeSheet.read_by({
+            &#39;user_id&#39;: employee_id,
+            &#39;paid&#39;: False
+        })
+        total = sum([timesheet.to_hours() for timesheet in timesheets])
+        money += hourly_rate * total
+
+        for timesheet in timesheets:
+            timesheet.paid = True
+            TimeSheet.update(timesheet)
+
+        return money
+
+
+@register_classification
+class Salaried(Classification):
+    &#34;&#34;&#34;
+    Class for salary employee, inherits from classification to use abstract issue payment method
+    &#34;&#34;&#34;
+    name = &#39;Salary&#39;
+
+    def issue_payment(self, salary):  # pylint: disable=arguments-differ
+        &#34;&#34;&#34;
+        This method issues salaried employee payment
+        :return: Returns Bimonthly payment(float)
+        &#34;&#34;&#34;
+        return float(salary) / 24
+
+
+@register_classification
+class Commissioned(Classification):
+    &#34;&#34;&#34;
+    Class for hourly employee, inherits from classification to use abstract issue payment method
+    &#34;&#34;&#34;
+    name = &#39;Commission&#39;
+
+    def issue_payment(self, employee_id, salary, commission):  # pylint: disable=arguments-differ
+        &#34;&#34;&#34;
+        This method issues payment to commission class employee
+        :param commission:
+        :param salary:
+        :return: money paid to employee
+        &#34;&#34;&#34;
+        money = salary / 24
+
+        receipts = Receipt.read_by({
+            &#39;user_id&#39;: employee_id,
+            &#39;paid&#39;: False
+        })
+        total = sum([receipt.amount for receipt in receipts])
+        money += total * (commission / 100)
+
+        for receipt in receipts:
+            receipt.paid = True
+            Receipt.update(receipt)
+
+        return money
+
+
+class PaymentMethod:
+    &#34;&#34;&#34;
+    Abstract payment class, allows for each employee to have a payment method that can be issued
+    &#34;&#34;&#34;
+    name: str = &#39;&#39;
+
+    @abstractmethod
+    def issue(self, employee: Employee):
+        &#34;&#34;&#34;
+        Abstract method for issuing payments
+        &#34;&#34;&#34;
+        raise NotImplementedError
+
+    @classmethod
+    def from_enum(cls, index):
+        &#34;&#34;&#34;
+        Converts from ID to class instance
+        :param index: int
+        :return: class instance
+        &#34;&#34;&#34;
+        return pay_methods[index - 1]()
+
+    @classmethod
+    def to_enum(cls, clz):
+        &#34;&#34;&#34;
+        Converts from class to ID
+        :param clz: instance
+        :return: id int
+        &#34;&#34;&#34;
+        return pay_methods[pay_methods_dict[clz.name][&#39;id&#39;]]
+
+    @classmethod
+    def to_enum_from_name(cls, name):
+        &#34;&#34;&#34;
+        Converts from name to ID
+        :param name: str
+        :return: id int
+        &#34;&#34;&#34;
+        return pay_methods[pay_methods_dict[name][&#39;id&#39;] - 1]
+
+    @classmethod
+    def get_id(cls):
+        &#34;&#34;&#34;
+        Gets ID from current class
+        :return: id int
+        &#34;&#34;&#34;
+        return pay_methods_dict[cls.name][&#39;id&#39;]
+
+    def __str__(self):
+        return self.name
+
+
+@register_payment_method
+class DirectMethod(PaymentMethod):
+    &#34;&#34;&#34;
+    Direct method payment class, inherits from PaymentMethod to use abstract issue method
+    &#34;&#34;&#34;
+    name = &#39;Direct Deposit&#39;
+
+    def issue(self, employee):
+        &#34;&#34;&#34;
+        This method prints out the direct payment method issued payment being mailed to employee
+        &#34;&#34;&#34;
+        return [
+            employee.classification.issue_payment(),
+            employee.first_name,
+            employee.last_name,
+            employee.bank_account,
+            employee.bank_routing
+        ]
+
+
+@register_payment_method
+class MailMethod(PaymentMethod):
+    &#34;&#34;&#34;
+    Direct method payment class, inherits from PaymentMethod to use abstract issue method
+    &#34;&#34;&#34;
+    name = &#39;Mail&#39;
+
+    def issue(self, employee):
+        &#34;&#34;&#34;
+        This method prints out the mailed payment method issued payment being mailed to employee
+        &#34;&#34;&#34;
+        return [
+            employee.classification.issue_payment(),
+            employee.first_name,
+            employee.last_name,
+            employee.address_line1,
+            employee.address_line2,
+            employee.city,
+            employee.state,
+            employee.zipcode
+        ]</code></pre>
+</details>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+<h2 class="section-title" id="header-functions">Functions</h2>
+<dl>
+<dt id="lib.model.employee.register_classification"><code class="name flex">
+<span>def <span class="ident">register_classification</span></span>(<span>cls)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Decorator that adds classification to the global registry
+:param cls: class
+:return: Class</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def register_classification(cls):
+    &#34;&#34;&#34;
+    Decorator that adds classification to the global registry
+    :param cls: class
+    :return: Class
+    &#34;&#34;&#34;
+    classifications.append(cls)
+    classifications_dict[cls.name] = {
+        &#39;class&#39;: cls,
+        &#39;id&#39;: len(classifications)
+    }
+    return cls</code></pre>
+</details>
+</dd>
+<dt id="lib.model.employee.register_payment_method"><code class="name flex">
+<span>def <span class="ident">register_payment_method</span></span>(<span>cls)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Decorator that adds payment method to the global registry
+:param cls: class
+:return: Class</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def register_payment_method(cls):
+    &#34;&#34;&#34;
+    Decorator that adds payment method to the global registry
+    :param cls: class
+    :return: Class
+    &#34;&#34;&#34;
+    pay_methods.append(cls)
+    pay_methods_dict[cls.name] = {
+        &#39;class&#39;: cls,
+        &#39;id&#39;: len(pay_methods)
+    }
+    return cls</code></pre>
+</details>
+</dd>
+</dl>
+</section>
+<section>
+<h2 class="section-title" id="header-classes">Classes</h2>
+<dl>
+<dt id="lib.model.employee.Classification"><code class="flex name class">
+<span>class <span class="ident">Classification</span></span>
+</code></dt>
+<dd>
+<div class="desc"><p>Abstract class of Employee classification</p>
+<p>Creates the abstract issue payment method which is used for all employee classifications</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class Classification:
+    &#34;&#34;&#34;
+    Abstract class of Employee classification
+
+    Creates the abstract issue payment method which is used for all employee classifications
+    &#34;&#34;&#34;
+    name: str = &#39;&#39;
+
+    @abstractmethod
+    def issue_payment(self, *args):
+        &#34;&#34;&#34;
+        Abstract Method to issue payments
+        &#34;&#34;&#34;
+        raise NotImplementedError
+
+    def __str__(self):
+        return self.name
+
+    @classmethod
+    def from_enum(cls, index):
+        &#34;&#34;&#34;
+        Converts from the Classification ID to the classification instance
+        :param index: int
+        :return: class instance
+        &#34;&#34;&#34;
+        return classifications[index - 1]()
+
+    @classmethod
+    def to_enum(cls, clz):
+        &#34;&#34;&#34;
+        Converts from the classification instance to an ID
+        :param clz: class instance
+        :return: int
+        &#34;&#34;&#34;
+        return classifications[classifications_dict[clz.name][&#39;id&#39;]]
+
+    @classmethod
+    def to_enum_from_name(cls, name):
+        &#34;&#34;&#34;
+        Converts from the classification class to the name
+        :param clz: class
+        :return: str
+        &#34;&#34;&#34;
+        return classifications[classifications_dict[name][&#39;id&#39;] - 1]
+
+    @classmethod
+    def get_id(cls):
+        &#34;&#34;&#34;
+        Gets the registered ID
+        :return: ID int
+        &#34;&#34;&#34;
+        return classifications_dict[cls.name][&#39;id&#39;]</code></pre>
+</details>
+<h3>Subclasses</h3>
+<ul class="hlist">
+<li><a title="lib.model.employee.Commissioned" href="#lib.model.employee.Commissioned">Commissioned</a></li>
+<li><a title="lib.model.employee.Hourly" href="#lib.model.employee.Hourly">Hourly</a></li>
+<li><a title="lib.model.employee.Salaried" href="#lib.model.employee.Salaried">Salaried</a></li>
+</ul>
+<h3>Class variables</h3>
+<dl>
+<dt id="lib.model.employee.Classification.name"><code class="name">var <span class="ident">name</span> : str</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+</dl>
+<h3>Static methods</h3>
+<dl>
+<dt id="lib.model.employee.Classification.from_enum"><code class="name flex">
+<span>def <span class="ident">from_enum</span></span>(<span>index)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Converts from the Classification ID to the classification instance
+:param index: int
+:return: class instance</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@classmethod
+def from_enum(cls, index):
+    &#34;&#34;&#34;
+    Converts from the Classification ID to the classification instance
+    :param index: int
+    :return: class instance
+    &#34;&#34;&#34;
+    return classifications[index - 1]()</code></pre>
+</details>
+</dd>
+<dt id="lib.model.employee.Classification.get_id"><code class="name flex">
+<span>def <span class="ident">get_id</span></span>(<span>)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Gets the registered ID
+:return: ID int</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@classmethod
+def get_id(cls):
+    &#34;&#34;&#34;
+    Gets the registered ID
+    :return: ID int
+    &#34;&#34;&#34;
+    return classifications_dict[cls.name][&#39;id&#39;]</code></pre>
+</details>
+</dd>
+<dt id="lib.model.employee.Classification.to_enum"><code class="name flex">
+<span>def <span class="ident">to_enum</span></span>(<span>clz)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Converts from the classification instance to an ID
+:param clz: class instance
+:return: int</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@classmethod
+def to_enum(cls, clz):
+    &#34;&#34;&#34;
+    Converts from the classification instance to an ID
+    :param clz: class instance
+    :return: int
+    &#34;&#34;&#34;
+    return classifications[classifications_dict[clz.name][&#39;id&#39;]]</code></pre>
+</details>
+</dd>
+<dt id="lib.model.employee.Classification.to_enum_from_name"><code class="name flex">
+<span>def <span class="ident">to_enum_from_name</span></span>(<span>name)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Converts from the classification class to the name
+:param clz: class
+:return: str</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@classmethod
+def to_enum_from_name(cls, name):
+    &#34;&#34;&#34;
+    Converts from the classification class to the name
+    :param clz: class
+    :return: str
+    &#34;&#34;&#34;
+    return classifications[classifications_dict[name][&#39;id&#39;] - 1]</code></pre>
+</details>
+</dd>
+</dl>
+<h3>Methods</h3>
+<dl>
+<dt id="lib.model.employee.Classification.issue_payment"><code class="name flex">
+<span>def <span class="ident">issue_payment</span></span>(<span>self, *args)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Abstract Method to issue payments</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@abstractmethod
+def issue_payment(self, *args):
+    &#34;&#34;&#34;
+    Abstract Method to issue payments
+    &#34;&#34;&#34;
+    raise NotImplementedError</code></pre>
+</details>
+</dd>
+</dl>
+</dd>
+<dt id="lib.model.employee.Commissioned"><code class="flex name class">
+<span>class <span class="ident">Commissioned</span></span>
+</code></dt>
+<dd>
+<div class="desc"><p>Class for hourly employee, inherits from classification to use abstract issue payment method</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class Commissioned(Classification):
+    &#34;&#34;&#34;
+    Class for hourly employee, inherits from classification to use abstract issue payment method
+    &#34;&#34;&#34;
+    name = &#39;Commission&#39;
+
+    def issue_payment(self, employee_id, salary, commission):  # pylint: disable=arguments-differ
+        &#34;&#34;&#34;
+        This method issues payment to commission class employee
+        :param commission:
+        :param salary:
+        :return: money paid to employee
+        &#34;&#34;&#34;
+        money = salary / 24
+
+        receipts = Receipt.read_by({
+            &#39;user_id&#39;: employee_id,
+            &#39;paid&#39;: False
+        })
+        total = sum([receipt.amount for receipt in receipts])
+        money += total * (commission / 100)
+
+        for receipt in receipts:
+            receipt.paid = True
+            Receipt.update(receipt)
+
+        return money</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="lib.model.employee.Classification" href="#lib.model.employee.Classification">Classification</a></li>
+</ul>
+<h3>Class variables</h3>
+<dl>
+<dt id="lib.model.employee.Commissioned.name"><code class="name">var <span class="ident">name</span> : str</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+</dl>
+<h3>Methods</h3>
+<dl>
+<dt id="lib.model.employee.Commissioned.issue_payment"><code class="name flex">
+<span>def <span class="ident">issue_payment</span></span>(<span>self, employee_id, salary, commission)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>This method issues payment to commission class employee
+:param commission:
+:param salary:
+:return: money paid to employee</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def issue_payment(self, employee_id, salary, commission):  # pylint: disable=arguments-differ
+    &#34;&#34;&#34;
+    This method issues payment to commission class employee
+    :param commission:
+    :param salary:
+    :return: money paid to employee
+    &#34;&#34;&#34;
+    money = salary / 24
+
+    receipts = Receipt.read_by({
+        &#39;user_id&#39;: employee_id,
+        &#39;paid&#39;: False
+    })
+    total = sum([receipt.amount for receipt in receipts])
+    money += total * (commission / 100)
+
+    for receipt in receipts:
+        receipt.paid = True
+        Receipt.update(receipt)
+
+    return money</code></pre>
+</details>
+</dd>
+</dl>
+<h3>Inherited members</h3>
+<ul class="hlist">
+<li><code><b><a title="lib.model.employee.Classification" href="#lib.model.employee.Classification">Classification</a></b></code>:
+<ul class="hlist">
+<li><code><a title="lib.model.employee.Classification.from_enum" href="#lib.model.employee.Classification.from_enum">from_enum</a></code></li>
+<li><code><a title="lib.model.employee.Classification.get_id" href="#lib.model.employee.Classification.get_id">get_id</a></code></li>
+<li><code><a title="lib.model.employee.Classification.to_enum" href="#lib.model.employee.Classification.to_enum">to_enum</a></code></li>
+<li><code><a title="lib.model.employee.Classification.to_enum_from_name" href="#lib.model.employee.Classification.to_enum_from_name">to_enum_from_name</a></code></li>
+</ul>
+</li>
+</ul>
+</dd>
+<dt id="lib.model.employee.DirectMethod"><code class="flex name class">
+<span>class <span class="ident">DirectMethod</span></span>
+</code></dt>
+<dd>
+<div class="desc"><p>Direct method payment class, inherits from PaymentMethod to use abstract issue method</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class DirectMethod(PaymentMethod):
+    &#34;&#34;&#34;
+    Direct method payment class, inherits from PaymentMethod to use abstract issue method
+    &#34;&#34;&#34;
+    name = &#39;Direct Deposit&#39;
+
+    def issue(self, employee):
+        &#34;&#34;&#34;
+        This method prints out the direct payment method issued payment being mailed to employee
+        &#34;&#34;&#34;
+        return [
+            employee.classification.issue_payment(),
+            employee.first_name,
+            employee.last_name,
+            employee.bank_account,
+            employee.bank_routing
+        ]</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="lib.model.employee.PaymentMethod" href="#lib.model.employee.PaymentMethod">PaymentMethod</a></li>
+</ul>
+<h3>Class variables</h3>
+<dl>
+<dt id="lib.model.employee.DirectMethod.name"><code class="name">var <span class="ident">name</span> : str</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+</dl>
+<h3>Methods</h3>
+<dl>
+<dt id="lib.model.employee.DirectMethod.issue"><code class="name flex">
+<span>def <span class="ident">issue</span></span>(<span>self, employee)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>This method prints out the direct payment method issued payment being mailed to employee</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def issue(self, employee):
+    &#34;&#34;&#34;
+    This method prints out the direct payment method issued payment being mailed to employee
+    &#34;&#34;&#34;
+    return [
+        employee.classification.issue_payment(),
+        employee.first_name,
+        employee.last_name,
+        employee.bank_account,
+        employee.bank_routing
+    ]</code></pre>
+</details>
+</dd>
+</dl>
+<h3>Inherited members</h3>
+<ul class="hlist">
+<li><code><b><a title="lib.model.employee.PaymentMethod" href="#lib.model.employee.PaymentMethod">PaymentMethod</a></b></code>:
+<ul class="hlist">
+<li><code><a title="lib.model.employee.PaymentMethod.from_enum" href="#lib.model.employee.PaymentMethod.from_enum">from_enum</a></code></li>
+<li><code><a title="lib.model.employee.PaymentMethod.get_id" href="#lib.model.employee.PaymentMethod.get_id">get_id</a></code></li>
+<li><code><a title="lib.model.employee.PaymentMethod.to_enum" href="#lib.model.employee.PaymentMethod.to_enum">to_enum</a></code></li>
+<li><code><a title="lib.model.employee.PaymentMethod.to_enum_from_name" href="#lib.model.employee.PaymentMethod.to_enum_from_name">to_enum_from_name</a></code></li>
+</ul>
+</li>
+</ul>
+</dd>
+<dt id="lib.model.employee.Employee"><code class="flex name class">
+<span>class <span class="ident">Employee</span></span>
+<span>(</span><span>data)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Tied directly to the 'employee' table</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class Employee(DatabaseRepository, DynamicViewModel, HasRelationships):
+    &#34;&#34;&#34;
+    Tied directly to the &#39;employee&#39; table
+    &#34;&#34;&#34;
+    resource_uri = &#39;employee&#39;
+    field_validators = {
+        &#39;id&#39;: &#39;numeric&#39;,
+        # &#39;role&#39;: &#39;role&#39;,
+        &#39;last_name&#39;: &#39;alpha&#39;,
+        &#39;first_name&#39;: &#39;alpha&#39;,
+        &#39;state&#39;: &#39;state_code&#39;,
+        &#39;classification_id&#39;: lambda idx: bool(classifications[idx - 1]),
+        &#39;paymethod_id&#39;: lambda idx: bool(pay_methods[idx - 1]),
+    }
+    field_optional_validators = {
+        &#39;social_security_number&#39;: &#39;ssn&#39;,
+        &#39;email&#39;: &#39;email&#39;,
+        &#39;phone_number&#39;: &#39;phone&#39;,
+        &#39;emergency_contact_name&#39;: &#39;alpha&#39;,
+        &#39;emergency_contact_phone&#39;: &#39;phone&#39;,
+        &#39;salary&#39;: &#39;numeric&#39;,
+        &#39;hourly_rate&#39;: &#39;numeric&#39;,
+        &#39;commission_rate&#39;: &#39;numeric&#39;,
+        &#39;bank_routing&#39;: &#39;bank_routing&#39;,
+        &#39;bank_account&#39;: &#39;numeric&#39;,
+    }
+    view_columns = {
+        &#39;id&#39;: &#39;ID&#39;,
+        &#39;role&#39;: &#39;Role&#39;,
+        &#39;first_name&#39;: &#39;First Name&#39;,
+        &#39;last_name&#39;: &#39;Last Name&#39;,
+        &#39;social_security_number&#39;: &#39;SSN&#39;,
+        &#39;start_date&#39;: &#39;Start Date&#39;,
+        &#39;date_of_birth&#39;: &#39;DOB&#39;,
+        &#39;sex&#39;: &#39;Sex&#39;,
+        &#39;address_line1&#39;: &#39;Address&#39;,
+        &#39;address_line2&#39;: &#39;Apt, PO Box, etc.&#39;,
+        &#39;city&#39;: &#39;City&#39;,
+        &#39;state&#39;: &#39;State&#39;,
+        &#39;zipcode&#39;: &#39;Postal Code&#39;,
+        &#39;email&#39;: &#39;Email&#39;,
+        &#39;phone_number&#39;: &#39;Phone Number&#39;,
+        &#39;emergency_contact_name&#39;: &#39;Emergency Contact&#39;,
+        &#39;emergency_contact_relation&#39;: &#39;Emergency Contact Relation&#39;,
+        &#39;emergency_contact_phone&#39;: &#39;Emergency Contact Phone&#39;,
+        &#39;classification&#39;: &#39;Classification&#39;,
+        &#39;payment_method&#39;: &#39;Payment Method&#39;,
+        &#39;salary&#39;: &#39;Salary&#39;,
+        &#39;hourly_rate&#39;: &#39;Hourly Rate&#39;,
+        &#39;commission_rate&#39;: &#39;Commission Rate&#39;,
+        &#39;bank_routing&#39;: &#39;Bank Rounting&#39;,
+        &#39;bank_account&#39;: &#39;Bank Account&#39;,
+        # &#39;timesheet&#39;: &#39;Timesheet&#39;,
+        &#39;date_left&#39;: &#39;Date Left&#39;,
+        &#39;notes&#39;: &#39;Notes&#39;,
+    }
+    field_casts = {
+        &#39;id&#39;: lambda s: int(s),  # pylint: disable=unnecessary-lambda
+        &#39;salary&#39;: lambda s: float(s) if s is not None and s != &#39;None&#39; else None,  # pylint: disable=unnecessary-lambda
+        &#39;hourly_rate&#39;: lambda s: float(s) if s is not None and s != &#39;None&#39; else None,  # pylint: disable=unnecessary-lambda
+        &#39;commission_rate&#39;: lambda s: float(s) if s is not None and s != &#39;None&#39; else None,  # pylint: disable=unnecessary-lambda
+        &#39;start_date&#39;: lambda d: date_converter(d), # pylint: disable=unnecessary-lambda
+        &#39;date_of_birth&#39;: lambda d: date_converter(d),  # pylint: disable=unnecessary-lambda
+        &#39;date_left&#39;: lambda d: date_converter(d)  # pylint: disable=unnecessary-lambda
+    }
+
+    def __init__(self, data):
+        DynamicViewModel.__init__(self, data)
+        DatabaseRepository.__init__(self)
+
+        self.load_relationships()
+
+    def to_dict(self):
+        return self.trim_relationships(DynamicViewModel.to_dict(self))
+
+    def load_relationships(self):
+        self.classification = Classification.from_enum(self.classification_id)
+        self.payment_method = PaymentMethod.from_enum(self.paymethod_id)
+
+    def relationship_fields(self):
+        return [
+            &#39;classification&#39;,
+            &#39;payment_method&#39;
+        ]
+
+    def get_name(self):
+        &#34;&#34;&#34;
+        Returns the Employee first and last name
+        :return: str
+        &#34;&#34;&#34;
+        return f&#34;{self.first_name} {self.last_name}&#34;
+
+    def get_balance(self):
+        &#34;&#34;&#34;
+        Gets amount owed to employee. Ran during payroll
+        :return: balance float
+        &#34;&#34;&#34;
+        if self.classification.name == Hourly.name:
+            return self.classification.issue_payment(self.id, self.hourly_rate)
+        if self.classification.name == Salaried.name:
+            return self.classification.issue_payment(self.salary)
+        if self.classification.name == Commissioned.name:
+            return self.classification.issue_payment(self.id, self.salary, self.commission_rate)
+        return 0
+
+    def get_payment_method(self):
+        &#34;&#34;&#34;
+        Returns info for payment method
+        :return: list
+        &#34;&#34;&#34;
+        return self.payment_method.issue(self)
+
+    def update_password(self, new_password: str):
+        &#34;&#34;&#34;
+        Updates password
+        :param new_password: plaintext password
+        :return: None
+        &#34;&#34;&#34;
+        self.password = sha_hash(new_password)  # pylint: disable=attribute-defined-outside-init
+        Employee.update(self)
+
+    def __str__(self):
+        return f&#34;{self.first_name} {self.last_name}&#34;
+
+    @classmethod
+    def new_empty(cls):
+        return Employee({
+            &#39;password&#39;: &#39;&#39;,
+            &#39;role&#39;: &#39;Viewer&#39;,
+            &#39;first_name&#39;: &#39;required&#39;,
+            &#39;last_name&#39;: &#39;required&#39;,
+            &#39;user_group_id&#39;: 0,
+            &#39;start_date&#39;: datetime.date.today(),
+            &#39;date_of_birth&#39;: datetime.date.today(),
+            &#39;sex&#39;: &#39;Not Set&#39;,
+            &#39;address_line1&#39;: &#39;required&#39;,
+            &#39;city&#39;: &#39;required&#39;,
+            &#39;state&#39;: &#39;INVALID&#39;,
+            &#39;zipcode&#39;: &#39;required&#39;,
+            &#39;classification_id&#39;: 0,
+            &#39;paymethod_id&#39;: 0
+        })
+
+    @classmethod
+    def from_view_model(cls, view_model: dict):
+        if view_model[cls.view_columns[&#39;id&#39;]]:
+            employee = Employee.read(int(view_model[cls.view_columns[&#39;id&#39;]]))
+        else:
+            employee = Employee.new_empty()
+        for key, value in cls.view_columns.items():
+            if value in view_model and key != &#39;id&#39;:
+                if view_model[value]:
+                    view_model[value] = view_model[value].strip()
+                    if view_model[value] == &#39;&#39; or view_model[value] == &#39;None&#39;:
+                        view_model[value] = None
+                setattr(employee, key, view_model[value])
+
+        employee.cast_fields()
+
+        employee.classification = Classification.to_enum_from_name(  # pylint: disable=attribute-defined-outside-init
+            employee.classification)
+        employee.classification_id = employee.classification.get_id()  # pylint: disable=attribute-defined-outside-init
+        employee.payment_method = PaymentMethod.to_enum_from_name(  # pylint: disable=attribute-defined-outside-init
+            employee.payment_method)
+        employee.paymethod_id = employee.payment_method.get_id()  # pylint: disable=attribute-defined-outside-init
+
+        return employee
+
+    @classmethod
+    def authenticate(cls, username, password):
+        &#34;&#34;&#34;
+        Authenticates an employee as a user
+        :param username: str
+        :param password: str
+        :return: Employee
+        &#34;&#34;&#34;
+        employees = Employee.read_by(filters={
+            &#39;id&#39;: int(username)
+        })
+
+        if len(employees) &lt; 1:
+            return None
+
+        employee = employees[0]
+
+        if sha_hash(password) == employee.password:
+            return employee
+        return None
+
+    @classmethod
+    def table(cls, metadata=MetaData()):
+        return Table(cls.resource_uri, metadata,
+                     Column(&#39;id&#39;, BigInteger().with_variant(Integer, &#34;sqlite&#34;), primary_key=True),
+                     Column(&#39;password&#39;, String(255)),
+                     Column(&#39;social_security_number&#39;, String(12)),
+                     Column(&#39;user_group_id&#39;, Integer),
+                     Column(&#39;department_id&#39;, Integer),
+                     Column(&#39;role&#39;, String(64)),
+                     Column(&#39;last_name&#39;, String(64)),
+                     Column(&#39;first_name&#39;, String(64)),
+                     Column(&#39;start_date&#39;, Date),
+                     Column(&#39;date_of_birth&#39;, Date),
+                     Column(&#39;sex&#39;, String(16)),
+                     Column(&#39;address_line1&#39;, String(128)),
+                     Column(&#39;address_line2&#39;, String(128), nullable=True),
+                     Column(&#39;city&#39;, String(45)),
+                     Column(&#39;state&#39;, String(45)),
+                     Column(&#39;zipcode&#39;, String(16)),
+                     Column(&#39;email&#39;, String(45), nullable=True),
+                     Column(&#39;phone_number&#39;, String(45), nullable=True),
+                     Column(&#39;emergency_contact_name&#39;, String(45), nullable=True),
+                     Column(&#39;emergency_contact_relation&#39;, String(45), nullable=True),
+                     Column(&#39;emergency_contact_phone&#39;, String(45), nullable=True),
+                     Column(&#39;classification_id&#39;, Integer),
+                     Column(&#39;paymethod_id&#39;, Integer),
+                     Column(&#39;salary&#39;, Float, nullable=True),
+                     Column(&#39;hourly_rate&#39;, Float, nullable=True),
+                     Column(&#39;commission_rate&#39;, Float, nullable=True),
+                     Column(&#39;bank_routing&#39;, String(32), nullable=True),
+                     Column(&#39;bank_account&#39;, String(32), nullable=True),
+                     Column(&#39;timesheet&#39;, Float, nullable=True),
+                     Column(&#39;created_at&#39;, DateTime),
+                     Column(&#39;modified_at&#39;, DateTime),
+                     Column(&#39;date_left&#39;, Date, nullable=True),
+                     Column(&#39;notes&#39;, Text, nullable=True),
+                     extend_existing=True
+                     )</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="lib.repository.db.DatabaseRepository" href="../repository/db.html#lib.repository.db.DatabaseRepository">DatabaseRepository</a></li>
+<li><a title="lib.repository.Repository" href="../repository/index.html#lib.repository.Repository">Repository</a></li>
+<li><a title="lib.repository.CanMutateData" href="../repository/index.html#lib.repository.CanMutateData">CanMutateData</a></li>
+<li><a title="lib.repository.validator.HasValidation" href="../repository/validator.html#lib.repository.validator.HasValidation">HasValidation</a></li>
+<li><a title="lib.model.DynamicViewModel" href="index.html#lib.model.DynamicViewModel">DynamicViewModel</a></li>
+<li><a title="lib.model.DynamicModel" href="index.html#lib.model.DynamicModel">DynamicModel</a></li>
+<li>abc.ABC</li>
+<li><a title="lib.model.HasRelationships" href="index.html#lib.model.HasRelationships">HasRelationships</a></li>
+</ul>
+<h3>Class variables</h3>
+<dl>
+<dt id="lib.model.employee.Employee.engine"><code class="name">var <span class="ident">engine</span> : sqlalchemy.engine.base.Engine</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="lib.model.employee.Employee.metadata"><code class="name">var <span class="ident">metadata</span> : sqlalchemy.sql.schema.MetaData</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="lib.model.employee.Employee.url"><code class="name">var <span class="ident">url</span> : str</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="lib.model.employee.Employee.view_columns"><code class="name">var <span class="ident">view_columns</span> : dict</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+</dl>
+<h3>Static methods</h3>
+<dl>
+<dt id="lib.model.employee.Employee.authenticate"><code class="name flex">
+<span>def <span class="ident">authenticate</span></span>(<span>username, password)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Authenticates an employee as a user
+:param username: str
+:param password: str
+:return: Employee</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@classmethod
+def authenticate(cls, username, password):
+    &#34;&#34;&#34;
+    Authenticates an employee as a user
+    :param username: str
+    :param password: str
+    :return: Employee
+    &#34;&#34;&#34;
+    employees = Employee.read_by(filters={
+        &#39;id&#39;: int(username)
+    })
+
+    if len(employees) &lt; 1:
+        return None
+
+    employee = employees[0]
+
+    if sha_hash(password) == employee.password:
+        return employee
+    return None</code></pre>
+</details>
+</dd>
+</dl>
+<h3>Methods</h3>
+<dl>
+<dt id="lib.model.employee.Employee.get_balance"><code class="name flex">
+<span>def <span class="ident">get_balance</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Gets amount owed to employee. Ran during payroll
+:return: balance float</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_balance(self):
+    &#34;&#34;&#34;
+    Gets amount owed to employee. Ran during payroll
+    :return: balance float
+    &#34;&#34;&#34;
+    if self.classification.name == Hourly.name:
+        return self.classification.issue_payment(self.id, self.hourly_rate)
+    if self.classification.name == Salaried.name:
+        return self.classification.issue_payment(self.salary)
+    if self.classification.name == Commissioned.name:
+        return self.classification.issue_payment(self.id, self.salary, self.commission_rate)
+    return 0</code></pre>
+</details>
+</dd>
+<dt id="lib.model.employee.Employee.get_name"><code class="name flex">
+<span>def <span class="ident">get_name</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Returns the Employee first and last name
+:return: str</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_name(self):
+    &#34;&#34;&#34;
+    Returns the Employee first and last name
+    :return: str
+    &#34;&#34;&#34;
+    return f&#34;{self.first_name} {self.last_name}&#34;</code></pre>
+</details>
+</dd>
+<dt id="lib.model.employee.Employee.get_payment_method"><code class="name flex">
+<span>def <span class="ident">get_payment_method</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Returns info for payment method
+:return: list</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_payment_method(self):
+    &#34;&#34;&#34;
+    Returns info for payment method
+    :return: list
+    &#34;&#34;&#34;
+    return self.payment_method.issue(self)</code></pre>
+</details>
+</dd>
+<dt id="lib.model.employee.Employee.update_password"><code class="name flex">
+<span>def <span class="ident">update_password</span></span>(<span>self, new_password: str)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Updates password
+:param new_password: plaintext password
+:return: None</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def update_password(self, new_password: str):
+    &#34;&#34;&#34;
+    Updates password
+    :param new_password: plaintext password
+    :return: None
+    &#34;&#34;&#34;
+    self.password = sha_hash(new_password)  # pylint: disable=attribute-defined-outside-init
+    Employee.update(self)</code></pre>
+</details>
+</dd>
+</dl>
+<h3>Inherited members</h3>
+<ul class="hlist">
+<li><code><b><a title="lib.repository.db.DatabaseRepository" href="../repository/db.html#lib.repository.db.DatabaseRepository">DatabaseRepository</a></b></code>:
+<ul class="hlist">
+<li><code><a title="lib.repository.db.DatabaseRepository.field_optional_validators" href="../repository/validator.html#lib.repository.validator.HasValidation.field_optional_validators">field_optional_validators</a></code></li>
+<li><code><a title="lib.repository.db.DatabaseRepository.field_validators" href="../repository/validator.html#lib.repository.validator.HasValidation.field_validators">field_validators</a></code></li>
+<li><code><a title="lib.repository.db.DatabaseRepository.resource_uri" href="../repository/index.html#lib.repository.Repository.resource_uri">resource_uri</a></code></li>
+</ul>
+</li>
+<li><code><b><a title="lib.repository.db.DatabaseRepository" href="../repository/db.html#lib.repository.db.DatabaseRepository">DatabaseRepository</a></b></code>:
+<ul class="hlist">
+<li><code><a title="lib.repository.db.DatabaseRepository.to_dict" href="../repository/db.html#lib.repository.db.DatabaseRepository.to_dict">to_dict</a></code></li>
+</ul>
+</li>
+<li><code><b><a title="lib.repository.db.DatabaseRepository" href="../repository/db.html#lib.repository.db.DatabaseRepository">DatabaseRepository</a></b></code>:
+<ul class="hlist">
+<li><code><a title="lib.repository.db.DatabaseRepository.after_read" href="../repository/index.html#lib.repository.CanMutateData.after_read">after_read</a></code></li>
+<li><code><a title="lib.repository.db.DatabaseRepository.after_read_many" href="../repository/index.html#lib.repository.CanMutateData.after_read_many">after_read_many</a></code></li>
+<li><code><a title="lib.repository.db.DatabaseRepository.create" href="../repository/db.html#lib.repository.db.DatabaseRepository.create">create</a></code></li>
+<li><code><a title="lib.repository.db.DatabaseRepository.destroy" href="../repository/db.html#lib.repository.db.DatabaseRepository.destroy">destroy</a></code></li>
+<li><code><a title="lib.repository.db.DatabaseRepository.on_create" href="../repository/index.html#lib.repository.Repository.on_create">on_create</a></code></li>
+<li><code><a title="lib.repository.db.DatabaseRepository.on_destroy" href="../repository/index.html#lib.repository.Repository.on_destroy">on_destroy</a></code></li>
+<li><code><a title="lib.repository.db.DatabaseRepository.on_update" href="../repository/index.html#lib.repository.Repository.on_update">on_update</a></code></li>
+<li><code><a title="lib.repository.db.DatabaseRepository.read" href="../repository/db.html#lib.repository.db.DatabaseRepository.read">read</a></code></li>
+<li><code><a title="lib.repository.db.DatabaseRepository.read_all" href="../repository/db.html#lib.repository.db.DatabaseRepository.read_all">read_all</a></code></li>
+<li><code><a title="lib.repository.db.DatabaseRepository.read_by" href="../repository/db.html#lib.repository.db.DatabaseRepository.read_by">read_by</a></code></li>
+<li><code><a title="lib.repository.db.DatabaseRepository.run_statement" href="../repository/db.html#lib.repository.db.DatabaseRepository.run_statement">run_statement</a></code></li>
+<li><code><a title="lib.repository.db.DatabaseRepository.table" href="../repository/db.html#lib.repository.db.DatabaseRepository.table">table</a></code></li>
+<li><code><a title="lib.repository.db.DatabaseRepository.update" href="../repository/db.html#lib.repository.db.DatabaseRepository.update">update</a></code></li>
+<li><code><a title="lib.repository.db.DatabaseRepository.validate" href="../repository/validator.html#lib.repository.validator.HasValidation.validate">validate</a></code></li>
+</ul>
+</li>
+<li><code><b><a title="lib.model.DynamicViewModel" href="index.html#lib.model.DynamicViewModel">DynamicViewModel</a></b></code>:
+<ul class="hlist">
+<li><code><a title="lib.model.DynamicViewModel.field_casts" href="index.html#lib.model.DynamicModel.field_casts">field_casts</a></code></li>
+</ul>
+</li>
+<li><code><b><a title="lib.model.DynamicViewModel" href="index.html#lib.model.DynamicViewModel">DynamicViewModel</a></b></code>:
+<ul class="hlist">
+<li><code><a title="lib.model.DynamicViewModel.from_view_model" href="index.html#lib.model.DynamicViewModel.from_view_model">from_view_model</a></code></li>
+<li><code><a title="lib.model.DynamicViewModel.new_empty" href="index.html#lib.model.DynamicModel.new_empty">new_empty</a></code></li>
+</ul>
+</li>
+<li><code><b><a title="lib.model.DynamicViewModel" href="index.html#lib.model.DynamicViewModel">DynamicViewModel</a></b></code>:
+<ul class="hlist">
+<li><code><a title="lib.model.DynamicViewModel.cast_fields" href="index.html#lib.model.DynamicModel.cast_fields">cast_fields</a></code></li>
+<li><code><a title="lib.model.DynamicViewModel.to_view_model" href="index.html#lib.model.DynamicViewModel.to_view_model">to_view_model</a></code></li>
+</ul>
+</li>
+<li><code><b><a title="lib.model.HasRelationships" href="index.html#lib.model.HasRelationships">HasRelationships</a></b></code>:
+<ul class="hlist">
+<li><code><a title="lib.model.HasRelationships.load_relationships" href="index.html#lib.model.HasRelationships.load_relationships">load_relationships</a></code></li>
+<li><code><a title="lib.model.HasRelationships.relationship_fields" href="index.html#lib.model.HasRelationships.relationship_fields">relationship_fields</a></code></li>
+</ul>
+</li>
+<li><code><b><a title="lib.model.HasRelationships" href="index.html#lib.model.HasRelationships">HasRelationships</a></b></code>:
+<ul class="hlist">
+<li><code><a title="lib.model.HasRelationships.trim_relationships" href="index.html#lib.model.HasRelationships.trim_relationships">trim_relationships</a></code></li>
+</ul>
+</li>
+</ul>
+</dd>
+<dt id="lib.model.employee.Hourly"><code class="flex name class">
+<span>class <span class="ident">Hourly</span></span>
+</code></dt>
+<dd>
+<div class="desc"><p>Class for hourly employee, inherits from classification to use abstract issue payment method</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class Hourly(Classification):
+    &#34;&#34;&#34;
+    Class for hourly employee, inherits from classification to use abstract issue payment method
+    &#34;&#34;&#34;
+    name = &#39;Hourly&#39;
+
+    def issue_payment(self, employee_id, hourly_rate):  # pylint: disable=arguments-differ
+        &#34;&#34;&#34;
+        This method issues payment to hourly classification
+        :returns: money paid to hourly employee
+        &#34;&#34;&#34;
+        money = 0
+
+        timesheets = TimeSheet.read_by({
+            &#39;user_id&#39;: employee_id,
+            &#39;paid&#39;: False
+        })
+        total = sum([timesheet.to_hours() for timesheet in timesheets])
+        money += hourly_rate * total
+
+        for timesheet in timesheets:
+            timesheet.paid = True
+            TimeSheet.update(timesheet)
+
+        return money</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="lib.model.employee.Classification" href="#lib.model.employee.Classification">Classification</a></li>
+</ul>
+<h3>Class variables</h3>
+<dl>
+<dt id="lib.model.employee.Hourly.name"><code class="name">var <span class="ident">name</span> : str</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+</dl>
+<h3>Methods</h3>
+<dl>
+<dt id="lib.model.employee.Hourly.issue_payment"><code class="name flex">
+<span>def <span class="ident">issue_payment</span></span>(<span>self, employee_id, hourly_rate)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>This method issues payment to hourly classification
+:returns: money paid to hourly employee</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def issue_payment(self, employee_id, hourly_rate):  # pylint: disable=arguments-differ
+    &#34;&#34;&#34;
+    This method issues payment to hourly classification
+    :returns: money paid to hourly employee
+    &#34;&#34;&#34;
+    money = 0
+
+    timesheets = TimeSheet.read_by({
+        &#39;user_id&#39;: employee_id,
+        &#39;paid&#39;: False
+    })
+    total = sum([timesheet.to_hours() for timesheet in timesheets])
+    money += hourly_rate * total
+
+    for timesheet in timesheets:
+        timesheet.paid = True
+        TimeSheet.update(timesheet)
+
+    return money</code></pre>
+</details>
+</dd>
+</dl>
+<h3>Inherited members</h3>
+<ul class="hlist">
+<li><code><b><a title="lib.model.employee.Classification" href="#lib.model.employee.Classification">Classification</a></b></code>:
+<ul class="hlist">
+<li><code><a title="lib.model.employee.Classification.from_enum" href="#lib.model.employee.Classification.from_enum">from_enum</a></code></li>
+<li><code><a title="lib.model.employee.Classification.get_id" href="#lib.model.employee.Classification.get_id">get_id</a></code></li>
+<li><code><a title="lib.model.employee.Classification.to_enum" href="#lib.model.employee.Classification.to_enum">to_enum</a></code></li>
+<li><code><a title="lib.model.employee.Classification.to_enum_from_name" href="#lib.model.employee.Classification.to_enum_from_name">to_enum_from_name</a></code></li>
+</ul>
+</li>
+</ul>
+</dd>
+<dt id="lib.model.employee.MailMethod"><code class="flex name class">
+<span>class <span class="ident">MailMethod</span></span>
+</code></dt>
+<dd>
+<div class="desc"><p>Direct method payment class, inherits from PaymentMethod to use abstract issue method</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class MailMethod(PaymentMethod):
+    &#34;&#34;&#34;
+    Direct method payment class, inherits from PaymentMethod to use abstract issue method
+    &#34;&#34;&#34;
+    name = &#39;Mail&#39;
+
+    def issue(self, employee):
+        &#34;&#34;&#34;
+        This method prints out the mailed payment method issued payment being mailed to employee
+        &#34;&#34;&#34;
+        return [
+            employee.classification.issue_payment(),
+            employee.first_name,
+            employee.last_name,
+            employee.address_line1,
+            employee.address_line2,
+            employee.city,
+            employee.state,
+            employee.zipcode
+        ]</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="lib.model.employee.PaymentMethod" href="#lib.model.employee.PaymentMethod">PaymentMethod</a></li>
+</ul>
+<h3>Class variables</h3>
+<dl>
+<dt id="lib.model.employee.MailMethod.name"><code class="name">var <span class="ident">name</span> : str</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+</dl>
+<h3>Methods</h3>
+<dl>
+<dt id="lib.model.employee.MailMethod.issue"><code class="name flex">
+<span>def <span class="ident">issue</span></span>(<span>self, employee)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>This method prints out the mailed payment method issued payment being mailed to employee</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def issue(self, employee):
+    &#34;&#34;&#34;
+    This method prints out the mailed payment method issued payment being mailed to employee
+    &#34;&#34;&#34;
+    return [
+        employee.classification.issue_payment(),
+        employee.first_name,
+        employee.last_name,
+        employee.address_line1,
+        employee.address_line2,
+        employee.city,
+        employee.state,
+        employee.zipcode
+    ]</code></pre>
+</details>
+</dd>
+</dl>
+<h3>Inherited members</h3>
+<ul class="hlist">
+<li><code><b><a title="lib.model.employee.PaymentMethod" href="#lib.model.employee.PaymentMethod">PaymentMethod</a></b></code>:
+<ul class="hlist">
+<li><code><a title="lib.model.employee.PaymentMethod.from_enum" href="#lib.model.employee.PaymentMethod.from_enum">from_enum</a></code></li>
+<li><code><a title="lib.model.employee.PaymentMethod.get_id" href="#lib.model.employee.PaymentMethod.get_id">get_id</a></code></li>
+<li><code><a title="lib.model.employee.PaymentMethod.to_enum" href="#lib.model.employee.PaymentMethod.to_enum">to_enum</a></code></li>
+<li><code><a title="lib.model.employee.PaymentMethod.to_enum_from_name" href="#lib.model.employee.PaymentMethod.to_enum_from_name">to_enum_from_name</a></code></li>
+</ul>
+</li>
+</ul>
+</dd>
+<dt id="lib.model.employee.PaymentMethod"><code class="flex name class">
+<span>class <span class="ident">PaymentMethod</span></span>
+</code></dt>
+<dd>
+<div class="desc"><p>Abstract payment class, allows for each employee to have a payment method that can be issued</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class PaymentMethod:
+    &#34;&#34;&#34;
+    Abstract payment class, allows for each employee to have a payment method that can be issued
+    &#34;&#34;&#34;
+    name: str = &#39;&#39;
+
+    @abstractmethod
+    def issue(self, employee: Employee):
+        &#34;&#34;&#34;
+        Abstract method for issuing payments
+        &#34;&#34;&#34;
+        raise NotImplementedError
+
+    @classmethod
+    def from_enum(cls, index):
+        &#34;&#34;&#34;
+        Converts from ID to class instance
+        :param index: int
+        :return: class instance
+        &#34;&#34;&#34;
+        return pay_methods[index - 1]()
+
+    @classmethod
+    def to_enum(cls, clz):
+        &#34;&#34;&#34;
+        Converts from class to ID
+        :param clz: instance
+        :return: id int
+        &#34;&#34;&#34;
+        return pay_methods[pay_methods_dict[clz.name][&#39;id&#39;]]
+
+    @classmethod
+    def to_enum_from_name(cls, name):
+        &#34;&#34;&#34;
+        Converts from name to ID
+        :param name: str
+        :return: id int
+        &#34;&#34;&#34;
+        return pay_methods[pay_methods_dict[name][&#39;id&#39;] - 1]
+
+    @classmethod
+    def get_id(cls):
+        &#34;&#34;&#34;
+        Gets ID from current class
+        :return: id int
+        &#34;&#34;&#34;
+        return pay_methods_dict[cls.name][&#39;id&#39;]
+
+    def __str__(self):
+        return self.name</code></pre>
+</details>
+<h3>Subclasses</h3>
+<ul class="hlist">
+<li><a title="lib.model.employee.DirectMethod" href="#lib.model.employee.DirectMethod">DirectMethod</a></li>
+<li><a title="lib.model.employee.MailMethod" href="#lib.model.employee.MailMethod">MailMethod</a></li>
+</ul>
+<h3>Class variables</h3>
+<dl>
+<dt id="lib.model.employee.PaymentMethod.name"><code class="name">var <span class="ident">name</span> : str</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+</dl>
+<h3>Static methods</h3>
+<dl>
+<dt id="lib.model.employee.PaymentMethod.from_enum"><code class="name flex">
+<span>def <span class="ident">from_enum</span></span>(<span>index)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Converts from ID to class instance
+:param index: int
+:return: class instance</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@classmethod
+def from_enum(cls, index):
+    &#34;&#34;&#34;
+    Converts from ID to class instance
+    :param index: int
+    :return: class instance
+    &#34;&#34;&#34;
+    return pay_methods[index - 1]()</code></pre>
+</details>
+</dd>
+<dt id="lib.model.employee.PaymentMethod.get_id"><code class="name flex">
+<span>def <span class="ident">get_id</span></span>(<span>)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Gets ID from current class
+:return: id int</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@classmethod
+def get_id(cls):
+    &#34;&#34;&#34;
+    Gets ID from current class
+    :return: id int
+    &#34;&#34;&#34;
+    return pay_methods_dict[cls.name][&#39;id&#39;]</code></pre>
+</details>
+</dd>
+<dt id="lib.model.employee.PaymentMethod.to_enum"><code class="name flex">
+<span>def <span class="ident">to_enum</span></span>(<span>clz)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Converts from class to ID
+:param clz: instance
+:return: id int</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@classmethod
+def to_enum(cls, clz):
+    &#34;&#34;&#34;
+    Converts from class to ID
+    :param clz: instance
+    :return: id int
+    &#34;&#34;&#34;
+    return pay_methods[pay_methods_dict[clz.name][&#39;id&#39;]]</code></pre>
+</details>
+</dd>
+<dt id="lib.model.employee.PaymentMethod.to_enum_from_name"><code class="name flex">
+<span>def <span class="ident">to_enum_from_name</span></span>(<span>name)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Converts from name to ID
+:param name: str
+:return: id int</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@classmethod
+def to_enum_from_name(cls, name):
+    &#34;&#34;&#34;
+    Converts from name to ID
+    :param name: str
+    :return: id int
+    &#34;&#34;&#34;
+    return pay_methods[pay_methods_dict[name][&#39;id&#39;] - 1]</code></pre>
+</details>
+</dd>
+</dl>
+<h3>Methods</h3>
+<dl>
+<dt id="lib.model.employee.PaymentMethod.issue"><code class="name flex">
+<span>def <span class="ident">issue</span></span>(<span>self, employee: <a title="lib.model.employee.Employee" href="#lib.model.employee.Employee">Employee</a>)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Abstract method for issuing payments</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@abstractmethod
+def issue(self, employee: Employee):
+    &#34;&#34;&#34;
+    Abstract method for issuing payments
+    &#34;&#34;&#34;
+    raise NotImplementedError</code></pre>
+</details>
+</dd>
+</dl>
+</dd>
+<dt id="lib.model.employee.Salaried"><code class="flex name class">
+<span>class <span class="ident">Salaried</span></span>
+</code></dt>
+<dd>
+<div class="desc"><p>Class for salary employee, inherits from classification to use abstract issue payment method</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class Salaried(Classification):
+    &#34;&#34;&#34;
+    Class for salary employee, inherits from classification to use abstract issue payment method
+    &#34;&#34;&#34;
+    name = &#39;Salary&#39;
+
+    def issue_payment(self, salary):  # pylint: disable=arguments-differ
+        &#34;&#34;&#34;
+        This method issues salaried employee payment
+        :return: Returns Bimonthly payment(float)
+        &#34;&#34;&#34;
+        return float(salary) / 24</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="lib.model.employee.Classification" href="#lib.model.employee.Classification">Classification</a></li>
+</ul>
+<h3>Class variables</h3>
+<dl>
+<dt id="lib.model.employee.Salaried.name"><code class="name">var <span class="ident">name</span> : str</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+</dl>
+<h3>Methods</h3>
+<dl>
+<dt id="lib.model.employee.Salaried.issue_payment"><code class="name flex">
+<span>def <span class="ident">issue_payment</span></span>(<span>self, salary)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>This method issues salaried employee payment
+:return: Returns Bimonthly payment(float)</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def issue_payment(self, salary):  # pylint: disable=arguments-differ
+    &#34;&#34;&#34;
+    This method issues salaried employee payment
+    :return: Returns Bimonthly payment(float)
+    &#34;&#34;&#34;
+    return float(salary) / 24</code></pre>
+</details>
+</dd>
+</dl>
+<h3>Inherited members</h3>
+<ul class="hlist">
+<li><code><b><a title="lib.model.employee.Classification" href="#lib.model.employee.Classification">Classification</a></b></code>:
+<ul class="hlist">
+<li><code><a title="lib.model.employee.Classification.from_enum" href="#lib.model.employee.Classification.from_enum">from_enum</a></code></li>
+<li><code><a title="lib.model.employee.Classification.get_id" href="#lib.model.employee.Classification.get_id">get_id</a></code></li>
+<li><code><a title="lib.model.employee.Classification.to_enum" href="#lib.model.employee.Classification.to_enum">to_enum</a></code></li>
+<li><code><a title="lib.model.employee.Classification.to_enum_from_name" href="#lib.model.employee.Classification.to_enum_from_name">to_enum_from_name</a></code></li>
+</ul>
+</li>
+</ul>
+</dd>
+</dl>
+</section>
+</article>
+<nav id="sidebar">
+<h1>Index</h1>
+<div class="toc">
+<ul></ul>
+</div>
+<ul id="index">
+<li><h3>Super-module</h3>
+<ul>
+<li><code><a title="lib.model" href="index.html">lib.model</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-functions">Functions</a></h3>
+<ul class="">
+<li><code><a title="lib.model.employee.register_classification" href="#lib.model.employee.register_classification">register_classification</a></code></li>
+<li><code><a title="lib.model.employee.register_payment_method" href="#lib.model.employee.register_payment_method">register_payment_method</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-classes">Classes</a></h3>
+<ul>
+<li>
+<h4><code><a title="lib.model.employee.Classification" href="#lib.model.employee.Classification">Classification</a></code></h4>
+<ul class="two-column">
+<li><code><a title="lib.model.employee.Classification.from_enum" href="#lib.model.employee.Classification.from_enum">from_enum</a></code></li>
+<li><code><a title="lib.model.employee.Classification.get_id" href="#lib.model.employee.Classification.get_id">get_id</a></code></li>
+<li><code><a title="lib.model.employee.Classification.issue_payment" href="#lib.model.employee.Classification.issue_payment">issue_payment</a></code></li>
+<li><code><a title="lib.model.employee.Classification.name" href="#lib.model.employee.Classification.name">name</a></code></li>
+<li><code><a title="lib.model.employee.Classification.to_enum" href="#lib.model.employee.Classification.to_enum">to_enum</a></code></li>
+<li><code><a title="lib.model.employee.Classification.to_enum_from_name" href="#lib.model.employee.Classification.to_enum_from_name">to_enum_from_name</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="lib.model.employee.Commissioned" href="#lib.model.employee.Commissioned">Commissioned</a></code></h4>
+<ul class="">
+<li><code><a title="lib.model.employee.Commissioned.issue_payment" href="#lib.model.employee.Commissioned.issue_payment">issue_payment</a></code></li>
+<li><code><a title="lib.model.employee.Commissioned.name" href="#lib.model.employee.Commissioned.name">name</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="lib.model.employee.DirectMethod" href="#lib.model.employee.DirectMethod">DirectMethod</a></code></h4>
+<ul class="">
+<li><code><a title="lib.model.employee.DirectMethod.issue" href="#lib.model.employee.DirectMethod.issue">issue</a></code></li>
+<li><code><a title="lib.model.employee.DirectMethod.name" href="#lib.model.employee.DirectMethod.name">name</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="lib.model.employee.Employee" href="#lib.model.employee.Employee">Employee</a></code></h4>
+<ul class="two-column">
+<li><code><a title="lib.model.employee.Employee.authenticate" href="#lib.model.employee.Employee.authenticate">authenticate</a></code></li>
+<li><code><a title="lib.model.employee.Employee.engine" href="#lib.model.employee.Employee.engine">engine</a></code></li>
+<li><code><a title="lib.model.employee.Employee.get_balance" href="#lib.model.employee.Employee.get_balance">get_balance</a></code></li>
+<li><code><a title="lib.model.employee.Employee.get_name" href="#lib.model.employee.Employee.get_name">get_name</a></code></li>
+<li><code><a title="lib.model.employee.Employee.get_payment_method" href="#lib.model.employee.Employee.get_payment_method">get_payment_method</a></code></li>
+<li><code><a title="lib.model.employee.Employee.metadata" href="#lib.model.employee.Employee.metadata">metadata</a></code></li>
+<li><code><a title="lib.model.employee.Employee.update_password" href="#lib.model.employee.Employee.update_password">update_password</a></code></li>
+<li><code><a title="lib.model.employee.Employee.url" href="#lib.model.employee.Employee.url">url</a></code></li>
+<li><code><a title="lib.model.employee.Employee.view_columns" href="#lib.model.employee.Employee.view_columns">view_columns</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="lib.model.employee.Hourly" href="#lib.model.employee.Hourly">Hourly</a></code></h4>
+<ul class="">
+<li><code><a title="lib.model.employee.Hourly.issue_payment" href="#lib.model.employee.Hourly.issue_payment">issue_payment</a></code></li>
+<li><code><a title="lib.model.employee.Hourly.name" href="#lib.model.employee.Hourly.name">name</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="lib.model.employee.MailMethod" href="#lib.model.employee.MailMethod">MailMethod</a></code></h4>
+<ul class="">
+<li><code><a title="lib.model.employee.MailMethod.issue" href="#lib.model.employee.MailMethod.issue">issue</a></code></li>
+<li><code><a title="lib.model.employee.MailMethod.name" href="#lib.model.employee.MailMethod.name">name</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="lib.model.employee.PaymentMethod" href="#lib.model.employee.PaymentMethod">PaymentMethod</a></code></h4>
+<ul class="two-column">
+<li><code><a title="lib.model.employee.PaymentMethod.from_enum" href="#lib.model.employee.PaymentMethod.from_enum">from_enum</a></code></li>
+<li><code><a title="lib.model.employee.PaymentMethod.get_id" href="#lib.model.employee.PaymentMethod.get_id">get_id</a></code></li>
+<li><code><a title="lib.model.employee.PaymentMethod.issue" href="#lib.model.employee.PaymentMethod.issue">issue</a></code></li>
+<li><code><a title="lib.model.employee.PaymentMethod.name" href="#lib.model.employee.PaymentMethod.name">name</a></code></li>
+<li><code><a title="lib.model.employee.PaymentMethod.to_enum" href="#lib.model.employee.PaymentMethod.to_enum">to_enum</a></code></li>
+<li><code><a title="lib.model.employee.PaymentMethod.to_enum_from_name" href="#lib.model.employee.PaymentMethod.to_enum_from_name">to_enum_from_name</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="lib.model.employee.Salaried" href="#lib.model.employee.Salaried">Salaried</a></code></h4>
+<ul class="">
+<li><code><a title="lib.model.employee.Salaried.issue_payment" href="#lib.model.employee.Salaried.issue_payment">issue_payment</a></code></li>
+<li><code><a title="lib.model.employee.Salaried.name" href="#lib.model.employee.Salaried.name">name</a></code></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</nav>
+</main>
+<footer id="footer">
+<p>Generated by <a href="https://pdoc3.github.io/pdoc"><cite>pdoc</cite> 0.9.2</a>.</p>
+</footer>
+</body>
+</html>

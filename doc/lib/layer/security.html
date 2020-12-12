@@ -1,0 +1,662 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
+<meta name="generator" content="pdoc 0.9.2" />
+<title>lib.layer.security API documentation</title>
+<meta name="description" content="Roles and Security Layer" />
+<link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/sanitize.min.css" integrity="sha256-PK9q560IAAa6WVRRh76LtCaI8pjTJ2z11v0miyNNjrs=" crossorigin>
+<link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/typography.min.css" integrity="sha256-7l/o7C8jubJiy74VsKTidCy1yBkRtiUGbVkYBylBqUg=" crossorigin>
+<link rel="stylesheet preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/styles/github.min.css" crossorigin>
+<style>:root{--highlight-color:#fe9}.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:30px;overflow:hidden}#sidebar > *:last-child{margin-bottom:2cm}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:1em 0 .50em 0}h3{font-size:1.4em;margin:25px 0 10px 0}h4{margin:0;font-size:105%}h1:target,h2:target,h3:target,h4:target,h5:target,h6:target{background:var(--highlight-color);padding:.2em 0}a{color:#058;text-decoration:none;transition:color .3s ease-in-out}a:hover{color:#e82}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900}pre code{background:#f8f8f8;font-size:.8em;line-height:1.4em}code{background:#f2f2f1;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{background:#f8f8f8;border:0;border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0;padding:1ex}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{margin-top:.6em;font-weight:bold}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-weight:bold;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}dt:target .name{background:var(--highlight-color)}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}td{padding:0 .5em}.admonition{padding:.1em .5em;margin-bottom:1em}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%;height:100vh;overflow:auto;position:sticky;top:0}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.item .name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul{padding-left:1.5em}.toc > ul > li{margin-top:.5em}}</style>
+<style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/highlight.min.js" integrity="sha256-Uv3H6lx7dJmRfRvH8TH6kJD1TSK1aFcwgx+mdg3epi8=" crossorigin></script>
+<script>window.addEventListener('DOMContentLoaded', () => hljs.initHighlighting())</script>
+</head>
+<body>
+<main>
+<article id="content">
+<header>
+<h1 class="title">Module <code>lib.layer.security</code></h1>
+</header>
+<section id="section-intro">
+<p>Roles and Security Layer</p>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">&#34;&#34;&#34;
+Roles and Security Layer
+&#34;&#34;&#34;
+
+import dictdiffer
+
+from lib.layer import Layer
+from lib.model.change_request import ChangeRequest
+
+CAN_CREATE = &#39;can_create&#39;  # falsy. Base rule is to reject
+CANT_READ = &#39;cant_read&#39;  # truthy. Base rule is to allow. Deletes fields during read
+CAN_UPDATE = &#39;can_update&#39;  # falsy. Base rule is to reject
+CAN_DESTROY = &#39;can_delete&#39;  # falsy. Base rule is to reject
+CAN_APPROVE = &#39;can_approve&#39;  # falsy. Base rule is to reject
+
+ROLES = {
+    &#34;Admin&#34;: {
+        CAN_CREATE: [
+            &#34;*&#34;
+        ],
+        CAN_UPDATE: {
+            &#34;*&#34;
+        },
+        CAN_DESTROY: [
+            &#34;*&#34;
+        ],
+        CAN_APPROVE: {
+            &#34;*&#34;
+        }
+    },
+    &#34;Accounting&#34;: {
+        CAN_UPDATE: {
+            &#34;employee&#34;: [
+                &#34;salary&#34;,
+                &#34;hourly_rate&#34;,
+                &#34;commission_rate&#34;,
+                &#34;bank_routing&#34;,
+                &#34;bank_account&#34;,
+                &#34;classification_id&#34;,
+                &#34;paymethod_id&#34;,
+                &#34;role&#34;
+            ]
+        },
+    },
+    &#34;Reporter&#34;: {
+        CANT_READ: {
+            &#34;employee&#34;: [
+                &#34;social_security_number&#34;,
+                &#34;role&#34;
+            ]
+        }
+    },
+    &#34;Viewer&#34;: {
+        CANT_READ: {
+            &#34;employee&#34;: [
+                &#34;salary&#34;,
+                &#34;hourly_rate&#34;,
+                &#34;commission_rate&#34;,
+                &#34;bank_routing&#34;,
+                &#34;bank_account&#34;,
+                &#34;classification_id&#34;,
+                &#34;paymethod_id&#34;,
+                &#34;role&#34;
+            ]
+        }
+    }
+}
+
+
+class SecurityException(Exception):
+    &#34;&#34;&#34;
+    Thrown when some security policy is violated
+    &#34;&#34;&#34;
+
+
+class ChangeRequestException(Exception):
+    &#34;&#34;&#34;
+    Thrown when a change request is entered instead of changing the data source directly
+    &#34;&#34;&#34;
+
+    def __init__(self, message, *args, request=None):
+        super().__init__(message, *args)
+        self.request = request
+
+
+class SecurityLayer(Layer):
+    &#34;&#34;&#34;
+    Enforces role-based policies as outlined in ROLES
+    &#34;&#34;&#34;
+
+    def __init__(self, user):
+        super().__init__()
+
+        if user.role not in ROLES:
+            raise ValueError(f&#39;No role programmed for role &#34;{user.role}&#34;&#39;)
+
+        self.user_role_name = user.role
+        self.user_role = ROLES[user.role]
+        self.user = user
+
+    @staticmethod
+    def _get_model_name_from_repo_cls(repo_cls):
+        return repo_cls.__name__.lower()
+
+    def on_create(self, repo_cls, new_model):
+        model_name = self._get_model_name_from_repo_cls(repo_cls)
+
+        if model_name == &#39;changerequest&#39;:
+            return
+
+        if CAN_CREATE not in self.user_role:
+            raise SecurityException(f&#39;Creating {model_name} records is not allowed&#39;)
+
+        if &#39;*&#39; in self.user_role[CAN_CREATE]:
+            return
+
+        if model_name not in self.user_role[CAN_CREATE]:
+            raise SecurityException(f&#39;Creating {model_name} records is not allowed&#39;)
+
+        changes = list(dictdiffer.diff({}, new_model.to_dict()))
+
+        # everyone who is not an Admin must request
+        request = ChangeRequest({
+            &#39;author_user_id&#39;: self.user.id,
+            &#39;table_name&#39;: repo_cls.resource_uri,
+            &#39;row_id&#39;: None,
+            &#39;changes&#39;: changes,
+            &#39;reason&#39;: &#39;No reason given&#39;
+        })
+        request = ChangeRequest.create(request)
+        raise ChangeRequestException(&#39;Request created successfully&#39;, request)
+
+    def on_read_one(self, repo_cls, model):
+        model_name = self._get_model_name_from_repo_cls(repo_cls)
+
+        if CANT_READ not in self.user_role:
+            return
+
+        if &#39;*&#39; in self.user_role[CANT_READ]:
+            raise SecurityException(f&#39;Cannot read this {model_name}! &#39;
+                                    f&#39;Insufficient permission.&#39;)
+
+        if model_name in self.user_role[CANT_READ]:
+            for field in self.user_role[CANT_READ][model_name]:
+                if field == &#39;*&#39;:
+                    raise SecurityException(f&#39;Cannot read this {model_name}! &#39;
+                                            f&#39;Insufficient permission.&#39;)
+
+                if hasattr(model, field):
+                    delattr(model, field)
+
+    def on_read_many(self, repo_cls, models):
+        raise NotImplementedError(&#39;lib.repository._call_middlewares currently &#39;
+                                  &#39;calls on_read_one iteratively&#39;)
+
+    def on_update(self, repo_cls, updated_model, id_attr=&#39;id&#39;):  # pylint: disable=too-many-branches
+        &#34;&#34;&#34;
+        Uses dictdiffer to find the differences in the dictionary versions of the
+        old and new model.
+
+        If the following dictionaries were given:
+
+        a_dict = {
+            &#39;a&#39;: &#39;foo&#39;,
+            &#39;b&#39;: &#39;bar&#39;,
+            &#39;d&#39;: &#39;barfoo&#39;
+        }
+
+        b_dict = {
+            &#39;a&#39;: &#39;foo&#39;,
+            &#39;b&#39;: &#39;BAR&#39;,
+            &#39;c&#39;: &#39;foobar&#39;
+        }
+
+        The dictdiffer tool would return the following:
+
+        difference = list(dictdiffer.diff(a_dict, b_dict))
+        print(difference)
+            [
+                (&#39;change&#39;, &#39;b&#39;, (&#39;bar&#39;, &#39;BAR&#39;)),
+                (&#39;add&#39;, &#39;&#39;, [(&#39;c&#39;, &#39;foobar&#39;)]),
+                (&#39;remove&#39;, &#39;&#39;, [(&#39;d&#39;, &#39;barfoo&#39;)])
+            ]
+        &#34;&#34;&#34;
+        model_name = self._get_model_name_from_repo_cls(repo_cls)
+
+        if CAN_UPDATE not in self.user_role:
+            raise SecurityException(f&#39;Updating {model_name} records is not allowed&#39;)
+
+        if &#39;*&#39; in self.user_role[CAN_UPDATE]:
+            return
+
+        if model_name not in self.user_role[CAN_UPDATE]:
+            raise SecurityException(f&#39;Updating {model_name} records is not allowed&#39;)
+
+        # self.user_role[CAN_UPDATE][model_name] exists
+        # now to look at the nitty-gritty of the changes...
+
+        old_model = repo_cls.read(getattr(updated_model, repo_cls.id_attr))
+
+        changes = list(dictdiffer.diff(old_model.to_dict(), updated_model.to_dict()))
+
+        for action, field, values in changes:
+            if action == &#39;add&#39;:
+                print(&#39;Warning: attempt to add a field made. Was this desired?&#39;)
+                for couple in values:
+                    for key, ignored in couple:  # pylint: disable=unused-variable
+                        if key not in self.user_role[CAN_UPDATE][model_name]:
+                            raise SecurityException(f&#39;Updating the {key} field in &#39;
+                                                    f&#39;{model_name} records is not allowed&#39;)
+            elif action == &#39;remove&#39;:
+                for couple in values:
+                    for key, ignored in couple:  # pylint: disable=unused-variable
+                        if key not in self.user_role[CAN_UPDATE][model_name]:
+                            raise SecurityException(f&#39;Updating the {key} field in &#39;
+                                                    f&#39;{model_name} records is not allowed&#39;)
+            elif action == &#39;change&#39;:
+                if field not in self.user_role[CAN_UPDATE][model_name]:
+                    raise SecurityException(f&#39;Updating the {field} field in &#39;
+                                            f&#39;{model_name} records is not allowed&#39;)
+
+        # everyone who is not an Admin must request
+        request = ChangeRequest({
+            &#39;author_user_id&#39;: self.user.id,
+            &#39;table_name&#39;: repo_cls.resource_uri,
+            &#39;row_id&#39;: getattr(updated_model, id_attr),
+            &#39;changes&#39;: changes,
+            &#39;reason&#39;: &#39;No reason given&#39;
+        })
+        request = ChangeRequest.create(request)
+        raise ChangeRequestException(&#39;Request created successfully&#39;, request)
+
+    def on_destroy(self, repo_cls, model_id, id_attr=&#39;id&#39;):
+        model_name = self._get_model_name_from_repo_cls(repo_cls)
+
+        if CAN_DESTROY not in self.user_role:
+            raise SecurityException(f&#39;Destroying {model_name} records is not allowed&#39;)
+
+        if &#39;*&#39; in self.user_role[CAN_DESTROY]:
+            return
+
+        if model_name not in self.user_role[CAN_DESTROY]:
+            raise SecurityException(f&#39;Destroying {model_name} records is not allowed&#39;)</code></pre>
+</details>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+<h2 class="section-title" id="header-classes">Classes</h2>
+<dl>
+<dt id="lib.layer.security.ChangeRequestException"><code class="flex name class">
+<span>class <span class="ident">ChangeRequestException</span></span>
+<span>(</span><span>message, *args, request=None)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Thrown when a change request is entered instead of changing the data source directly</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class ChangeRequestException(Exception):
+    &#34;&#34;&#34;
+    Thrown when a change request is entered instead of changing the data source directly
+    &#34;&#34;&#34;
+
+    def __init__(self, message, *args, request=None):
+        super().__init__(message, *args)
+        self.request = request</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li>builtins.Exception</li>
+<li>builtins.BaseException</li>
+</ul>
+</dd>
+<dt id="lib.layer.security.SecurityException"><code class="flex name class">
+<span>class <span class="ident">SecurityException</span></span>
+<span>(</span><span>*args, **kwargs)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Thrown when some security policy is violated</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class SecurityException(Exception):
+    &#34;&#34;&#34;
+    Thrown when some security policy is violated
+    &#34;&#34;&#34;</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li>builtins.Exception</li>
+<li>builtins.BaseException</li>
+</ul>
+</dd>
+<dt id="lib.layer.security.SecurityLayer"><code class="flex name class">
+<span>class <span class="ident">SecurityLayer</span></span>
+<span>(</span><span>user)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Enforces role-based policies as outlined in ROLES</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class SecurityLayer(Layer):
+    &#34;&#34;&#34;
+    Enforces role-based policies as outlined in ROLES
+    &#34;&#34;&#34;
+
+    def __init__(self, user):
+        super().__init__()
+
+        if user.role not in ROLES:
+            raise ValueError(f&#39;No role programmed for role &#34;{user.role}&#34;&#39;)
+
+        self.user_role_name = user.role
+        self.user_role = ROLES[user.role]
+        self.user = user
+
+    @staticmethod
+    def _get_model_name_from_repo_cls(repo_cls):
+        return repo_cls.__name__.lower()
+
+    def on_create(self, repo_cls, new_model):
+        model_name = self._get_model_name_from_repo_cls(repo_cls)
+
+        if model_name == &#39;changerequest&#39;:
+            return
+
+        if CAN_CREATE not in self.user_role:
+            raise SecurityException(f&#39;Creating {model_name} records is not allowed&#39;)
+
+        if &#39;*&#39; in self.user_role[CAN_CREATE]:
+            return
+
+        if model_name not in self.user_role[CAN_CREATE]:
+            raise SecurityException(f&#39;Creating {model_name} records is not allowed&#39;)
+
+        changes = list(dictdiffer.diff({}, new_model.to_dict()))
+
+        # everyone who is not an Admin must request
+        request = ChangeRequest({
+            &#39;author_user_id&#39;: self.user.id,
+            &#39;table_name&#39;: repo_cls.resource_uri,
+            &#39;row_id&#39;: None,
+            &#39;changes&#39;: changes,
+            &#39;reason&#39;: &#39;No reason given&#39;
+        })
+        request = ChangeRequest.create(request)
+        raise ChangeRequestException(&#39;Request created successfully&#39;, request)
+
+    def on_read_one(self, repo_cls, model):
+        model_name = self._get_model_name_from_repo_cls(repo_cls)
+
+        if CANT_READ not in self.user_role:
+            return
+
+        if &#39;*&#39; in self.user_role[CANT_READ]:
+            raise SecurityException(f&#39;Cannot read this {model_name}! &#39;
+                                    f&#39;Insufficient permission.&#39;)
+
+        if model_name in self.user_role[CANT_READ]:
+            for field in self.user_role[CANT_READ][model_name]:
+                if field == &#39;*&#39;:
+                    raise SecurityException(f&#39;Cannot read this {model_name}! &#39;
+                                            f&#39;Insufficient permission.&#39;)
+
+                if hasattr(model, field):
+                    delattr(model, field)
+
+    def on_read_many(self, repo_cls, models):
+        raise NotImplementedError(&#39;lib.repository._call_middlewares currently &#39;
+                                  &#39;calls on_read_one iteratively&#39;)
+
+    def on_update(self, repo_cls, updated_model, id_attr=&#39;id&#39;):  # pylint: disable=too-many-branches
+        &#34;&#34;&#34;
+        Uses dictdiffer to find the differences in the dictionary versions of the
+        old and new model.
+
+        If the following dictionaries were given:
+
+        a_dict = {
+            &#39;a&#39;: &#39;foo&#39;,
+            &#39;b&#39;: &#39;bar&#39;,
+            &#39;d&#39;: &#39;barfoo&#39;
+        }
+
+        b_dict = {
+            &#39;a&#39;: &#39;foo&#39;,
+            &#39;b&#39;: &#39;BAR&#39;,
+            &#39;c&#39;: &#39;foobar&#39;
+        }
+
+        The dictdiffer tool would return the following:
+
+        difference = list(dictdiffer.diff(a_dict, b_dict))
+        print(difference)
+            [
+                (&#39;change&#39;, &#39;b&#39;, (&#39;bar&#39;, &#39;BAR&#39;)),
+                (&#39;add&#39;, &#39;&#39;, [(&#39;c&#39;, &#39;foobar&#39;)]),
+                (&#39;remove&#39;, &#39;&#39;, [(&#39;d&#39;, &#39;barfoo&#39;)])
+            ]
+        &#34;&#34;&#34;
+        model_name = self._get_model_name_from_repo_cls(repo_cls)
+
+        if CAN_UPDATE not in self.user_role:
+            raise SecurityException(f&#39;Updating {model_name} records is not allowed&#39;)
+
+        if &#39;*&#39; in self.user_role[CAN_UPDATE]:
+            return
+
+        if model_name not in self.user_role[CAN_UPDATE]:
+            raise SecurityException(f&#39;Updating {model_name} records is not allowed&#39;)
+
+        # self.user_role[CAN_UPDATE][model_name] exists
+        # now to look at the nitty-gritty of the changes...
+
+        old_model = repo_cls.read(getattr(updated_model, repo_cls.id_attr))
+
+        changes = list(dictdiffer.diff(old_model.to_dict(), updated_model.to_dict()))
+
+        for action, field, values in changes:
+            if action == &#39;add&#39;:
+                print(&#39;Warning: attempt to add a field made. Was this desired?&#39;)
+                for couple in values:
+                    for key, ignored in couple:  # pylint: disable=unused-variable
+                        if key not in self.user_role[CAN_UPDATE][model_name]:
+                            raise SecurityException(f&#39;Updating the {key} field in &#39;
+                                                    f&#39;{model_name} records is not allowed&#39;)
+            elif action == &#39;remove&#39;:
+                for couple in values:
+                    for key, ignored in couple:  # pylint: disable=unused-variable
+                        if key not in self.user_role[CAN_UPDATE][model_name]:
+                            raise SecurityException(f&#39;Updating the {key} field in &#39;
+                                                    f&#39;{model_name} records is not allowed&#39;)
+            elif action == &#39;change&#39;:
+                if field not in self.user_role[CAN_UPDATE][model_name]:
+                    raise SecurityException(f&#39;Updating the {field} field in &#39;
+                                            f&#39;{model_name} records is not allowed&#39;)
+
+        # everyone who is not an Admin must request
+        request = ChangeRequest({
+            &#39;author_user_id&#39;: self.user.id,
+            &#39;table_name&#39;: repo_cls.resource_uri,
+            &#39;row_id&#39;: getattr(updated_model, id_attr),
+            &#39;changes&#39;: changes,
+            &#39;reason&#39;: &#39;No reason given&#39;
+        })
+        request = ChangeRequest.create(request)
+        raise ChangeRequestException(&#39;Request created successfully&#39;, request)
+
+    def on_destroy(self, repo_cls, model_id, id_attr=&#39;id&#39;):
+        model_name = self._get_model_name_from_repo_cls(repo_cls)
+
+        if CAN_DESTROY not in self.user_role:
+            raise SecurityException(f&#39;Destroying {model_name} records is not allowed&#39;)
+
+        if &#39;*&#39; in self.user_role[CAN_DESTROY]:
+            return
+
+        if model_name not in self.user_role[CAN_DESTROY]:
+            raise SecurityException(f&#39;Destroying {model_name} records is not allowed&#39;)</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="lib.layer.Layer" href="index.html#lib.layer.Layer">Layer</a></li>
+</ul>
+<h3>Methods</h3>
+<dl>
+<dt id="lib.layer.security.SecurityLayer.on_update"><code class="name flex">
+<span>def <span class="ident">on_update</span></span>(<span>self, repo_cls, updated_model, id_attr='id')</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Uses dictdiffer to find the differences in the dictionary versions of the
+old and new model.</p>
+<p>If the following dictionaries were given:</p>
+<p>a_dict = {
+'a': 'foo',
+'b': 'bar',
+'d': 'barfoo'
+}</p>
+<p>b_dict = {
+'a': 'foo',
+'b': 'BAR',
+'c': 'foobar'
+}</p>
+<p>The dictdiffer tool would return the following:</p>
+<p>difference = list(dictdiffer.diff(a_dict, b_dict))
+print(difference)
+[
+('change', 'b', ('bar', 'BAR')),
+('add', '', [('c', 'foobar')]),
+('remove', '', [('d', 'barfoo')])
+]</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def on_update(self, repo_cls, updated_model, id_attr=&#39;id&#39;):  # pylint: disable=too-many-branches
+    &#34;&#34;&#34;
+    Uses dictdiffer to find the differences in the dictionary versions of the
+    old and new model.
+
+    If the following dictionaries were given:
+
+    a_dict = {
+        &#39;a&#39;: &#39;foo&#39;,
+        &#39;b&#39;: &#39;bar&#39;,
+        &#39;d&#39;: &#39;barfoo&#39;
+    }
+
+    b_dict = {
+        &#39;a&#39;: &#39;foo&#39;,
+        &#39;b&#39;: &#39;BAR&#39;,
+        &#39;c&#39;: &#39;foobar&#39;
+    }
+
+    The dictdiffer tool would return the following:
+
+    difference = list(dictdiffer.diff(a_dict, b_dict))
+    print(difference)
+        [
+            (&#39;change&#39;, &#39;b&#39;, (&#39;bar&#39;, &#39;BAR&#39;)),
+            (&#39;add&#39;, &#39;&#39;, [(&#39;c&#39;, &#39;foobar&#39;)]),
+            (&#39;remove&#39;, &#39;&#39;, [(&#39;d&#39;, &#39;barfoo&#39;)])
+        ]
+    &#34;&#34;&#34;
+    model_name = self._get_model_name_from_repo_cls(repo_cls)
+
+    if CAN_UPDATE not in self.user_role:
+        raise SecurityException(f&#39;Updating {model_name} records is not allowed&#39;)
+
+    if &#39;*&#39; in self.user_role[CAN_UPDATE]:
+        return
+
+    if model_name not in self.user_role[CAN_UPDATE]:
+        raise SecurityException(f&#39;Updating {model_name} records is not allowed&#39;)
+
+    # self.user_role[CAN_UPDATE][model_name] exists
+    # now to look at the nitty-gritty of the changes...
+
+    old_model = repo_cls.read(getattr(updated_model, repo_cls.id_attr))
+
+    changes = list(dictdiffer.diff(old_model.to_dict(), updated_model.to_dict()))
+
+    for action, field, values in changes:
+        if action == &#39;add&#39;:
+            print(&#39;Warning: attempt to add a field made. Was this desired?&#39;)
+            for couple in values:
+                for key, ignored in couple:  # pylint: disable=unused-variable
+                    if key not in self.user_role[CAN_UPDATE][model_name]:
+                        raise SecurityException(f&#39;Updating the {key} field in &#39;
+                                                f&#39;{model_name} records is not allowed&#39;)
+        elif action == &#39;remove&#39;:
+            for couple in values:
+                for key, ignored in couple:  # pylint: disable=unused-variable
+                    if key not in self.user_role[CAN_UPDATE][model_name]:
+                        raise SecurityException(f&#39;Updating the {key} field in &#39;
+                                                f&#39;{model_name} records is not allowed&#39;)
+        elif action == &#39;change&#39;:
+            if field not in self.user_role[CAN_UPDATE][model_name]:
+                raise SecurityException(f&#39;Updating the {field} field in &#39;
+                                        f&#39;{model_name} records is not allowed&#39;)
+
+    # everyone who is not an Admin must request
+    request = ChangeRequest({
+        &#39;author_user_id&#39;: self.user.id,
+        &#39;table_name&#39;: repo_cls.resource_uri,
+        &#39;row_id&#39;: getattr(updated_model, id_attr),
+        &#39;changes&#39;: changes,
+        &#39;reason&#39;: &#39;No reason given&#39;
+    })
+    request = ChangeRequest.create(request)
+    raise ChangeRequestException(&#39;Request created successfully&#39;, request)</code></pre>
+</details>
+</dd>
+</dl>
+<h3>Inherited members</h3>
+<ul class="hlist">
+<li><code><b><a title="lib.layer.Layer" href="index.html#lib.layer.Layer">Layer</a></b></code>:
+<ul class="hlist">
+<li><code><a title="lib.layer.Layer.on_create" href="index.html#lib.layer.Layer.on_create">on_create</a></code></li>
+<li><code><a title="lib.layer.Layer.on_destroy" href="index.html#lib.layer.Layer.on_destroy">on_destroy</a></code></li>
+<li><code><a title="lib.layer.Layer.on_read_many" href="index.html#lib.layer.Layer.on_read_many">on_read_many</a></code></li>
+<li><code><a title="lib.layer.Layer.on_read_one" href="index.html#lib.layer.Layer.on_read_one">on_read_one</a></code></li>
+</ul>
+</li>
+</ul>
+</dd>
+</dl>
+</section>
+</article>
+<nav id="sidebar">
+<h1>Index</h1>
+<div class="toc">
+<ul></ul>
+</div>
+<ul id="index">
+<li><h3>Super-module</h3>
+<ul>
+<li><code><a title="lib.layer" href="index.html">lib.layer</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-classes">Classes</a></h3>
+<ul>
+<li>
+<h4><code><a title="lib.layer.security.ChangeRequestException" href="#lib.layer.security.ChangeRequestException">ChangeRequestException</a></code></h4>
+</li>
+<li>
+<h4><code><a title="lib.layer.security.SecurityException" href="#lib.layer.security.SecurityException">SecurityException</a></code></h4>
+</li>
+<li>
+<h4><code><a title="lib.layer.security.SecurityLayer" href="#lib.layer.security.SecurityLayer">SecurityLayer</a></code></h4>
+<ul class="">
+<li><code><a title="lib.layer.security.SecurityLayer.on_update" href="#lib.layer.security.SecurityLayer.on_update">on_update</a></code></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</nav>
+</main>
+<footer id="footer">
+<p>Generated by <a href="https://pdoc3.github.io/pdoc"><cite>pdoc</cite> 0.9.2</a>.</p>
+</footer>
+</body>
+</html>
