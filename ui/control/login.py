@@ -43,8 +43,7 @@ class LoginController(Controller):
 
         authenticated = Employee.authenticate(username, password)
         if authenticated is not None:
-            store.AUTHENTICATED_USER = authenticated
-            SecurityLayer(authenticated)
+            store.SECURITY_LAYER = SecurityLayer(authenticated)
             print("Logged in as user ID", authenticated.id)
             self.view.destroy()
             DatabaseController().show()

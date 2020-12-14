@@ -56,7 +56,7 @@ class ChangeRequestsController(Controller):
         ids = self.view.table.get_selectedRecordNames()
         for request_id in ids:
             request = ChangeRequest.read(request_id)
-            request.apply_to_db(store.AUTHENTICATED_USER)
+            request.apply_to_db(store.SECURITY_LAYER.user)
         self.view.show_info('Approvals Successful', 'Changes applied successfully!')
         self.refresh()
 

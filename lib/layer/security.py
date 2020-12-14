@@ -46,7 +46,12 @@ ROLES = {
         CANT_READ: {
             "employee": [
                 "social_security_number",
-                "role"
+                "role",
+                "address_line1",
+                "address_line2",
+                "city",
+                "state",
+                "zipcode",
             ]
         }
     },
@@ -60,7 +65,14 @@ ROLES = {
                 "bank_account",
                 "classification_id",
                 "paymethod_id",
-                "role"
+                "classification",  # view model field of the above
+                "payment_method",  # view model field of the above
+                "role",
+                "address_line1",
+                "address_line2",
+                "city",
+                "state",
+                "zipcode",
             ]
         }
     }
@@ -241,3 +253,17 @@ class SecurityLayer(Layer):
 
         if model_name not in self.user_role[CAN_DESTROY]:
             raise SecurityException(f'Destroying {model_name} records is not allowed')
+
+    def can_read(self, resource_uri, field):
+        """
+        Calculates if a role can access a certain field
+
+        :param role: Role string
+        :param resource_uri: URI str
+        :param field: field name
+        :return: bool if can read
+        """
+        return not (self.user_role
+                    and CANT_READ in self.user_role
+                    and resource_uri in self.user_role[CANT_READ]
+                    and field in self.user_role[CANT_READ][field])

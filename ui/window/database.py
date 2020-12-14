@@ -113,7 +113,7 @@ class DatabaseWindow(TkinterWindow):  # pylint: disable=too-many-instance-attrib
                                        data=self.results, rowheight=50)
         self.table.show()
 
-        if store.AUTHENTICATED_USER.role == 'Viewer':
+        if store.SECURITY_LAYER.user.role == 'Viewer':
             self.table.read_only = True
 
         self.create_menu()
@@ -132,15 +132,16 @@ class DatabaseWindow(TkinterWindow):  # pylint: disable=too-many-instance-attrib
         self.filemenu = Menu(self.menubar, tearoff=False)
         # New Employee
         # adds a command to the menu option, calling it exit
-        self.filemenu.add_command(label="New Employee",
-                                  command=self.event_handlers['new_employee'])
-        self.filemenu.add_command(label="New Receipt",
-                                  command=self.event_handlers['new_receipt'])
-        self.filemenu.add_command(label="New Timesheet",
-                                  command=self.event_handlers['new_timesheet'])
+        if store.SECURITY_LAYER.user.role != 'Viewer':
+            self.filemenu.add_command(label="New Employee",
+                                      command=self.event_handlers['new_employee'])
+            self.filemenu.add_command(label="New Receipt",
+                                      command=self.event_handlers['new_receipt'])
+            self.filemenu.add_command(label="New Timesheet",
+                                      command=self.event_handlers['new_timesheet'])
         self.filemenu.add_separator()
-        if store.AUTHENTICATED_USER.role == 'Admin' \
-                or store.AUTHENTICATED_USER.role == 'Accounting':
+        if store.SECURITY_LAYER.user.role == 'Admin' \
+                or store.SECURITY_LAYER.user.role == 'Accounting':
             self.filemenu.add_command(label="Run Payroll",
                                       command=self.event_handlers['run_payroll'])
         self.filemenu.add_command(label="Change My Password",
@@ -169,11 +170,11 @@ class DatabaseWindow(TkinterWindow):  # pylint: disable=too-many-instance-attrib
                                      command=self.event_handlers['import>timesheets'])
         self.menubar.add_cascade(label="Import", menu=self.import_menu)
         # Admin tab
-        if store.AUTHENTICATED_USER.role == 'Admin':
+        if store.SECURITY_LAYER.user.role == 'Admin':
             self.admin_menu = Menu(self.menubar, tearoff=False)
             self.admin_menu.add_command(label="Review Change Requests",
                                         command=self.event_handlers['admin>review'])
-            self.admin_menu.add_command(label="Change Passwords",
+            self.admin_menu.add_command(label="Set Passwords",
                                         command=self.event_handlers['admin>change_password'])
             self.menubar.add_cascade(label="Admin", menu=self.admin_menu)
 
@@ -222,8 +223,8 @@ class DatabaseWindow(TkinterWindow):  # pylint: disable=too-many-instance-attrib
         self.new_button.pack(side=LEFT, anchor=W)
         self.refresh_button.pack(side=LEFT, anchor=W)
         Label(buttons,
-              text=f"({store.AUTHENTICATED_USER.first_name} "
-              f"{store.AUTHENTICATED_USER.last_name})") \
+              text=f"({store.SECURITY_LAYER.user.first_name} "
+              f"{store.SECURITY_LAYER.user.last_name})") \
             .pack(side=LEFT, anchor=W)
 
         self.status = Label(buttons, text='')

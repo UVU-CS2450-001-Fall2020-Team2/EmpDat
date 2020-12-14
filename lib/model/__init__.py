@@ -157,15 +157,19 @@ class DynamicViewModel(DynamicModel, ABC):
         """
         super().__init__(data)
 
-    def to_view_model(self):
+    def to_view_model(self, security_layer=None):
         """
         Uses the view_columns dictionary and converts the model
         instance into a dictionary ready for presentation
 
+        :param security_layer: SecurityLayer instance
         :return: view model dictionary
         """
         view_model = {}
         for key, value in self.view_columns.items():
+            if security_layer:
+                if not security_layer.can_read(self.resource_uri, key):
+                    continue
             if getattr(self, key):
                 view_model[value] = getattr(self, key)
             else:

@@ -217,7 +217,7 @@ class DatabaseController(Controller):
         """
 
         def on_save(dialog, old_pass: str, password: str, password_confirm: str):
-            _on_password_save(self.view, dialog, store.AUTHENTICATED_USER.id,
+            _on_password_save(self.view, dialog, store.SECURITY_LAYER.user.id,
                               old_pass, password, password_confirm)
 
         MyPasswordDialog({
