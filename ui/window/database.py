@@ -132,16 +132,17 @@ class DatabaseWindow(TkinterWindow):  # pylint: disable=too-many-instance-attrib
         self.filemenu = Menu(self.menubar, tearoff=False)
         # New Employee
         # adds a command to the menu option, calling it exit
-        if store.SECURITY_LAYER.user.role != 'Viewer':
+        if store.SECURITY_LAYER.can_create('employee'):
             self.filemenu.add_command(label="New Employee",
                                       command=self.event_handlers['new_employee'])
+        if store.SECURITY_LAYER.can_create('receipt'):
             self.filemenu.add_command(label="New Receipt",
                                       command=self.event_handlers['new_receipt'])
+        if store.SECURITY_LAYER.can_create('timesheet'):
             self.filemenu.add_command(label="New Timesheet",
                                       command=self.event_handlers['new_timesheet'])
         self.filemenu.add_separator()
-        if store.SECURITY_LAYER.user.role == 'Admin' \
-                or store.SECURITY_LAYER.user.role == 'Accounting':
+        if store.SECURITY_LAYER.can_('payroll'):
             self.filemenu.add_command(label="Run Payroll",
                                       command=self.event_handlers['run_payroll'])
         self.filemenu.add_command(label="Change My Password",
@@ -220,7 +221,8 @@ class DatabaseWindow(TkinterWindow):  # pylint: disable=too-many-instance-attrib
             state="disabled"
         )
 
-        self.new_button.pack(side=LEFT, anchor=W)
+        if store.SECURITY_LAYER.can_create('employee'):
+            self.new_button.pack(side=LEFT, anchor=W)
         self.refresh_button.pack(side=LEFT, anchor=W)
         Label(buttons,
               text=f"({store.SECURITY_LAYER.user.first_name} "
@@ -232,8 +234,9 @@ class DatabaseWindow(TkinterWindow):  # pylint: disable=too-many-instance-attrib
 
         Frame(buttons, relief='flat', borderwidth=0).pack(fill=X, expand=1)
 
-        self.save_button.pack(side=RIGHT, anchor=E)
-        self.delete_button.pack(side=RIGHT, anchor=E)
+        if store.SECURITY_LAYER.can_update('employee'):
+            self.save_button.pack(side=RIGHT, anchor=E)
+            self.delete_button.pack(side=RIGHT, anchor=E)
         self.search_button.pack(side=RIGHT, anchor=E)
 
         buttons.pack(side=RIGHT, fill=X, expand=1)
@@ -325,6 +328,7 @@ class DatabaseWindow(TkinterWindow):  # pylint: disable=too-many-instance-attrib
         :return: None
         """
         self.table.addRow(record_id, **to_add)
+        print(to_add)
 
     def destroy_results(self):
         """

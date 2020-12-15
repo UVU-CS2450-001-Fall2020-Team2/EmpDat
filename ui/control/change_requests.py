@@ -27,7 +27,9 @@ class ChangeRequestsController(Controller):
         Loads all change requests and has the view display them
         :return: None
         """
-        change_requests = ChangeRequest.read_all()
+        change_requests = ChangeRequest.read_by(filters={
+            'approved_at': None
+        })
         i = 0
         for request in change_requests:
             i += 1
@@ -40,6 +42,7 @@ class ChangeRequestsController(Controller):
         Wipes and refreshes change requests view
         :return: None
         """
+        self.view.destroy_results()
         self.load()
         self.view.table.redraw()
 

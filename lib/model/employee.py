@@ -9,7 +9,7 @@ from sqlalchemy import MetaData, Table, Column, String, \
 
 from lib.model import DynamicViewModel, HasRelationships, register_database_model
 from lib.model.receipt import Receipt
-from lib.model.time_sheet import TimeSheet
+from lib.model.timesheet import TimeSheet
 from lib.repository.db import DatabaseRepository
 from lib.utils import sha_hash, date_converter
 

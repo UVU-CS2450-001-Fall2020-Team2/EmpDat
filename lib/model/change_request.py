@@ -69,21 +69,26 @@ class ChangeRequest(DatabaseRepository, DynamicViewModel, HasRelationships):
         if not model_cls:
             raise Exception("Table name given in the ChangeRequest does not exist!")
 
+        changes = ChangeRequest.deserialize_dates(self.changes)
+
         if self.row_id:  # is just a change?
             model = model_cls.read(self.row_id)
-            for diff_type, field, values in self.changes:
+            for diff_type, field, values in changes:
                 if diff_type == 'change':
                     setattr(model, field, values[1])
             model_cls.update(model)
         else:  # it must be an entire new object
             model_raw = {}
-            for diff_type, field, values in self.changes:
+            for diff_type, field, values in changes:
                 if diff_type == 'add':
-                    setattr(model_raw, field, values[1])
+                    for couple in values:
+                        model_raw[couple[0]] = couple[1]
             model_cls.create(model_cls(model_raw))
 
         self.approved_by_user_id = approved_by.id  # pylint: disable=attribute-defined-outside-init
         self.approved_at = datetime.datetime.now()  # pylint: disable=attribute-defined-outside-init
+
+        self.changes = ChangeRequest.serialize_dates(self.changes)
 
         ChangeRequest.update(self)
 
@@ -102,11 +107,22 @@ class ChangeRequest(DatabaseRepository, DynamicViewModel, HasRelationships):
         """
         result = ""
         for diff_type, field, values in changes:  # pylint: disable=unused-variable
-            if model_name:
-                model_cls = find_model_by_name(model_name)
-                result += f"{model_cls.view_columns[field]}: {values[0]} > {values[1]}\n"
+            if diff_type == 'change':
+                if model_name:
+                    model_cls = find_model_by_name(model_name)
+                    result += f"{model_cls.view_columns[field]}: {values[0]} => {values[1]}\n"
+                else:
+                    result += f"{field}: {values[0]} > {values[1]}\n"
             else:
-                result += f"{field}: {values[0]} > {values[1]}\n"
+                for couple in values:
+                    if model_name:
+                        model_cls = find_model_by_name(model_name)
+                        if couple[0] in model_cls.view_columns:
+                            result += f"{model_cls.view_columns[couple[0]]}: {couple[1]}\n"
+                        # else:
+                        #     result += f"{model_cls.view_columns[couple[0]]}: {couple[1]}\n"
+                    else:
+                        result += f"{couple[0]}: {couple[1]}\n"
         return result.rstrip()
 
     @classmethod
@@ -124,3 +140,36 @@ class ChangeRequest(DatabaseRepository, DynamicViewModel, HasRelationships):
                      Column('approved_by_user_id', BigInteger, nullable=True),
                      extend_existing=True
                      )
+
+    @staticmethod
+    def serialize_dates(changes):
+        print(changes)
+        for action, field, values in changes:
+            if action == 'add':
+                for i in range(len(values)):
+                    couple = values[i]
+                    mutable = list(couple)
+                    if isinstance(couple[1], datetime.datetime):
+                        mutable[1] = couple[1].isoformat()
+                    values[i] = tuple(mutable)
+
+        return changes
+
+    @staticmethod
+    def deserialize_dates(changes):
+        print(changes)
+        for action, field, values in changes:
+            if action == 'add':
+                for i in range(len(values)):
+                    couple = values[i]
+                    mutable = list(couple)
+                    try:
+                        mutable[1] = datetime.datetime.strptime(couple[1], "%Y-%m-%dT%H:%M:%S")
+                        values[i] = tuple(mutable)
+                    except:
+                        try:
+                            mutable[1] = datetime.datetime.strptime(couple[1], "%Y-%m-%dT%H:%M:%S.%f")
+                            values[i] = tuple(mutable)
+                        except:
+                            continue
+        return changes

@@ -12,6 +12,7 @@ CANT_READ = 'cant_read'  # truthy. Base rule is to allow. Deletes fields during 
 CAN_UPDATE = 'can_update'  # falsy. Base rule is to reject
 CAN_DESTROY = 'can_delete'  # falsy. Base rule is to reject
 CAN_APPROVE = 'can_approve'  # falsy. Base rule is to reject
+CAN = 'can'
 
 ROLES = {
     "Admin": {
@@ -39,25 +40,67 @@ ROLES = {
                 "classification_id",
                 "paymethod_id",
                 "role"
+            ],
+            "timesheet": [
+                "*"
+            ],
+            "receipt": [
+                "*"
             ]
         },
+        CAN_CREATE: [
+            "timesheet",
+            "receipt"
+        ],
+        CAN: [
+            "payroll",
+        ]
     },
     "Reporter": {
         CANT_READ: {
             "employee": [
-                "social_security_number",
                 "role",
+                "social_security_number",
                 "address_line1",
                 "address_line2",
                 "city",
                 "state",
                 "zipcode",
+                "salary",
+                "hourly_rate",
+                "commission_rate",
+                "bank_routing",
+                "bank_account",
+                "paymethod_id",
+                "payment_method",  # view model field of the above
             ]
+        },
+        CAN_CREATE: [
+            "timesheet",
+            "receipt"
+        ],
+        CAN_UPDATE: {
+            "timesheet": {
+                "*"
+            },
+            "receipt": {
+                "*"
+            }
         }
     },
     "Viewer": {
         CANT_READ: {
             "employee": [
+                "id",
+                "role",
+                "social_security_number",
+                "start_date",
+                "date_of_birth",
+                "address_line1",
+                "address_line2",
+                "city",
+                "state",
+                "zipcode",
                 "salary",
                 "hourly_rate",
                 "commission_rate",
@@ -67,12 +110,8 @@ ROLES = {
                 "paymethod_id",
                 "classification",  # view model field of the above
                 "payment_method",  # view model field of the above
-                "role",
-                "address_line1",
-                "address_line2",
-                "city",
-                "state",
-                "zipcode",
+                'date_left',
+                'notes'
             ]
         }
     }
@@ -136,7 +175,7 @@ class SecurityLayer(Layer):
             'author_user_id': self.user.id,
             'table_name': repo_cls.resource_uri,
             'row_id': None,
-            'changes': changes,
+            'changes': ChangeRequest.serialize_dates(changes),
             'reason': 'No reason given'
         })
         request = ChangeRequest.create(request)
@@ -211,6 +250,7 @@ class SecurityLayer(Layer):
         old_model = repo_cls.read(getattr(updated_model, repo_cls.id_attr))
 
         changes = list(dictdiffer.diff(old_model.to_dict(), updated_model.to_dict()))
+        print(changes)
 
         for action, field, values in changes:
             if action == 'add':
@@ -236,7 +276,7 @@ class SecurityLayer(Layer):
             'author_user_id': self.user.id,
             'table_name': repo_cls.resource_uri,
             'row_id': getattr(updated_model, id_attr),
-            'changes': changes,
+            'changes': ChangeRequest.serialize_dates(changes),
             'reason': 'No reason given'
         })
         request = ChangeRequest.create(request)
@@ -254,6 +294,20 @@ class SecurityLayer(Layer):
         if model_name not in self.user_role[CAN_DESTROY]:
             raise SecurityException(f'Destroying {model_name} records is not allowed')
 
+    def can_create(self, resource_uri):
+        """
+        Checks if user can create X
+
+        :param resource_uri: X
+        :return: True if can create X
+        """
+        if self.user_role and CAN_CREATE in self.user_role and '*' in self.user_role[CAN_UPDATE]:
+            return True
+
+        return self.user_role \
+               and CAN_CREATE in self.user_role \
+               and resource_uri in self.user_role[CAN_CREATE]
+
     def can_read(self, resource_uri, field):
         """
         Calculates if a role can access a certain field
@@ -263,7 +317,35 @@ class SecurityLayer(Layer):
         :param field: field name
         :return: bool if can read
         """
+
         return not (self.user_role
                     and CANT_READ in self.user_role
                     and resource_uri in self.user_role[CANT_READ]
-                    and field in self.user_role[CANT_READ][field])
+                    and field in self.user_role[CANT_READ][resource_uri])
+
+    def can_update(self, resource_uri):
+        """
+        Checks if user can update X
+
+        :param resource_uri: X
+        :return: True if can update X
+        """
+        if self.user_role and CAN_UPDATE in self.user_role and '*' in self.user_role[CAN_UPDATE]:
+            return True
+
+        return self.user_role \
+               and CAN_UPDATE in self.user_role \
+               and resource_uri in self.user_role[CAN_UPDATE]
+
+    def can_(self, custom_operation: str):
+        """
+        Checks if an arbitrary operation can be done with this role
+
+        :param custom_operation: operation string
+        :return: bool if can do X
+        """
+        if self.user_role_name == 'Admin':
+            return True
+
+        return self.user_role and CAN in self.user_role \
+               and custom_operation in self.user_role[CAN]

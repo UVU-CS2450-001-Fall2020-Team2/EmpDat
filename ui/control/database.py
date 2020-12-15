@@ -11,7 +11,7 @@ from lib.cli.payroll import run_payroll
 from lib.layer.security import ChangeRequestException, SecurityException
 from lib.model.employee import Employee
 from lib.model.receipt import Receipt
-from lib.model.time_sheet import TimeSheet
+from lib.model.timesheet import TimeSheet
 from lib.repository.validator import is_valid_against, ValidationException
 from lib.utils import sha_hash
 from ui import store
@@ -98,7 +98,8 @@ class DatabaseController(Controller):
         i = 0
         for employee in employees:
             i += 1
-            self.view.add_to_result(employee.id, employee.to_view_model())
+            self.view.add_to_result(employee.id,
+                                    employee.to_view_model(security_layer=store.SECURITY_LAYER))
 
         self.view.table.autoResizeColumns()
 
@@ -155,16 +156,18 @@ class DatabaseController(Controller):
                 is_new = True
 
             try:
+                print(view_model)
                 employee = Employee.from_view_model(view_model)
+                print(employee.to_dict())
                 if is_new:
                     Employee.create(employee)
                 else:
                     Employee.update(employee)
             except ChangeRequestException:
                 change_request_submitted = True
-            except SecurityException:
+            except SecurityException as error:
                 self.view.highlight_invalid_rows([employee_id])
-                self.view.show_error('Error', 'Access Denied')
+                self.view.show_error('Error', f'Access Denied\n{error}')
                 return
             except ValidationException as error:
                 self.view.highlight_invalid_cell(employee_id,

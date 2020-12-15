@@ -3,16 +3,16 @@ Timesheet Model
 """
 from sqlalchemy import Table, MetaData, Column, String, Integer, DateTime, Boolean, BigInteger
 
-from lib.model import DynamicModel, HasRelationships, register_database_model
+from lib.model import DynamicModel, HasRelationships, register_database_model, DynamicViewModel
 from lib.repository.db import DatabaseRepository
 
 
 @register_database_model
-class TimeSheet(DatabaseRepository, DynamicModel, HasRelationships):
+class TimeSheet(DatabaseRepository, DynamicViewModel, HasRelationships):
     """
     Timesheet Model
     """
-    resource_uri = 'time_sheet'
+    resource_uri = 'timesheet'
     field_validators = {
 
     }
@@ -21,6 +21,14 @@ class TimeSheet(DatabaseRepository, DynamicModel, HasRelationships):
     }
     field_casts = {
 
+    }
+    view_columns = {
+        'id': 'ID',
+        'user_id': 'Owner ID',
+        'user': 'Owner',
+        'datetime_begin': 'Time In',
+        'datetime_end': 'Time Out',
+        'paid': 'Time In',
     }
 
     def __init__(self, data):
@@ -31,10 +39,13 @@ class TimeSheet(DatabaseRepository, DynamicModel, HasRelationships):
         return self.trim_relationships(DynamicModel.to_dict(self))
 
     def load_relationships(self):
+        # self.user = Employee.read(self.user_id)
         pass
 
     def relationship_fields(self) -> list:
-        return []
+        return [
+            'user'
+        ]
 
     def to_hours(self):
         """

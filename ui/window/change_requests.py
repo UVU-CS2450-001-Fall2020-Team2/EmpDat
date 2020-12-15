@@ -21,7 +21,13 @@ def _render_row_id(raw: str) -> str:
     loaded = json.loads(raw)
     table_name = loaded[0]
     row_id = loaded[1]
-    return find_model_by_name(table_name).read(row_id).get_name()
+
+    if row_id:
+        try:
+            return find_model_by_name(table_name).read(row_id).get_name()
+        except AttributeError:
+            pass
+    return 'NEW'
 
 
 class ChangeRequestsWindow(TkinterWindow):
@@ -44,16 +50,16 @@ class ChangeRequestsWindow(TkinterWindow):
         frame.pack(fill=BOTH, expand=1)
         self.table = EmpDatTableCanvas(frame,
                                        col_modifiers={
-                                           2: {
+                                           'ID affected': {
                                                'render_as': lambda x: _render_row_id(x)  # pylint: disable=unnecessary-lambda
                                            },
-                                           3: {
+                                           'Changes': {
                                                'render_as': lambda x:
                                                ChangeRequest.prettify_changes(*json.loads(x))
                                            }
                                        },
-                                       on_selected=lambda x: self.set_bottom_state('normal'),
-                                       data=self.results, rowheight=50)
+                                       on_selected=lambda: self.set_bottom_state('normal'),
+                                       data=self.results, rowheight=150)
         self.table.show()
         self.table.read_only = True
 
@@ -103,3 +109,12 @@ class ChangeRequestsWindow(TkinterWindow):
         to_add['ID affected'] = json.dumps((to_add['Data Type'], to_add['ID affected']))
         to_add['Changes'] = json.dumps((to_add['Changes'], to_add['Data Type']))
         self.table.addRow(record_id, **to_add)
+
+    def destroy_results(self):
+        """
+        Destroy all rows
+        :return: None
+        """
+        keys = list(self.table.model.data.keys())
+        for key in keys:
+            self.table.model.deleteRow(key=key)

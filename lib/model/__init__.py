@@ -168,6 +168,7 @@ class DynamicViewModel(DynamicModel, ABC):
         view_model = {}
         for key, value in self.view_columns.items():
             if security_layer:
+                print(key)
                 if not security_layer.can_read(self.resource_uri, key):
                     continue
             if getattr(self, key):
