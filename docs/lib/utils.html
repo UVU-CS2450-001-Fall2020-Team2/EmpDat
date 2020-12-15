@@ -56,7 +56,10 @@ def date_converter(date_thing):
     if isinstance(date_thing, datetime.date):
         return date_thing
     if isinstance(date_thing, str):
-        return datetime.datetime.strptime(date_thing, &#39;%Y-%m-%d&#39;).date()
+        try:
+            return datetime.datetime.strptime(date_thing, &#39;%m/%d/%y&#39;).date()
+        except:
+            return datetime.datetime.strptime(date_thing, &#39;%Y-%m-%d&#39;).date()
     raise ValueError(f&#39;Invalid date &#34;{date_thing}&#34; given&#39;)</code></pre>
 </details>
 </section>
@@ -89,7 +92,10 @@ def date_converter(date_thing):
     if isinstance(date_thing, datetime.date):
         return date_thing
     if isinstance(date_thing, str):
-        return datetime.datetime.strptime(date_thing, &#39;%Y-%m-%d&#39;).date()
+        try:
+            return datetime.datetime.strptime(date_thing, &#39;%m/%d/%y&#39;).date()
+        except:
+            return datetime.datetime.strptime(date_thing, &#39;%Y-%m-%d&#39;).date()
     raise ValueError(f&#39;Invalid date &#34;{date_thing}&#34; given&#39;)</code></pre>
 </details>
 </dd>

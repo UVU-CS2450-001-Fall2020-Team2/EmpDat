@@ -186,15 +186,19 @@ class DynamicViewModel(DynamicModel, ABC):
         &#34;&#34;&#34;
         super().__init__(data)
 
-    def to_view_model(self):
+    def to_view_model(self, security_layer=None):
         &#34;&#34;&#34;
         Uses the view_columns dictionary and converts the model
         instance into a dictionary ready for presentation
 
+        :param security_layer: SecurityLayer instance
         :return: view model dictionary
         &#34;&#34;&#34;
         view_model = {}
         for key, value in self.view_columns.items():
+            if security_layer:
+                if not security_layer.can_read(self.resource_uri, key):
+                    continue
             if getattr(self, key):
                 view_model[value] = getattr(self, key)
             else:
@@ -284,7 +288,7 @@ class HasRelationships:
 <dd>
 <div class="desc"><p>Receipt Model</p></div>
 </dd>
-<dt><code class="name"><a title="lib.model.time_sheet" href="time_sheet.html">lib.model.time_sheet</a></code></dt>
+<dt><code class="name"><a title="lib.model.timesheet" href="timesheet.html">lib.model.timesheet</a></code></dt>
 <dd>
 <div class="desc"><p>Timesheet Model</p></div>
 </dd>
@@ -465,7 +469,6 @@ Can be overridden.</p>
 <li><a title="lib.model.DynamicViewModel" href="#lib.model.DynamicViewModel">DynamicViewModel</a></li>
 <li><a title="lib.model.department.Department" href="department.html#lib.model.department.Department">Department</a></li>
 <li><a title="lib.model.receipt.Receipt" href="receipt.html#lib.model.receipt.Receipt">Receipt</a></li>
-<li><a title="lib.model.time_sheet.TimeSheet" href="time_sheet.html#lib.model.time_sheet.TimeSheet">TimeSheet</a></li>
 </ul>
 <h3>Class variables</h3>
 <dl>
@@ -633,15 +636,19 @@ Example:
         &#34;&#34;&#34;
         super().__init__(data)
 
-    def to_view_model(self):
+    def to_view_model(self, security_layer=None):
         &#34;&#34;&#34;
         Uses the view_columns dictionary and converts the model
         instance into a dictionary ready for presentation
 
+        :param security_layer: SecurityLayer instance
         :return: view model dictionary
         &#34;&#34;&#34;
         view_model = {}
         for key, value in self.view_columns.items():
+            if security_layer:
+                if not security_layer.can_read(self.resource_uri, key):
+                    continue
             if getattr(self, key):
                 view_model[value] = getattr(self, key)
             else:
@@ -672,6 +679,7 @@ Example:
 <ul class="hlist">
 <li><a title="lib.model.change_request.ChangeRequest" href="change_request.html#lib.model.change_request.ChangeRequest">ChangeRequest</a></li>
 <li><a title="lib.model.employee.Employee" href="employee.html#lib.model.employee.Employee">Employee</a></li>
+<li><a title="lib.model.timesheet.TimeSheet" href="timesheet.html#lib.model.timesheet.TimeSheet">TimeSheet</a></li>
 </ul>
 <h3>Class variables</h3>
 <dl>
@@ -713,25 +721,30 @@ def from_view_model(cls, view_model: dict):
 <h3>Methods</h3>
 <dl>
 <dt id="lib.model.DynamicViewModel.to_view_model"><code class="name flex">
-<span>def <span class="ident">to_view_model</span></span>(<span>self)</span>
+<span>def <span class="ident">to_view_model</span></span>(<span>self, security_layer=None)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Uses the view_columns dictionary and converts the model
 instance into a dictionary ready for presentation</p>
-<p>:return: view model dictionary</p></div>
+<p>:param security_layer: SecurityLayer instance
+:return: view model dictionary</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def to_view_model(self):
+<pre><code class="python">def to_view_model(self, security_layer=None):
     &#34;&#34;&#34;
     Uses the view_columns dictionary and converts the model
     instance into a dictionary ready for presentation
 
+    :param security_layer: SecurityLayer instance
     :return: view model dictionary
     &#34;&#34;&#34;
     view_model = {}
     for key, value in self.view_columns.items():
+        if security_layer:
+            if not security_layer.can_read(self.resource_uri, key):
+                continue
         if getattr(self, key):
             view_model[value] = getattr(self, key)
         else:
@@ -814,7 +827,7 @@ instance into a dictionary ready for presentation</p>
 <li><a title="lib.model.department.Department" href="department.html#lib.model.department.Department">Department</a></li>
 <li><a title="lib.model.employee.Employee" href="employee.html#lib.model.employee.Employee">Employee</a></li>
 <li><a title="lib.model.receipt.Receipt" href="receipt.html#lib.model.receipt.Receipt">Receipt</a></li>
-<li><a title="lib.model.time_sheet.TimeSheet" href="time_sheet.html#lib.model.time_sheet.TimeSheet">TimeSheet</a></li>
+<li><a title="lib.model.timesheet.TimeSheet" href="timesheet.html#lib.model.timesheet.TimeSheet">TimeSheet</a></li>
 </ul>
 <h3>Methods</h3>
 <dl>
@@ -900,7 +913,7 @@ def relationship_fields(self) -&gt; list:
 <li><code><a title="lib.model.department" href="department.html">lib.model.department</a></code></li>
 <li><code><a title="lib.model.employee" href="employee.html">lib.model.employee</a></code></li>
 <li><code><a title="lib.model.receipt" href="receipt.html">lib.model.receipt</a></code></li>
-<li><code><a title="lib.model.time_sheet" href="time_sheet.html">lib.model.time_sheet</a></code></li>
+<li><code><a title="lib.model.timesheet" href="timesheet.html">lib.model.timesheet</a></code></li>
 </ul>
 </li>
 <li><h3><a href="#header-functions">Functions</a></h3>

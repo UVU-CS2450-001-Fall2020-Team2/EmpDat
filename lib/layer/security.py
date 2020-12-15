@@ -250,7 +250,7 @@ class SecurityLayer(Layer):
         old_model = repo_cls.read(getattr(updated_model, repo_cls.id_attr))
 
         changes = list(dictdiffer.diff(old_model.to_dict(), updated_model.to_dict()))
-        print(changes)
+        # print(changes)
 
         for action, field, values in changes:
             if action == 'add':

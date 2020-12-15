@@ -328,7 +328,6 @@ class DatabaseWindow(TkinterWindow):  # pylint: disable=too-many-instance-attrib
         :return: None
         """
         self.table.addRow(record_id, **to_add)
-        print(to_add)
 
     def destroy_results(self):
         """

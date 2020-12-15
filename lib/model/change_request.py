@@ -143,7 +143,6 @@ class ChangeRequest(DatabaseRepository, DynamicViewModel, HasRelationships):
 
     @staticmethod
     def serialize_dates(changes):
-        print(changes)
         for action, field, values in changes:
             if action == 'add':
                 for i in range(len(values)):
@@ -157,7 +156,6 @@ class ChangeRequest(DatabaseRepository, DynamicViewModel, HasRelationships):
 
     @staticmethod
     def deserialize_dates(changes):
-        print(changes)
         for action, field, values in changes:
             if action == 'add':
                 for i in range(len(values)):

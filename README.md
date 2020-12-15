@@ -21,16 +21,24 @@ However, EmpDat can be run on any operating system Python is supported on.
 ### The easy way
 
 ##### Windows:
-1. ~~Run the installer wizard in win/EmpDatSetup.exe~~
-    - Due to security issues with Windows, an installation wizard is not possible.
-1. Unzip the `Portable.exe.zip` to a location of choice.
+1. Unzip the `Portable.win.zip` to a location of choice.
 2. Run `EmpDat.exe`
 3. Done!
 
-#### The hard way: from source
+#### The harder way: from included environment
 Most of the steps require a terminal window.
-1. Acquire the source from either the deployment ZIP archive
-    - `src/` is the source folder within the deployment ZIP archive
+1. Acquire the source with dependencies from the deployment ZIP archive
+    - `src_w_deps.zip`
+2. Ensure Python 3 (version 3.6 minimum) is installed.
+3. Activate the virtual environment by running:
+    - `.\venv\Scripts\activate.bat`
+4. Install dependencies: `pip install -r requirements.txt`
+5. Run `python EmpDat.py`
+
+#### The hard way: from scratch
+Most of the steps require a terminal window.
+1. Acquire the source from the deployment ZIP archive
+    - `src.zip`
 2. Ensure Python 3 (version 3.6 minimum) is installed.
 3. Install dependencies: `pip3 install -r requirements.txt`
 4. Run `python3 EmpDat.py`
@@ -42,9 +50,10 @@ Most of the steps require a terminal window.
     - Password: `Ineed2changemypassword!`
 2. On the top bar, click **File > Change Password** 
     and change the super-admin's password to preference
-3. Import previous database of employees
+3. If desired, import previous database of employees
     - On the top bar, click **Import > Employees** and locate the previous CSV database
     - *Note: the database can be converted back into a CSV using the Employee Directory Report*
+4. Consult the User Manual for performing other operations
 
 ## Development
 

@@ -28,7 +28,7 @@ class TimeSheet(DatabaseRepository, DynamicViewModel, HasRelationships):
         'user': 'Owner',
         'datetime_begin': 'Time In',
         'datetime_end': 'Time Out',
-        'paid': 'Time In',
+        'paid': 'Is Paid?',
     }
 
     def __init__(self, data):

@@ -41,6 +41,7 @@ CANT_READ = &#39;cant_read&#39;  # truthy. Base rule is to allow. Deletes fields
 CAN_UPDATE = &#39;can_update&#39;  # falsy. Base rule is to reject
 CAN_DESTROY = &#39;can_delete&#39;  # falsy. Base rule is to reject
 CAN_APPROVE = &#39;can_approve&#39;  # falsy. Base rule is to reject
+CAN = &#39;can&#39;
 
 ROLES = {
     &#34;Admin&#34;: {
@@ -68,20 +69,67 @@ ROLES = {
                 &#34;classification_id&#34;,
                 &#34;paymethod_id&#34;,
                 &#34;role&#34;
+            ],
+            &#34;timesheet&#34;: [
+                &#34;*&#34;
+            ],
+            &#34;receipt&#34;: [
+                &#34;*&#34;
             ]
         },
+        CAN_CREATE: [
+            &#34;timesheet&#34;,
+            &#34;receipt&#34;
+        ],
+        CAN: [
+            &#34;payroll&#34;,
+        ]
     },
     &#34;Reporter&#34;: {
         CANT_READ: {
             &#34;employee&#34;: [
+                &#34;role&#34;,
                 &#34;social_security_number&#34;,
-                &#34;role&#34;
+                &#34;address_line1&#34;,
+                &#34;address_line2&#34;,
+                &#34;city&#34;,
+                &#34;state&#34;,
+                &#34;zipcode&#34;,
+                &#34;salary&#34;,
+                &#34;hourly_rate&#34;,
+                &#34;commission_rate&#34;,
+                &#34;bank_routing&#34;,
+                &#34;bank_account&#34;,
+                &#34;paymethod_id&#34;,
+                &#34;payment_method&#34;,  # view model field of the above
             ]
+        },
+        CAN_CREATE: [
+            &#34;timesheet&#34;,
+            &#34;receipt&#34;
+        ],
+        CAN_UPDATE: {
+            &#34;timesheet&#34;: {
+                &#34;*&#34;
+            },
+            &#34;receipt&#34;: {
+                &#34;*&#34;
+            }
         }
     },
     &#34;Viewer&#34;: {
         CANT_READ: {
             &#34;employee&#34;: [
+                &#34;id&#34;,
+                &#34;role&#34;,
+                &#34;social_security_number&#34;,
+                &#34;start_date&#34;,
+                &#34;date_of_birth&#34;,
+                &#34;address_line1&#34;,
+                &#34;address_line2&#34;,
+                &#34;city&#34;,
+                &#34;state&#34;,
+                &#34;zipcode&#34;,
                 &#34;salary&#34;,
                 &#34;hourly_rate&#34;,
                 &#34;commission_rate&#34;,
@@ -89,7 +137,10 @@ ROLES = {
                 &#34;bank_account&#34;,
                 &#34;classification_id&#34;,
                 &#34;paymethod_id&#34;,
-                &#34;role&#34;
+                &#34;classification&#34;,  # view model field of the above
+                &#34;payment_method&#34;,  # view model field of the above
+                &#39;date_left&#39;,
+                &#39;notes&#39;
             ]
         }
     }
@@ -153,7 +204,7 @@ class SecurityLayer(Layer):
             &#39;author_user_id&#39;: self.user.id,
             &#39;table_name&#39;: repo_cls.resource_uri,
             &#39;row_id&#39;: None,
-            &#39;changes&#39;: changes,
+            &#39;changes&#39;: ChangeRequest.serialize_dates(changes),
             &#39;reason&#39;: &#39;No reason given&#39;
         })
         request = ChangeRequest.create(request)
@@ -228,6 +279,7 @@ class SecurityLayer(Layer):
         old_model = repo_cls.read(getattr(updated_model, repo_cls.id_attr))
 
         changes = list(dictdiffer.diff(old_model.to_dict(), updated_model.to_dict()))
+        # print(changes)
 
         for action, field, values in changes:
             if action == &#39;add&#39;:
@@ -253,7 +305,7 @@ class SecurityLayer(Layer):
             &#39;author_user_id&#39;: self.user.id,
             &#39;table_name&#39;: repo_cls.resource_uri,
             &#39;row_id&#39;: getattr(updated_model, id_attr),
-            &#39;changes&#39;: changes,
+            &#39;changes&#39;: ChangeRequest.serialize_dates(changes),
             &#39;reason&#39;: &#39;No reason given&#39;
         })
         request = ChangeRequest.create(request)
@@ -269,7 +321,63 @@ class SecurityLayer(Layer):
             return
 
         if model_name not in self.user_role[CAN_DESTROY]:
-            raise SecurityException(f&#39;Destroying {model_name} records is not allowed&#39;)</code></pre>
+            raise SecurityException(f&#39;Destroying {model_name} records is not allowed&#39;)
+
+    def can_create(self, resource_uri):
+        &#34;&#34;&#34;
+        Checks if user can create X
+
+        :param resource_uri: X
+        :return: True if can create X
+        &#34;&#34;&#34;
+        if self.user_role and CAN_CREATE in self.user_role and &#39;*&#39; in self.user_role[CAN_UPDATE]:
+            return True
+
+        return self.user_role \
+               and CAN_CREATE in self.user_role \
+               and resource_uri in self.user_role[CAN_CREATE]
+
+    def can_read(self, resource_uri, field):
+        &#34;&#34;&#34;
+        Calculates if a role can access a certain field
+
+        :param role: Role string
+        :param resource_uri: URI str
+        :param field: field name
+        :return: bool if can read
+        &#34;&#34;&#34;
+
+        return not (self.user_role
+                    and CANT_READ in self.user_role
+                    and resource_uri in self.user_role[CANT_READ]
+                    and field in self.user_role[CANT_READ][resource_uri])
+
+    def can_update(self, resource_uri):
+        &#34;&#34;&#34;
+        Checks if user can update X
+
+        :param resource_uri: X
+        :return: True if can update X
+        &#34;&#34;&#34;
+        if self.user_role and CAN_UPDATE in self.user_role and &#39;*&#39; in self.user_role[CAN_UPDATE]:
+            return True
+
+        return self.user_role \
+               and CAN_UPDATE in self.user_role \
+               and resource_uri in self.user_role[CAN_UPDATE]
+
+    def can_(self, custom_operation: str):
+        &#34;&#34;&#34;
+        Checks if an arbitrary operation can be done with this role
+
+        :param custom_operation: operation string
+        :return: bool if can do X
+        &#34;&#34;&#34;
+        if self.user_role_name == &#39;Admin&#39;:
+            return True
+
+        return self.user_role and CAN in self.user_role \
+               and custom_operation in self.user_role[CAN]</code></pre>
 </details>
 </section>
 <section>
@@ -378,7 +486,7 @@ class SecurityLayer(Layer):
             &#39;author_user_id&#39;: self.user.id,
             &#39;table_name&#39;: repo_cls.resource_uri,
             &#39;row_id&#39;: None,
-            &#39;changes&#39;: changes,
+            &#39;changes&#39;: ChangeRequest.serialize_dates(changes),
             &#39;reason&#39;: &#39;No reason given&#39;
         })
         request = ChangeRequest.create(request)
@@ -453,6 +561,7 @@ class SecurityLayer(Layer):
         old_model = repo_cls.read(getattr(updated_model, repo_cls.id_attr))
 
         changes = list(dictdiffer.diff(old_model.to_dict(), updated_model.to_dict()))
+        # print(changes)
 
         for action, field, values in changes:
             if action == &#39;add&#39;:
@@ -478,7 +587,7 @@ class SecurityLayer(Layer):
             &#39;author_user_id&#39;: self.user.id,
             &#39;table_name&#39;: repo_cls.resource_uri,
             &#39;row_id&#39;: getattr(updated_model, id_attr),
-            &#39;changes&#39;: changes,
+            &#39;changes&#39;: ChangeRequest.serialize_dates(changes),
             &#39;reason&#39;: &#39;No reason given&#39;
         })
         request = ChangeRequest.create(request)
@@ -494,7 +603,63 @@ class SecurityLayer(Layer):
             return
 
         if model_name not in self.user_role[CAN_DESTROY]:
-            raise SecurityException(f&#39;Destroying {model_name} records is not allowed&#39;)</code></pre>
+            raise SecurityException(f&#39;Destroying {model_name} records is not allowed&#39;)
+
+    def can_create(self, resource_uri):
+        &#34;&#34;&#34;
+        Checks if user can create X
+
+        :param resource_uri: X
+        :return: True if can create X
+        &#34;&#34;&#34;
+        if self.user_role and CAN_CREATE in self.user_role and &#39;*&#39; in self.user_role[CAN_UPDATE]:
+            return True
+
+        return self.user_role \
+               and CAN_CREATE in self.user_role \
+               and resource_uri in self.user_role[CAN_CREATE]
+
+    def can_read(self, resource_uri, field):
+        &#34;&#34;&#34;
+        Calculates if a role can access a certain field
+
+        :param role: Role string
+        :param resource_uri: URI str
+        :param field: field name
+        :return: bool if can read
+        &#34;&#34;&#34;
+
+        return not (self.user_role
+                    and CANT_READ in self.user_role
+                    and resource_uri in self.user_role[CANT_READ]
+                    and field in self.user_role[CANT_READ][resource_uri])
+
+    def can_update(self, resource_uri):
+        &#34;&#34;&#34;
+        Checks if user can update X
+
+        :param resource_uri: X
+        :return: True if can update X
+        &#34;&#34;&#34;
+        if self.user_role and CAN_UPDATE in self.user_role and &#39;*&#39; in self.user_role[CAN_UPDATE]:
+            return True
+
+        return self.user_role \
+               and CAN_UPDATE in self.user_role \
+               and resource_uri in self.user_role[CAN_UPDATE]
+
+    def can_(self, custom_operation: str):
+        &#34;&#34;&#34;
+        Checks if an arbitrary operation can be done with this role
+
+        :param custom_operation: operation string
+        :return: bool if can do X
+        &#34;&#34;&#34;
+        if self.user_role_name == &#39;Admin&#39;:
+            return True
+
+        return self.user_role and CAN in self.user_role \
+               and custom_operation in self.user_role[CAN]</code></pre>
 </details>
 <h3>Ancestors</h3>
 <ul class="hlist">
@@ -502,6 +667,112 @@ class SecurityLayer(Layer):
 </ul>
 <h3>Methods</h3>
 <dl>
+<dt id="lib.layer.security.SecurityLayer.can_"><code class="name flex">
+<span>def <span class="ident">can_</span></span>(<span>self, custom_operation: str)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Checks if an arbitrary operation can be done with this role</p>
+<p>:param custom_operation: operation string
+:return: bool if can do X</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def can_(self, custom_operation: str):
+    &#34;&#34;&#34;
+    Checks if an arbitrary operation can be done with this role
+
+    :param custom_operation: operation string
+    :return: bool if can do X
+    &#34;&#34;&#34;
+    if self.user_role_name == &#39;Admin&#39;:
+        return True
+
+    return self.user_role and CAN in self.user_role \
+           and custom_operation in self.user_role[CAN]</code></pre>
+</details>
+</dd>
+<dt id="lib.layer.security.SecurityLayer.can_create"><code class="name flex">
+<span>def <span class="ident">can_create</span></span>(<span>self, resource_uri)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Checks if user can create X</p>
+<p>:param resource_uri: X
+:return: True if can create X</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def can_create(self, resource_uri):
+    &#34;&#34;&#34;
+    Checks if user can create X
+
+    :param resource_uri: X
+    :return: True if can create X
+    &#34;&#34;&#34;
+    if self.user_role and CAN_CREATE in self.user_role and &#39;*&#39; in self.user_role[CAN_UPDATE]:
+        return True
+
+    return self.user_role \
+           and CAN_CREATE in self.user_role \
+           and resource_uri in self.user_role[CAN_CREATE]</code></pre>
+</details>
+</dd>
+<dt id="lib.layer.security.SecurityLayer.can_read"><code class="name flex">
+<span>def <span class="ident">can_read</span></span>(<span>self, resource_uri, field)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Calculates if a role can access a certain field</p>
+<p>:param role: Role string
+:param resource_uri: URI str
+:param field: field name
+:return: bool if can read</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def can_read(self, resource_uri, field):
+    &#34;&#34;&#34;
+    Calculates if a role can access a certain field
+
+    :param role: Role string
+    :param resource_uri: URI str
+    :param field: field name
+    :return: bool if can read
+    &#34;&#34;&#34;
+
+    return not (self.user_role
+                and CANT_READ in self.user_role
+                and resource_uri in self.user_role[CANT_READ]
+                and field in self.user_role[CANT_READ][resource_uri])</code></pre>
+</details>
+</dd>
+<dt id="lib.layer.security.SecurityLayer.can_update"><code class="name flex">
+<span>def <span class="ident">can_update</span></span>(<span>self, resource_uri)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Checks if user can update X</p>
+<p>:param resource_uri: X
+:return: True if can update X</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def can_update(self, resource_uri):
+    &#34;&#34;&#34;
+    Checks if user can update X
+
+    :param resource_uri: X
+    :return: True if can update X
+    &#34;&#34;&#34;
+    if self.user_role and CAN_UPDATE in self.user_role and &#39;*&#39; in self.user_role[CAN_UPDATE]:
+        return True
+
+    return self.user_role \
+           and CAN_UPDATE in self.user_role \
+           and resource_uri in self.user_role[CAN_UPDATE]</code></pre>
+</details>
+</dd>
 <dt id="lib.layer.security.SecurityLayer.on_update"><code class="name flex">
 <span>def <span class="ident">on_update</span></span>(<span>self, repo_cls, updated_model, id_attr='id')</span>
 </code></dt>
@@ -577,6 +848,7 @@ print(difference)
     old_model = repo_cls.read(getattr(updated_model, repo_cls.id_attr))
 
     changes = list(dictdiffer.diff(old_model.to_dict(), updated_model.to_dict()))
+    # print(changes)
 
     for action, field, values in changes:
         if action == &#39;add&#39;:
@@ -602,7 +874,7 @@ print(difference)
         &#39;author_user_id&#39;: self.user.id,
         &#39;table_name&#39;: repo_cls.resource_uri,
         &#39;row_id&#39;: getattr(updated_model, id_attr),
-        &#39;changes&#39;: changes,
+        &#39;changes&#39;: ChangeRequest.serialize_dates(changes),
         &#39;reason&#39;: &#39;No reason given&#39;
     })
     request = ChangeRequest.create(request)
@@ -647,6 +919,10 @@ print(difference)
 <li>
 <h4><code><a title="lib.layer.security.SecurityLayer" href="#lib.layer.security.SecurityLayer">SecurityLayer</a></code></h4>
 <ul class="">
+<li><code><a title="lib.layer.security.SecurityLayer.can_" href="#lib.layer.security.SecurityLayer.can_">can_</a></code></li>
+<li><code><a title="lib.layer.security.SecurityLayer.can_create" href="#lib.layer.security.SecurityLayer.can_create">can_create</a></code></li>
+<li><code><a title="lib.layer.security.SecurityLayer.can_read" href="#lib.layer.security.SecurityLayer.can_read">can_read</a></code></li>
+<li><code><a title="lib.layer.security.SecurityLayer.can_update" href="#lib.layer.security.SecurityLayer.can_update">can_update</a></code></li>
 <li><code><a title="lib.layer.security.SecurityLayer.on_update" href="#lib.layer.security.SecurityLayer.on_update">on_update</a></code></li>
 </ul>
 </li>

@@ -98,21 +98,26 @@ class ChangeRequest(DatabaseRepository, DynamicViewModel, HasRelationships):
         if not model_cls:
             raise Exception(&#34;Table name given in the ChangeRequest does not exist!&#34;)
 
+        changes = ChangeRequest.deserialize_dates(self.changes)
+
         if self.row_id:  # is just a change?
             model = model_cls.read(self.row_id)
-            for diff_type, field, values in self.changes:
+            for diff_type, field, values in changes:
                 if diff_type == &#39;change&#39;:
                     setattr(model, field, values[1])
             model_cls.update(model)
         else:  # it must be an entire new object
             model_raw = {}
-            for diff_type, field, values in self.changes:
+            for diff_type, field, values in changes:
                 if diff_type == &#39;add&#39;:
-                    setattr(model_raw, field, values[1])
+                    for couple in values:
+                        model_raw[couple[0]] = couple[1]
             model_cls.create(model_cls(model_raw))
 
         self.approved_by_user_id = approved_by.id  # pylint: disable=attribute-defined-outside-init
         self.approved_at = datetime.datetime.now()  # pylint: disable=attribute-defined-outside-init
+
+        self.changes = ChangeRequest.serialize_dates(self.changes)
 
         ChangeRequest.update(self)
 
@@ -131,11 +136,22 @@ class ChangeRequest(DatabaseRepository, DynamicViewModel, HasRelationships):
         &#34;&#34;&#34;
         result = &#34;&#34;
         for diff_type, field, values in changes:  # pylint: disable=unused-variable
-            if model_name:
-                model_cls = find_model_by_name(model_name)
-                result += f&#34;{model_cls.view_columns[field]}: {values[0]} &gt; {values[1]}\n&#34;
+            if diff_type == &#39;change&#39;:
+                if model_name:
+                    model_cls = find_model_by_name(model_name)
+                    result += f&#34;{model_cls.view_columns[field]}: {values[0]} =&gt; {values[1]}\n&#34;
+                else:
+                    result += f&#34;{field}: {values[0]} &gt; {values[1]}\n&#34;
             else:
-                result += f&#34;{field}: {values[0]} &gt; {values[1]}\n&#34;
+                for couple in values:
+                    if model_name:
+                        model_cls = find_model_by_name(model_name)
+                        if couple[0] in model_cls.view_columns:
+                            result += f&#34;{model_cls.view_columns[couple[0]]}: {couple[1]}\n&#34;
+                        # else:
+                        #     result += f&#34;{model_cls.view_columns[couple[0]]}: {couple[1]}\n&#34;
+                    else:
+                        result += f&#34;{couple[0]}: {couple[1]}\n&#34;
         return result.rstrip()
 
     @classmethod
@@ -152,7 +168,38 @@ class ChangeRequest(DatabaseRepository, DynamicViewModel, HasRelationships):
                      Column(&#39;modified_at&#39;, DateTime),
                      Column(&#39;approved_by_user_id&#39;, BigInteger, nullable=True),
                      extend_existing=True
-                     )</code></pre>
+                     )
+
+    @staticmethod
+    def serialize_dates(changes):
+        for action, field, values in changes:
+            if action == &#39;add&#39;:
+                for i in range(len(values)):
+                    couple = values[i]
+                    mutable = list(couple)
+                    if isinstance(couple[1], datetime.datetime):
+                        mutable[1] = couple[1].isoformat()
+                    values[i] = tuple(mutable)
+
+        return changes
+
+    @staticmethod
+    def deserialize_dates(changes):
+        for action, field, values in changes:
+            if action == &#39;add&#39;:
+                for i in range(len(values)):
+                    couple = values[i]
+                    mutable = list(couple)
+                    try:
+                        mutable[1] = datetime.datetime.strptime(couple[1], &#34;%Y-%m-%dT%H:%M:%S&#34;)
+                        values[i] = tuple(mutable)
+                    except:
+                        try:
+                            mutable[1] = datetime.datetime.strptime(couple[1], &#34;%Y-%m-%dT%H:%M:%S.%f&#34;)
+                            values[i] = tuple(mutable)
+                        except:
+                            continue
+        return changes</code></pre>
 </details>
 </section>
 <section>
@@ -230,21 +277,26 @@ class ChangeRequest(DatabaseRepository, DynamicViewModel, HasRelationships):
         if not model_cls:
             raise Exception(&#34;Table name given in the ChangeRequest does not exist!&#34;)
 
+        changes = ChangeRequest.deserialize_dates(self.changes)
+
         if self.row_id:  # is just a change?
             model = model_cls.read(self.row_id)
-            for diff_type, field, values in self.changes:
+            for diff_type, field, values in changes:
                 if diff_type == &#39;change&#39;:
                     setattr(model, field, values[1])
             model_cls.update(model)
         else:  # it must be an entire new object
             model_raw = {}
-            for diff_type, field, values in self.changes:
+            for diff_type, field, values in changes:
                 if diff_type == &#39;add&#39;:
-                    setattr(model_raw, field, values[1])
+                    for couple in values:
+                        model_raw[couple[0]] = couple[1]
             model_cls.create(model_cls(model_raw))
 
         self.approved_by_user_id = approved_by.id  # pylint: disable=attribute-defined-outside-init
         self.approved_at = datetime.datetime.now()  # pylint: disable=attribute-defined-outside-init
+
+        self.changes = ChangeRequest.serialize_dates(self.changes)
 
         ChangeRequest.update(self)
 
@@ -263,11 +315,22 @@ class ChangeRequest(DatabaseRepository, DynamicViewModel, HasRelationships):
         &#34;&#34;&#34;
         result = &#34;&#34;
         for diff_type, field, values in changes:  # pylint: disable=unused-variable
-            if model_name:
-                model_cls = find_model_by_name(model_name)
-                result += f&#34;{model_cls.view_columns[field]}: {values[0]} &gt; {values[1]}\n&#34;
+            if diff_type == &#39;change&#39;:
+                if model_name:
+                    model_cls = find_model_by_name(model_name)
+                    result += f&#34;{model_cls.view_columns[field]}: {values[0]} =&gt; {values[1]}\n&#34;
+                else:
+                    result += f&#34;{field}: {values[0]} &gt; {values[1]}\n&#34;
             else:
-                result += f&#34;{field}: {values[0]} &gt; {values[1]}\n&#34;
+                for couple in values:
+                    if model_name:
+                        model_cls = find_model_by_name(model_name)
+                        if couple[0] in model_cls.view_columns:
+                            result += f&#34;{model_cls.view_columns[couple[0]]}: {couple[1]}\n&#34;
+                        # else:
+                        #     result += f&#34;{model_cls.view_columns[couple[0]]}: {couple[1]}\n&#34;
+                    else:
+                        result += f&#34;{couple[0]}: {couple[1]}\n&#34;
         return result.rstrip()
 
     @classmethod
@@ -284,7 +347,38 @@ class ChangeRequest(DatabaseRepository, DynamicViewModel, HasRelationships):
                      Column(&#39;modified_at&#39;, DateTime),
                      Column(&#39;approved_by_user_id&#39;, BigInteger, nullable=True),
                      extend_existing=True
-                     )</code></pre>
+                     )
+
+    @staticmethod
+    def serialize_dates(changes):
+        for action, field, values in changes:
+            if action == &#39;add&#39;:
+                for i in range(len(values)):
+                    couple = values[i]
+                    mutable = list(couple)
+                    if isinstance(couple[1], datetime.datetime):
+                        mutable[1] = couple[1].isoformat()
+                    values[i] = tuple(mutable)
+
+        return changes
+
+    @staticmethod
+    def deserialize_dates(changes):
+        for action, field, values in changes:
+            if action == &#39;add&#39;:
+                for i in range(len(values)):
+                    couple = values[i]
+                    mutable = list(couple)
+                    try:
+                        mutable[1] = datetime.datetime.strptime(couple[1], &#34;%Y-%m-%dT%H:%M:%S&#34;)
+                        values[i] = tuple(mutable)
+                    except:
+                        try:
+                            mutable[1] = datetime.datetime.strptime(couple[1], &#34;%Y-%m-%dT%H:%M:%S.%f&#34;)
+                            values[i] = tuple(mutable)
+                        except:
+                            continue
+        return changes</code></pre>
 </details>
 <h3>Ancestors</h3>
 <ul class="hlist">
@@ -318,6 +412,34 @@ class ChangeRequest(DatabaseRepository, DynamicViewModel, HasRelationships):
 </dl>
 <h3>Static methods</h3>
 <dl>
+<dt id="lib.model.change_request.ChangeRequest.deserialize_dates"><code class="name flex">
+<span>def <span class="ident">deserialize_dates</span></span>(<span>changes)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@staticmethod
+def deserialize_dates(changes):
+    for action, field, values in changes:
+        if action == &#39;add&#39;:
+            for i in range(len(values)):
+                couple = values[i]
+                mutable = list(couple)
+                try:
+                    mutable[1] = datetime.datetime.strptime(couple[1], &#34;%Y-%m-%dT%H:%M:%S&#34;)
+                    values[i] = tuple(mutable)
+                except:
+                    try:
+                        mutable[1] = datetime.datetime.strptime(couple[1], &#34;%Y-%m-%dT%H:%M:%S.%f&#34;)
+                        values[i] = tuple(mutable)
+                    except:
+                        continue
+    return changes</code></pre>
+</details>
+</dd>
 <dt id="lib.model.change_request.ChangeRequest.prettify_changes"><code class="name flex">
 <span>def <span class="ident">prettify_changes</span></span>(<span>changes, model_name=None) ‑> str</span>
 </code></dt>
@@ -341,12 +463,46 @@ def prettify_changes(cls, changes, model_name=None) -&gt; str:
     &#34;&#34;&#34;
     result = &#34;&#34;
     for diff_type, field, values in changes:  # pylint: disable=unused-variable
-        if model_name:
-            model_cls = find_model_by_name(model_name)
-            result += f&#34;{model_cls.view_columns[field]}: {values[0]} &gt; {values[1]}\n&#34;
+        if diff_type == &#39;change&#39;:
+            if model_name:
+                model_cls = find_model_by_name(model_name)
+                result += f&#34;{model_cls.view_columns[field]}: {values[0]} =&gt; {values[1]}\n&#34;
+            else:
+                result += f&#34;{field}: {values[0]} &gt; {values[1]}\n&#34;
         else:
-            result += f&#34;{field}: {values[0]} &gt; {values[1]}\n&#34;
+            for couple in values:
+                if model_name:
+                    model_cls = find_model_by_name(model_name)
+                    if couple[0] in model_cls.view_columns:
+                        result += f&#34;{model_cls.view_columns[couple[0]]}: {couple[1]}\n&#34;
+                    # else:
+                    #     result += f&#34;{model_cls.view_columns[couple[0]]}: {couple[1]}\n&#34;
+                else:
+                    result += f&#34;{couple[0]}: {couple[1]}\n&#34;
     return result.rstrip()</code></pre>
+</details>
+</dd>
+<dt id="lib.model.change_request.ChangeRequest.serialize_dates"><code class="name flex">
+<span>def <span class="ident">serialize_dates</span></span>(<span>changes)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@staticmethod
+def serialize_dates(changes):
+    for action, field, values in changes:
+        if action == &#39;add&#39;:
+            for i in range(len(values)):
+                couple = values[i]
+                mutable = list(couple)
+                if isinstance(couple[1], datetime.datetime):
+                    mutable[1] = couple[1].isoformat()
+                values[i] = tuple(mutable)
+
+    return changes</code></pre>
 </details>
 </dd>
 </dl>
@@ -373,21 +529,26 @@ def prettify_changes(cls, changes, model_name=None) -&gt; str:
     if not model_cls:
         raise Exception(&#34;Table name given in the ChangeRequest does not exist!&#34;)
 
+    changes = ChangeRequest.deserialize_dates(self.changes)
+
     if self.row_id:  # is just a change?
         model = model_cls.read(self.row_id)
-        for diff_type, field, values in self.changes:
+        for diff_type, field, values in changes:
             if diff_type == &#39;change&#39;:
                 setattr(model, field, values[1])
         model_cls.update(model)
     else:  # it must be an entire new object
         model_raw = {}
-        for diff_type, field, values in self.changes:
+        for diff_type, field, values in changes:
             if diff_type == &#39;add&#39;:
-                setattr(model_raw, field, values[1])
+                for couple in values:
+                    model_raw[couple[0]] = couple[1]
         model_cls.create(model_cls(model_raw))
 
     self.approved_by_user_id = approved_by.id  # pylint: disable=attribute-defined-outside-init
     self.approved_at = datetime.datetime.now()  # pylint: disable=attribute-defined-outside-init
+
+    self.changes = ChangeRequest.serialize_dates(self.changes)
 
     ChangeRequest.update(self)</code></pre>
 </details>
@@ -475,9 +636,11 @@ def prettify_changes(cls, changes, model_name=None) -&gt; str:
 <h4><code><a title="lib.model.change_request.ChangeRequest" href="#lib.model.change_request.ChangeRequest">ChangeRequest</a></code></h4>
 <ul class="two-column">
 <li><code><a title="lib.model.change_request.ChangeRequest.apply_to_db" href="#lib.model.change_request.ChangeRequest.apply_to_db">apply_to_db</a></code></li>
+<li><code><a title="lib.model.change_request.ChangeRequest.deserialize_dates" href="#lib.model.change_request.ChangeRequest.deserialize_dates">deserialize_dates</a></code></li>
 <li><code><a title="lib.model.change_request.ChangeRequest.engine" href="#lib.model.change_request.ChangeRequest.engine">engine</a></code></li>
 <li><code><a title="lib.model.change_request.ChangeRequest.metadata" href="#lib.model.change_request.ChangeRequest.metadata">metadata</a></code></li>
 <li><code><a title="lib.model.change_request.ChangeRequest.prettify_changes" href="#lib.model.change_request.ChangeRequest.prettify_changes">prettify_changes</a></code></li>
+<li><code><a title="lib.model.change_request.ChangeRequest.serialize_dates" href="#lib.model.change_request.ChangeRequest.serialize_dates">serialize_dates</a></code></li>
 <li><code><a title="lib.model.change_request.ChangeRequest.url" href="#lib.model.change_request.ChangeRequest.url">url</a></code></li>
 <li><code><a title="lib.model.change_request.ChangeRequest.view_columns" href="#lib.model.change_request.ChangeRequest.view_columns">view_columns</a></code></li>
 </ul>
