@@ -156,9 +156,7 @@ class DatabaseController(Controller):
                 is_new = True
 
             try:
-                print(view_model)
                 employee = Employee.from_view_model(view_model)
-                print(employee.to_dict())
                 if is_new:
                     Employee.create(employee)
                 else:

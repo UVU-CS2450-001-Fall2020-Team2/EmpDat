@@ -56,7 +56,9 @@ class ChangeRequestsController(Controller):
         Loads all change requests and has the view display them
         :return: None
         &#34;&#34;&#34;
-        change_requests = ChangeRequest.read_all()
+        change_requests = ChangeRequest.read_by(filters={
+            &#39;approved_at&#39;: None
+        })
         i = 0
         for request in change_requests:
             i += 1
@@ -69,6 +71,7 @@ class ChangeRequestsController(Controller):
         Wipes and refreshes change requests view
         :return: None
         &#34;&#34;&#34;
+        self.view.destroy_results()
         self.load()
         self.view.table.redraw()
 
@@ -85,7 +88,7 @@ class ChangeRequestsController(Controller):
         ids = self.view.table.get_selectedRecordNames()
         for request_id in ids:
             request = ChangeRequest.read(request_id)
-            request.apply_to_db(store.AUTHENTICATED_USER)
+            request.apply_to_db(store.SECURITY_LAYER.user)
         self.view.show_info(&#39;Approvals Successful&#39;, &#39;Changes applied successfully!&#39;)
         self.refresh()
 
@@ -139,7 +142,9 @@ class ChangeRequestsController(Controller):
         Loads all change requests and has the view display them
         :return: None
         &#34;&#34;&#34;
-        change_requests = ChangeRequest.read_all()
+        change_requests = ChangeRequest.read_by(filters={
+            &#39;approved_at&#39;: None
+        })
         i = 0
         for request in change_requests:
             i += 1
@@ -152,6 +157,7 @@ class ChangeRequestsController(Controller):
         Wipes and refreshes change requests view
         :return: None
         &#34;&#34;&#34;
+        self.view.destroy_results()
         self.load()
         self.view.table.redraw()
 
@@ -168,7 +174,7 @@ class ChangeRequestsController(Controller):
         ids = self.view.table.get_selectedRecordNames()
         for request_id in ids:
             request = ChangeRequest.read(request_id)
-            request.apply_to_db(store.AUTHENTICATED_USER)
+            request.apply_to_db(store.SECURITY_LAYER.user)
         self.view.show_info(&#39;Approvals Successful&#39;, &#39;Changes applied successfully!&#39;)
         self.refresh()
 
@@ -207,7 +213,7 @@ class ChangeRequestsController(Controller):
     ids = self.view.table.get_selectedRecordNames()
     for request_id in ids:
         request = ChangeRequest.read(request_id)
-        request.apply_to_db(store.AUTHENTICATED_USER)
+        request.apply_to_db(store.SECURITY_LAYER.user)
     self.view.show_info(&#39;Approvals Successful&#39;, &#39;Changes applied successfully!&#39;)
     self.refresh()</code></pre>
 </details>
@@ -227,7 +233,9 @@ class ChangeRequestsController(Controller):
     Loads all change requests and has the view display them
     :return: None
     &#34;&#34;&#34;
-    change_requests = ChangeRequest.read_all()
+    change_requests = ChangeRequest.read_by(filters={
+        &#39;approved_at&#39;: None
+    })
     i = 0
     for request in change_requests:
         i += 1
@@ -251,6 +259,7 @@ class ChangeRequestsController(Controller):
     Wipes and refreshes change requests view
     :return: None
     &#34;&#34;&#34;
+    self.view.destroy_results()
     self.load()
     self.view.table.redraw()</code></pre>
 </details>

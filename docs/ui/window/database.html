@@ -142,7 +142,7 @@ class DatabaseWindow(TkinterWindow):  # pylint: disable=too-many-instance-attrib
                                        data=self.results, rowheight=50)
         self.table.show()
 
-        if store.AUTHENTICATED_USER.role == &#39;Viewer&#39;:
+        if store.SECURITY_LAYER.user.role == &#39;Viewer&#39;:
             self.table.read_only = True
 
         self.create_menu()
@@ -161,15 +161,17 @@ class DatabaseWindow(TkinterWindow):  # pylint: disable=too-many-instance-attrib
         self.filemenu = Menu(self.menubar, tearoff=False)
         # New Employee
         # adds a command to the menu option, calling it exit
-        self.filemenu.add_command(label=&#34;New Employee&#34;,
-                                  command=self.event_handlers[&#39;new_employee&#39;])
-        self.filemenu.add_command(label=&#34;New Receipt&#34;,
-                                  command=self.event_handlers[&#39;new_receipt&#39;])
-        self.filemenu.add_command(label=&#34;New Timesheet&#34;,
-                                  command=self.event_handlers[&#39;new_timesheet&#39;])
+        if store.SECURITY_LAYER.can_create(&#39;employee&#39;):
+            self.filemenu.add_command(label=&#34;New Employee&#34;,
+                                      command=self.event_handlers[&#39;new_employee&#39;])
+        if store.SECURITY_LAYER.can_create(&#39;receipt&#39;):
+            self.filemenu.add_command(label=&#34;New Receipt&#34;,
+                                      command=self.event_handlers[&#39;new_receipt&#39;])
+        if store.SECURITY_LAYER.can_create(&#39;timesheet&#39;):
+            self.filemenu.add_command(label=&#34;New Timesheet&#34;,
+                                      command=self.event_handlers[&#39;new_timesheet&#39;])
         self.filemenu.add_separator()
-        if store.AUTHENTICATED_USER.role == &#39;Admin&#39; \
-                or store.AUTHENTICATED_USER.role == &#39;Accounting&#39;:
+        if store.SECURITY_LAYER.can_(&#39;payroll&#39;):
             self.filemenu.add_command(label=&#34;Run Payroll&#34;,
                                       command=self.event_handlers[&#39;run_payroll&#39;])
         self.filemenu.add_command(label=&#34;Change My Password&#34;,
@@ -198,11 +200,11 @@ class DatabaseWindow(TkinterWindow):  # pylint: disable=too-many-instance-attrib
                                      command=self.event_handlers[&#39;import&gt;timesheets&#39;])
         self.menubar.add_cascade(label=&#34;Import&#34;, menu=self.import_menu)
         # Admin tab
-        if store.AUTHENTICATED_USER.role == &#39;Admin&#39;:
+        if store.SECURITY_LAYER.user.role == &#39;Admin&#39;:
             self.admin_menu = Menu(self.menubar, tearoff=False)
             self.admin_menu.add_command(label=&#34;Review Change Requests&#34;,
                                         command=self.event_handlers[&#39;admin&gt;review&#39;])
-            self.admin_menu.add_command(label=&#34;Change Passwords&#34;,
+            self.admin_menu.add_command(label=&#34;Set Passwords&#34;,
                                         command=self.event_handlers[&#39;admin&gt;change_password&#39;])
             self.menubar.add_cascade(label=&#34;Admin&#34;, menu=self.admin_menu)
 
@@ -248,11 +250,12 @@ class DatabaseWindow(TkinterWindow):  # pylint: disable=too-many-instance-attrib
             state=&#34;disabled&#34;
         )
 
-        self.new_button.pack(side=LEFT, anchor=W)
+        if store.SECURITY_LAYER.can_create(&#39;employee&#39;):
+            self.new_button.pack(side=LEFT, anchor=W)
         self.refresh_button.pack(side=LEFT, anchor=W)
         Label(buttons,
-              text=f&#34;({store.AUTHENTICATED_USER.first_name} &#34;
-              f&#34;{store.AUTHENTICATED_USER.last_name})&#34;) \
+              text=f&#34;({store.SECURITY_LAYER.user.first_name} &#34;
+              f&#34;{store.SECURITY_LAYER.user.last_name})&#34;) \
             .pack(side=LEFT, anchor=W)
 
         self.status = Label(buttons, text=&#39;&#39;)
@@ -260,8 +263,9 @@ class DatabaseWindow(TkinterWindow):  # pylint: disable=too-many-instance-attrib
 
         Frame(buttons, relief=&#39;flat&#39;, borderwidth=0).pack(fill=X, expand=1)
 
-        self.save_button.pack(side=RIGHT, anchor=E)
-        self.delete_button.pack(side=RIGHT, anchor=E)
+        if store.SECURITY_LAYER.can_update(&#39;employee&#39;):
+            self.save_button.pack(side=RIGHT, anchor=E)
+            self.delete_button.pack(side=RIGHT, anchor=E)
         self.search_button.pack(side=RIGHT, anchor=E)
 
         buttons.pack(side=RIGHT, fill=X, expand=1)
@@ -521,7 +525,7 @@ if __name__ == &#34;__main__&#34;:
                                        data=self.results, rowheight=50)
         self.table.show()
 
-        if store.AUTHENTICATED_USER.role == &#39;Viewer&#39;:
+        if store.SECURITY_LAYER.user.role == &#39;Viewer&#39;:
             self.table.read_only = True
 
         self.create_menu()
@@ -540,15 +544,17 @@ if __name__ == &#34;__main__&#34;:
         self.filemenu = Menu(self.menubar, tearoff=False)
         # New Employee
         # adds a command to the menu option, calling it exit
-        self.filemenu.add_command(label=&#34;New Employee&#34;,
-                                  command=self.event_handlers[&#39;new_employee&#39;])
-        self.filemenu.add_command(label=&#34;New Receipt&#34;,
-                                  command=self.event_handlers[&#39;new_receipt&#39;])
-        self.filemenu.add_command(label=&#34;New Timesheet&#34;,
-                                  command=self.event_handlers[&#39;new_timesheet&#39;])
+        if store.SECURITY_LAYER.can_create(&#39;employee&#39;):
+            self.filemenu.add_command(label=&#34;New Employee&#34;,
+                                      command=self.event_handlers[&#39;new_employee&#39;])
+        if store.SECURITY_LAYER.can_create(&#39;receipt&#39;):
+            self.filemenu.add_command(label=&#34;New Receipt&#34;,
+                                      command=self.event_handlers[&#39;new_receipt&#39;])
+        if store.SECURITY_LAYER.can_create(&#39;timesheet&#39;):
+            self.filemenu.add_command(label=&#34;New Timesheet&#34;,
+                                      command=self.event_handlers[&#39;new_timesheet&#39;])
         self.filemenu.add_separator()
-        if store.AUTHENTICATED_USER.role == &#39;Admin&#39; \
-                or store.AUTHENTICATED_USER.role == &#39;Accounting&#39;:
+        if store.SECURITY_LAYER.can_(&#39;payroll&#39;):
             self.filemenu.add_command(label=&#34;Run Payroll&#34;,
                                       command=self.event_handlers[&#39;run_payroll&#39;])
         self.filemenu.add_command(label=&#34;Change My Password&#34;,
@@ -577,11 +583,11 @@ if __name__ == &#34;__main__&#34;:
                                      command=self.event_handlers[&#39;import&gt;timesheets&#39;])
         self.menubar.add_cascade(label=&#34;Import&#34;, menu=self.import_menu)
         # Admin tab
-        if store.AUTHENTICATED_USER.role == &#39;Admin&#39;:
+        if store.SECURITY_LAYER.user.role == &#39;Admin&#39;:
             self.admin_menu = Menu(self.menubar, tearoff=False)
             self.admin_menu.add_command(label=&#34;Review Change Requests&#34;,
                                         command=self.event_handlers[&#39;admin&gt;review&#39;])
-            self.admin_menu.add_command(label=&#34;Change Passwords&#34;,
+            self.admin_menu.add_command(label=&#34;Set Passwords&#34;,
                                         command=self.event_handlers[&#39;admin&gt;change_password&#39;])
             self.menubar.add_cascade(label=&#34;Admin&#34;, menu=self.admin_menu)
 
@@ -627,11 +633,12 @@ if __name__ == &#34;__main__&#34;:
             state=&#34;disabled&#34;
         )
 
-        self.new_button.pack(side=LEFT, anchor=W)
+        if store.SECURITY_LAYER.can_create(&#39;employee&#39;):
+            self.new_button.pack(side=LEFT, anchor=W)
         self.refresh_button.pack(side=LEFT, anchor=W)
         Label(buttons,
-              text=f&#34;({store.AUTHENTICATED_USER.first_name} &#34;
-              f&#34;{store.AUTHENTICATED_USER.last_name})&#34;) \
+              text=f&#34;({store.SECURITY_LAYER.user.first_name} &#34;
+              f&#34;{store.SECURITY_LAYER.user.last_name})&#34;) \
             .pack(side=LEFT, anchor=W)
 
         self.status = Label(buttons, text=&#39;&#39;)
@@ -639,8 +646,9 @@ if __name__ == &#34;__main__&#34;:
 
         Frame(buttons, relief=&#39;flat&#39;, borderwidth=0).pack(fill=X, expand=1)
 
-        self.save_button.pack(side=RIGHT, anchor=E)
-        self.delete_button.pack(side=RIGHT, anchor=E)
+        if store.SECURITY_LAYER.can_update(&#39;employee&#39;):
+            self.save_button.pack(side=RIGHT, anchor=E)
+            self.delete_button.pack(side=RIGHT, anchor=E)
         self.search_button.pack(side=RIGHT, anchor=E)
 
         buttons.pack(side=RIGHT, fill=X, expand=1)
@@ -826,11 +834,12 @@ if __name__ == &#34;__main__&#34;:
         state=&#34;disabled&#34;
     )
 
-    self.new_button.pack(side=LEFT, anchor=W)
+    if store.SECURITY_LAYER.can_create(&#39;employee&#39;):
+        self.new_button.pack(side=LEFT, anchor=W)
     self.refresh_button.pack(side=LEFT, anchor=W)
     Label(buttons,
-          text=f&#34;({store.AUTHENTICATED_USER.first_name} &#34;
-          f&#34;{store.AUTHENTICATED_USER.last_name})&#34;) \
+          text=f&#34;({store.SECURITY_LAYER.user.first_name} &#34;
+          f&#34;{store.SECURITY_LAYER.user.last_name})&#34;) \
         .pack(side=LEFT, anchor=W)
 
     self.status = Label(buttons, text=&#39;&#39;)
@@ -838,8 +847,9 @@ if __name__ == &#34;__main__&#34;:
 
     Frame(buttons, relief=&#39;flat&#39;, borderwidth=0).pack(fill=X, expand=1)
 
-    self.save_button.pack(side=RIGHT, anchor=E)
-    self.delete_button.pack(side=RIGHT, anchor=E)
+    if store.SECURITY_LAYER.can_update(&#39;employee&#39;):
+        self.save_button.pack(side=RIGHT, anchor=E)
+        self.delete_button.pack(side=RIGHT, anchor=E)
     self.search_button.pack(side=RIGHT, anchor=E)
 
     buttons.pack(side=RIGHT, fill=X, expand=1)</code></pre>
@@ -868,15 +878,17 @@ if __name__ == &#34;__main__&#34;:
     self.filemenu = Menu(self.menubar, tearoff=False)
     # New Employee
     # adds a command to the menu option, calling it exit
-    self.filemenu.add_command(label=&#34;New Employee&#34;,
-                              command=self.event_handlers[&#39;new_employee&#39;])
-    self.filemenu.add_command(label=&#34;New Receipt&#34;,
-                              command=self.event_handlers[&#39;new_receipt&#39;])
-    self.filemenu.add_command(label=&#34;New Timesheet&#34;,
-                              command=self.event_handlers[&#39;new_timesheet&#39;])
+    if store.SECURITY_LAYER.can_create(&#39;employee&#39;):
+        self.filemenu.add_command(label=&#34;New Employee&#34;,
+                                  command=self.event_handlers[&#39;new_employee&#39;])
+    if store.SECURITY_LAYER.can_create(&#39;receipt&#39;):
+        self.filemenu.add_command(label=&#34;New Receipt&#34;,
+                                  command=self.event_handlers[&#39;new_receipt&#39;])
+    if store.SECURITY_LAYER.can_create(&#39;timesheet&#39;):
+        self.filemenu.add_command(label=&#34;New Timesheet&#34;,
+                                  command=self.event_handlers[&#39;new_timesheet&#39;])
     self.filemenu.add_separator()
-    if store.AUTHENTICATED_USER.role == &#39;Admin&#39; \
-            or store.AUTHENTICATED_USER.role == &#39;Accounting&#39;:
+    if store.SECURITY_LAYER.can_(&#39;payroll&#39;):
         self.filemenu.add_command(label=&#34;Run Payroll&#34;,
                                   command=self.event_handlers[&#39;run_payroll&#39;])
     self.filemenu.add_command(label=&#34;Change My Password&#34;,
@@ -905,11 +917,11 @@ if __name__ == &#34;__main__&#34;:
                                  command=self.event_handlers[&#39;import&gt;timesheets&#39;])
     self.menubar.add_cascade(label=&#34;Import&#34;, menu=self.import_menu)
     # Admin tab
-    if store.AUTHENTICATED_USER.role == &#39;Admin&#39;:
+    if store.SECURITY_LAYER.user.role == &#39;Admin&#39;:
         self.admin_menu = Menu(self.menubar, tearoff=False)
         self.admin_menu.add_command(label=&#34;Review Change Requests&#34;,
                                     command=self.event_handlers[&#39;admin&gt;review&#39;])
-        self.admin_menu.add_command(label=&#34;Change Passwords&#34;,
+        self.admin_menu.add_command(label=&#34;Set Passwords&#34;,
                                     command=self.event_handlers[&#39;admin&gt;change_password&#39;])
         self.menubar.add_cascade(label=&#34;Admin&#34;, menu=self.admin_menu)
 

@@ -50,7 +50,13 @@ def _render_row_id(raw: str) -&gt; str:
     loaded = json.loads(raw)
     table_name = loaded[0]
     row_id = loaded[1]
-    return find_model_by_name(table_name).read(row_id).get_name()
+
+    if row_id:
+        try:
+            return find_model_by_name(table_name).read(row_id).get_name()
+        except AttributeError:
+            pass
+    return &#39;NEW&#39;
 
 
 class ChangeRequestsWindow(TkinterWindow):
@@ -73,16 +79,16 @@ class ChangeRequestsWindow(TkinterWindow):
         frame.pack(fill=BOTH, expand=1)
         self.table = EmpDatTableCanvas(frame,
                                        col_modifiers={
-                                           2: {
+                                           &#39;ID affected&#39;: {
                                                &#39;render_as&#39;: lambda x: _render_row_id(x)  # pylint: disable=unnecessary-lambda
                                            },
-                                           3: {
+                                           &#39;Changes&#39;: {
                                                &#39;render_as&#39;: lambda x:
                                                ChangeRequest.prettify_changes(*json.loads(x))
                                            }
                                        },
-                                       on_selected=lambda x: self.set_bottom_state(&#39;normal&#39;),
-                                       data=self.results, rowheight=50)
+                                       on_selected=lambda: self.set_bottom_state(&#39;normal&#39;),
+                                       data=self.results, rowheight=150)
         self.table.show()
         self.table.read_only = True
 
@@ -131,7 +137,16 @@ class ChangeRequestsWindow(TkinterWindow):
         &#34;&#34;&#34;
         to_add[&#39;ID affected&#39;] = json.dumps((to_add[&#39;Data Type&#39;], to_add[&#39;ID affected&#39;]))
         to_add[&#39;Changes&#39;] = json.dumps((to_add[&#39;Changes&#39;], to_add[&#39;Data Type&#39;]))
-        self.table.addRow(record_id, **to_add)</code></pre>
+        self.table.addRow(record_id, **to_add)
+
+    def destroy_results(self):
+        &#34;&#34;&#34;
+        Destroy all rows
+        :return: None
+        &#34;&#34;&#34;
+        keys = list(self.table.model.data.keys())
+        for key in keys:
+            self.table.model.deleteRow(key=key)</code></pre>
 </details>
 </section>
 <section>
@@ -175,16 +190,16 @@ class ChangeRequestsWindow(TkinterWindow):
         frame.pack(fill=BOTH, expand=1)
         self.table = EmpDatTableCanvas(frame,
                                        col_modifiers={
-                                           2: {
+                                           &#39;ID affected&#39;: {
                                                &#39;render_as&#39;: lambda x: _render_row_id(x)  # pylint: disable=unnecessary-lambda
                                            },
-                                           3: {
+                                           &#39;Changes&#39;: {
                                                &#39;render_as&#39;: lambda x:
                                                ChangeRequest.prettify_changes(*json.loads(x))
                                            }
                                        },
-                                       on_selected=lambda x: self.set_bottom_state(&#39;normal&#39;),
-                                       data=self.results, rowheight=50)
+                                       on_selected=lambda: self.set_bottom_state(&#39;normal&#39;),
+                                       data=self.results, rowheight=150)
         self.table.show()
         self.table.read_only = True
 
@@ -233,7 +248,16 @@ class ChangeRequestsWindow(TkinterWindow):
         &#34;&#34;&#34;
         to_add[&#39;ID affected&#39;] = json.dumps((to_add[&#39;Data Type&#39;], to_add[&#39;ID affected&#39;]))
         to_add[&#39;Changes&#39;] = json.dumps((to_add[&#39;Changes&#39;], to_add[&#39;Data Type&#39;]))
-        self.table.addRow(record_id, **to_add)</code></pre>
+        self.table.addRow(record_id, **to_add)
+
+    def destroy_results(self):
+        &#34;&#34;&#34;
+        Destroy all rows
+        :return: None
+        &#34;&#34;&#34;
+        keys = list(self.table.model.data.keys())
+        for key in keys:
+            self.table.model.deleteRow(key=key)</code></pre>
 </details>
 <h3>Ancestors</h3>
 <ul class="hlist">
@@ -302,6 +326,26 @@ class ChangeRequestsWindow(TkinterWindow):
     buttons.pack(side=RIGHT, fill=X, expand=1)</code></pre>
 </details>
 </dd>
+<dt id="ui.window.change_requests.ChangeRequestsWindow.destroy_results"><code class="name flex">
+<span>def <span class="ident">destroy_results</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Destroy all rows
+:return: None</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def destroy_results(self):
+    &#34;&#34;&#34;
+    Destroy all rows
+    :return: None
+    &#34;&#34;&#34;
+    keys = list(self.table.model.data.keys())
+    for key in keys:
+        self.table.model.deleteRow(key=key)</code></pre>
+</details>
+</dd>
 <dt id="ui.window.change_requests.ChangeRequestsWindow.set_bottom_state"><code class="name flex">
 <span>def <span class="ident">set_bottom_state</span></span>(<span>self, state)</span>
 </code></dt>
@@ -361,6 +405,7 @@ class ChangeRequestsWindow(TkinterWindow):
 <ul class="">
 <li><code><a title="ui.window.change_requests.ChangeRequestsWindow.add_to_result" href="#ui.window.change_requests.ChangeRequestsWindow.add_to_result">add_to_result</a></code></li>
 <li><code><a title="ui.window.change_requests.ChangeRequestsWindow.create_bottom" href="#ui.window.change_requests.ChangeRequestsWindow.create_bottom">create_bottom</a></code></li>
+<li><code><a title="ui.window.change_requests.ChangeRequestsWindow.destroy_results" href="#ui.window.change_requests.ChangeRequestsWindow.destroy_results">destroy_results</a></code></li>
 <li><code><a title="ui.window.change_requests.ChangeRequestsWindow.set_bottom_state" href="#ui.window.change_requests.ChangeRequestsWindow.set_bottom_state">set_bottom_state</a></code></li>
 </ul>
 </li>

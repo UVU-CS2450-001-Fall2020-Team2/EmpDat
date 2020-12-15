@@ -72,8 +72,7 @@ class LoginController(Controller):
 
         authenticated = Employee.authenticate(username, password)
         if authenticated is not None:
-            store.AUTHENTICATED_USER = authenticated
-            SecurityLayer(authenticated)
+            store.SECURITY_LAYER = SecurityLayer(authenticated)
             print(&#34;Logged in as user ID&#34;, authenticated.id)
             self.view.destroy()
             DatabaseController().show()
@@ -133,8 +132,7 @@ class LoginController(Controller):
 
         authenticated = Employee.authenticate(username, password)
         if authenticated is not None:
-            store.AUTHENTICATED_USER = authenticated
-            SecurityLayer(authenticated)
+            store.SECURITY_LAYER = SecurityLayer(authenticated)
             print(&#34;Logged in as user ID&#34;, authenticated.id)
             self.view.destroy()
             DatabaseController().show()
@@ -179,8 +177,7 @@ class LoginController(Controller):
 
     authenticated = Employee.authenticate(username, password)
     if authenticated is not None:
-        store.AUTHENTICATED_USER = authenticated
-        SecurityLayer(authenticated)
+        store.SECURITY_LAYER = SecurityLayer(authenticated)
         print(&#34;Logged in as user ID&#34;, authenticated.id)
         self.view.destroy()
         DatabaseController().show()

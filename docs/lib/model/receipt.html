@@ -52,6 +52,14 @@ class Receipt(DatabaseRepository, DynamicModel, HasRelationships):
     field_casts = {
 
     }
+    view_columns = {
+        &#39;id&#39;: &#39;ID&#39;,
+        &#39;user_id&#39;: &#39;Owner ID&#39;,
+        &#39;user&#39;: &#39;Owner&#39;,
+        &#39;amount&#39;: &#39;Amount&#39;,
+        &#39;datetime_end&#39;: &#39;Time Out&#39;,
+        &#39;paid&#39;: &#39;Is Paid?&#39;,
+    }
 
     def __init__(self, data):
         DynamicModel.__init__(self, data)
@@ -116,6 +124,14 @@ class Receipt(DatabaseRepository, DynamicModel, HasRelationships):
     field_casts = {
 
     }
+    view_columns = {
+        &#39;id&#39;: &#39;ID&#39;,
+        &#39;user_id&#39;: &#39;Owner ID&#39;,
+        &#39;user&#39;: &#39;Owner&#39;,
+        &#39;amount&#39;: &#39;Amount&#39;,
+        &#39;datetime_end&#39;: &#39;Time Out&#39;,
+        &#39;paid&#39;: &#39;Is Paid?&#39;,
+    }
 
     def __init__(self, data):
         DynamicModel.__init__(self, data)
@@ -166,6 +182,10 @@ class Receipt(DatabaseRepository, DynamicModel, HasRelationships):
 <div class="desc"></div>
 </dd>
 <dt id="lib.model.receipt.Receipt.url"><code class="name">var <span class="ident">url</span> : str</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="lib.model.receipt.Receipt.view_columns"><code class="name">var <span class="ident">view_columns</span></code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
@@ -252,6 +272,7 @@ class Receipt(DatabaseRepository, DynamicModel, HasRelationships):
 <li><code><a title="lib.model.receipt.Receipt.engine" href="#lib.model.receipt.Receipt.engine">engine</a></code></li>
 <li><code><a title="lib.model.receipt.Receipt.metadata" href="#lib.model.receipt.Receipt.metadata">metadata</a></code></li>
 <li><code><a title="lib.model.receipt.Receipt.url" href="#lib.model.receipt.Receipt.url">url</a></code></li>
+<li><code><a title="lib.model.receipt.Receipt.view_columns" href="#lib.model.receipt.Receipt.view_columns">view_columns</a></code></li>
 </ul>
 </li>
 </ul>

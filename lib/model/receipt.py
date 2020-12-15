@@ -23,6 +23,14 @@ class Receipt(DatabaseRepository, DynamicModel, HasRelationships):
     field_casts = {
 
     }
+    view_columns = {
+        'id': 'ID',
+        'user_id': 'Owner ID',
+        'user': 'Owner',
+        'amount': 'Amount',
+        'datetime_end': 'Time Out',
+        'paid': 'Is Paid?',
+    }
 
     def __init__(self, data):
         DynamicModel.__init__(self, data)
