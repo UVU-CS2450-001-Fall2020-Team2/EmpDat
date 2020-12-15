@@ -9,7 +9,7 @@ a = Analysis(['..\\EmpDat.py'],
                 ('..\\dist\\wkhtmltopdf.exe', '.')
              ],
              datas=[],
-             hiddenimports=[],
+             hiddenimports=['babel.numbers'],
              hookspath=[],
              runtime_hooks=[],
              excludes=[],
